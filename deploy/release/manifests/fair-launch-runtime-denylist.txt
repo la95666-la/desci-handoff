@@ -1,0 +1,15 @@
+contracts/
+contracts-audit/
+contracts-model/
+migrations/
+scripts/fair-launch/
+private
+mnemonic
+seed
+.pem
+.key
+keystore
+wallet
+raw_tx
+artifact-baseline
+JoinCareFairLaunchV1ArtifactBaseline

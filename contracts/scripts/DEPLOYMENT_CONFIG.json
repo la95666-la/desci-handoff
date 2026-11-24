@@ -1,0 +1,56 @@
+{
+  "deployment": {
+	"network": "jcTarget",
+    "chainId": 97,
+    "contracts": {
+      "JCC": {
+        "name": "JoinCare Coin",
+        "symbol": "JCC",
+        "decimals": 18,
+        "initialSupply": 1000000,
+        "description": "ERC20 标准代币，用于 JoinCare IDO 平台"
+      },
+      "JoinCare_v1": {
+        "name": "JoinCare IDO Platform",
+        "type": "UUPS Proxy",
+        "description": "IDO 平台主合约"
+      }
+    },
+    "rpcEndpoints": {
+      "primary": "https://data-seed-prebsc-1-s1.binance.org:8545",
+      "backup1": "https://bsc-testnet.publicnode.com",
+      "backup2": "https://bsc-testnet-rpc.publicnode.com",
+      "backup3": "https://bsc-testnet.blockpi.network/v1/rpc/public"
+    },
+    "gasSettings": {
+      "gasPrice": "10 gwei",
+      "estimatedGasJCC": "~500000",
+      "estimatedGasJoinCare": "~2000000",
+      "totalEstimatedCost": "~0.025 BNB"
+    },
+    "deploymentSteps": [
+      "1. 部署 JCC 代币合约",
+      "2. 获取 JCC 代币地址",
+      "3. 更新 .env 文件中的 JCC_TOKEN_ADDRESS",
+      "4. 部署 JoinCare_v1 合约（UUPS 代理）",
+      "5. 验证部署成功",
+      "6. 在 BscScan 上验证合约源代码"
+    ],
+    "commands": {
+	  "deployJCC": "JC_DEPLOY_RPC=<rpc> JC_DEPLOY_CHAIN_ID=97 JC_DEPLOY_PRIVATE_KEY=<key> npx hardhat run scripts/deployJC.js --network jcTarget",
+      "deployJoinCare": "npm run deploy:testnet",
+	  "verify": "BscScan verification is not configured; verify the implementation explicitly before release"
+    }
+  },
+  "remixDeployment": {
+    "description": "如果 Hardhat 部署失败，可以使用 Remix 在线部署",
+    "steps": [
+      "1. 访问 https://remix.ethereum.org",
+      "2. 创建新文件 JCC.sol",
+      "3. 复制 contracts/JCC.sol 的代码",
+      "4. 在 Remix 中编译合约",
+      "5. 连接 MetaMask 到 BSC 测试网",
+      "6. 部署合约，初始供应量设置为 1000000"
+    ]
+  }
+}

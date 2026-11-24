@@ -1,0 +1,33 @@
+# Deps
+node_modules/
+
+# Hardhat build outputs
+artifacts/
+cache/
+coverage.json
+coverage/
+typechain-types/
+
+# Env（含 PRIVATE_KEY / BSCSCAN_API_KEY 等敏感）
+.env
+.env.local
+.env.*.local
+
+# 编辑器 / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# 日志
+*.log
+
+# Audit-only build outputs
+artifacts-audit/
+cache-audit/
+
+# Persistent Fair Launch LOCAL-ONLY E2E build/run outputs
+artifacts-local-e2e/
+cache-local-e2e/
+.local-e2e/

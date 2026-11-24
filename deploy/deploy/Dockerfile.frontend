@@ -1,0 +1,49 @@
+# syntax=docker/dockerfile:1
+# Build context = project root (so both src/ and deploy/ are reachable)
+
+# ============== Stage 1: Vite build ==============
+FROM node:24-bookworm-slim AS builder
+
+WORKDIR /src
+ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
+
+ARG WEB_DIR=src/joincare_frontend-main/joincare-web
+
+COPY ${WEB_DIR}/package*.json ./
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --no-audit --no-fund
+
+COPY ${WEB_DIR}/ .
+
+# local mode → API_BASE_URL='' (relative paths), so nginx can proxy same-origin
+ARG VITE_ENVIRONMENT=local
+ENV VITE_ENVIRONMENT=$VITE_ENVIRONMENT
+
+# Reown AppKit project id；缺省走 placeholder（WalletConnect 不可用，但浏览器扩展钱包仍能连）
+ARG VITE_REOWN_PROJECT_ID=
+ENV VITE_REOWN_PROJECT_ID=$VITE_REOWN_PROJECT_ID
+
+# V2 self-paid CheckIn 参数：非空时前端会将 hardhat 网络加入 AppKit（用户能切链签到）
+ARG VITE_HARDHAT_RPC=
+ARG VITE_CHECKIN_CHAIN_ID=
+ARG VITE_CHECKIN_CHAIN_NAME=
+ARG VITE_CHECKIN_CURRENCY=
+ENV VITE_HARDHAT_RPC=$VITE_HARDHAT_RPC \
+    VITE_CHECKIN_CHAIN_ID=$VITE_CHECKIN_CHAIN_ID \
+    VITE_CHECKIN_CHAIN_NAME=$VITE_CHECKIN_CHAIN_NAME \
+    VITE_CHECKIN_CURRENCY=$VITE_CHECKIN_CURRENCY
+
+RUN printf "VITE_ENVIRONMENT=%s\nVITE_REOWN_PROJECT_ID=%s\nVITE_HARDHAT_RPC=%s\nVITE_CHECKIN_CHAIN_ID=%s\nVITE_CHECKIN_CHAIN_NAME=%s\nVITE_CHECKIN_CURRENCY=%s\n" \
+    "$VITE_ENVIRONMENT" "$VITE_REOWN_PROJECT_ID" \
+    "$VITE_HARDHAT_RPC" "$VITE_CHECKIN_CHAIN_ID" "$VITE_CHECKIN_CHAIN_NAME" "$VITE_CHECKIN_CURRENCY" > .env.local
+RUN npm run build
+
+# ============== Stage 2: nginx runtime ==============
+FROM nginx:1.27-alpine
+
+RUN rm -f /etc/nginx/conf.d/default.conf
+COPY deploy/nginx.conf /etc/nginx/conf.d/joincare.conf
+COPY --from=builder /src/dist /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

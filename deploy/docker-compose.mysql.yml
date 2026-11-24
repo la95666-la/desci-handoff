@@ -1,0 +1,3 @@
+# MySQL operational overlay is intentionally unavailable in this release.
+# Schema artifacts remain available for offline review; no runnable service exists.
+services: {}

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joincare.example/schemas/fair-launch/restore-recovery-attestation.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "domain",
+    "restoredSnapshotId",
+    "snapshotCreatedAt",
+    "bootstrapDigest",
+    "effectiveWatermarkDigest",
+    "deploymentAttestationDigest",
+    "replayFromCheckpoint",
+    "replayThroughBlock",
+    "replayThroughBlockHash",
+    "ceIdentityRoot",
+    "cePlacementRoot",
+    "ceApplicationRoot",
+    "outboxRoot",
+    "gatewayJournalRoot",
+    "eoaNonceRoot",
+    "safeRoot",
+    "timelockRoot",
+    "executorRoot",
+    "financialProjectRoot",
+    "financialWalletRoot",
+    "financialContractTokenRoot",
+    "result",
+    "initiatorId",
+    "approverIds",
+    "executorId",
+    "completedAt"
+  ],
+  "properties": {
+    "domain": {
+      "const": "joincare.restore-recovery-attestation.v1"
+    },
+    "restoredSnapshotId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "snapshotCreatedAt": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "bootstrapDigest": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "effectiveWatermarkDigest": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "deploymentAttestationDigest": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "replayFromCheckpoint": {
+      "$ref": "common.schema.json#/$defs/uint"
+    },
+    "replayThroughBlock": {
+      "$ref": "common.schema.json#/$defs/uint"
+    },
+    "replayThroughBlockHash": {
+      "$ref": "common.schema.json#/$defs/blockHash"
+    },
+    "ceIdentityRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "cePlacementRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "ceApplicationRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "outboxRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "gatewayJournalRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "eoaNonceRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "safeRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "timelockRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "executorRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "financialProjectRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "financialWalletRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "financialContractTokenRoot": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "result": {
+      "const": "BALANCED"
+    },
+    "initiatorId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approverIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "executorId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "completedAt": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    }
+  }
+}

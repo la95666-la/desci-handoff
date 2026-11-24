@@ -1,0 +1,3 @@
+# Caddy operational overlay is not part of the admitted release path. This file is
+# retained as non-operational evidence only; no runnable service is defined.
+services: {}

@@ -1,0 +1,24 @@
+[Unit]
+Description=JoinCare Release Server (jc-release-server)
+After=network.target
+
+[Service]
+Type=simple
+User=jc-release
+Group=jc-release
+ExecStart=/usr/local/bin/jc-release-server -config /etc/jc-release/server.yaml
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=65536
+StandardOutput=journal
+StandardError=journal
+
+# Sandbox
+ProtectSystem=strict
+ProtectHome=true
+NoNewPrivileges=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/jc-release
+
+[Install]
+WantedBy=multi-user.target

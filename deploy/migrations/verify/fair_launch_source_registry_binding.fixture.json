@@ -1,0 +1,27 @@
+{
+  "canonical_payload_keys": [
+    "abi_digest",
+    "chain_id",
+    "config_generation",
+    "environment",
+    "implementation_address",
+    "implementation_code_hash",
+    "policy_generation",
+    "proxy_address",
+    "revision",
+    "runtime_generation",
+    "source_id",
+    "source_registry_generation",
+    "source_revision_id",
+    "source_revision_no"
+  ],
+  "snapshot": {
+    "abi_digest": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "implementation_code_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "source_revision": {
+    "abi_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "implementation_code_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "normalization": "snapshot_prefixed_lower_hex.substring(2) == source_revision_unprefixed_lower_hex"
+}

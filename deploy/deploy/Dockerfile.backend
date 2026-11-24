@@ -1,0 +1,45 @@
+# syntax=docker/dockerfile:1
+# ============== Stage 1: build all three Go binaries ==============
+FROM golang:1.25-bookworm AS builder
+
+WORKDIR /src
+ENV GOPROXY=https://goproxy.cn,direct \
+    GOTOOLCHAIN=auto \
+    GOEXPERIMENT=jsonv2 \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
+
+# Cache modules first
+COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    --mount=type=cache,target=/go/pkg/mod \
+    go mod download
+
+# Build
+COPY . .
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    --mount=type=cache,target=/go/pkg/mod \
+    go build -trimpath -ldflags="-s -w" -o /out/joincare-core   ./cmd/core   && \
+    go build -trimpath -ldflags="-s -w" -o /out/joincare-job    ./cmd/job    && \
+    go build -trimpath -ldflags="-s -w" -o /out/joincare-notice ./cmd/notice
+
+# ============== Stage 2: slim runtime ==============
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Shanghai
+RUN apt-get -qq update && \
+    apt-get -qq install -y --no-install-recommends ca-certificates tzdata curl && \
+    ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo Asia/Shanghai > /etc/timezone && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --from=builder /out/joincare-core   /app/joincare-core
+COPY --from=builder /out/joincare-job    /app/joincare-job
+COPY --from=builder /out/joincare-notice /app/joincare-notice
+
+# Config is mounted at runtime via docker compose volumes
+EXPOSE 13004
+CMD ["/app/joincare-core", "--path", "/app/config/"]

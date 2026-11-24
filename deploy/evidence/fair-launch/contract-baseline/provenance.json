@@ -1,0 +1,34 @@
+{
+  "auditConfigSha256": "d17c6b79ae6e59cf60897d851d155d738f17951d6a60329929e7b445b1557b26",
+  "buildInfoSha256": "5f0be560e28e7c1d2feca8a7e39d530fe852057a21334dbbeab07c25e4d283b4",
+  "compiler": "0.8.22+commit.4fc1097e",
+  "compilerInputSha256": "a81fa4b6031d30ec4c92a00b1ae3afbcce6316443aa4af691ce0bf75fb5037b7",
+  "contract": "JoinCareFairLaunchV1ArtifactBaseline",
+  "counts": {
+    "errors": 67,
+    "events": 36,
+    "functions": 65,
+    "ownedErrors": 56,
+    "ownedEvents": 32
+  },
+  "deployedBytecodeSha256Denylist": "5e50f9716783b50a447ae7d5ae55adb32053d9738383b0a2810c4bc14dcf5a62",
+  "evmVersion": "paris",
+  "namespace": "erc7201:joincare.storage.JoinCareFairLaunchV1",
+  "namespaceSlot": "0x7ebb4c309dc14c823b32233ea7cfb602ee106e1bc7e105581a751cd0bcb46700",
+  "openzeppelin": {
+    "contracts": "5.1.0",
+    "contractsUpgradeable": "5.1.0"
+  },
+  "optimizer": {
+    "enabled": true,
+    "runs": 200
+  },
+  "packageLockSha256": "4e7517667229c0d5736312399a9d039619be4be6af6eb06ee39c883267b58c3b",
+  "source": "contracts-audit/JoinCareFairLaunchV1ArtifactBaseline.sol",
+  "sourceSha256": "bfe2862c9522c362212918d1e281630fcfd4c6c2d18dcfce1911055af7d901ff",
+  "status": "AUDIT_ONLY_NON_PRODUCTION_SPECIMEN",
+  "validationContractVersionWithoutMetadata": "8f86dfa0623e04811569a1ad537e5671d8f844dbafa95a60d81074e561448b55",
+  "validationLayoutVersion": "1.2",
+  "validationsSha256": "d469312867648e8a08b4624bdf960ecef7888e8b9b05c947f026bcad38ed8f5b",
+  "viaIR": true
+}

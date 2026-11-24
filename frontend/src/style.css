@@ -1,0 +1,80 @@
+/* JoinCare 子页面骨架：复用首页设计语言（@import 必须在所有其它声明之前） */
+@import './styles/jc-shell.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === JoinCare 品牌色分层 tokens ===
+   - 亮档 --jc-brand: 高饱和 acid green，用于 CTA / 背景 / 装饰块（醒目）
+   - 暗档 --jc-brand-ink: 同色调降亮度，用于浅底文字 / link（AAA 对比度）
+   - 暗底文字上依然用亮档（暗底自带高对比） */
+:root {
+  --jc-brand: #9bff00;
+  --jc-brand-ink: #4a8c00;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    @apply antialiased;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.7);
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(200, 200, 200, 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 200, 200, 0.5);
+}
+
+/* Additional utility animations */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-10px) translateX(10px);
+  }
+  66% {
+    transform: translateY(10px) translateX(-10px);
+  }
+}
+
+/* Perspective for 3D effects */
+.perspective-1000 {
+  perspective: 1000px;
+}

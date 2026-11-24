@@ -1,0 +1,44 @@
+{
+  "timeConfig": {
+    "option": "Full",
+    "description": "Full test with parameter validation (30 minutes total). projectStartDelay must be large enough to cover Phase1(~2min) + Phase2(~7min) setup time.",
+    "projectStartDelay": 600,
+    "projectDuration": 300,
+    "vestingDelays": [
+      180,
+      480,
+      780
+    ],
+    "vestingPercents": [
+      5000,
+      3000,
+      2000
+    ]
+  },
+  "projectParams": {
+    "tokenPrice": "1",
+    "hardCap": "10000",
+    "softCap": "5000",
+    "maxPerUser": "1000"
+  },
+  "gasConfig": {
+    "maxGasPrice": "20",
+    "gasLimit": "500000",
+    "confirmations": 2
+  },
+  "budgets": {
+    "totalBNB": "0.83",
+    "distributionBNB": "0.0765",
+    "reserveBNB": "0.7",
+    "estimatedGasCost": "0.06"
+  },
+  "bnbDistribution": {
+    "projectOwner": "0.015",
+    "feeReceiver": "0.005",
+    "users": "0.009"
+  },
+  "jccDistribution": {
+    "perUser": "10000",
+    "totalDistributed": "50000"
+  }
+}

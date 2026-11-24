@@ -1,0 +1,29 @@
+{
+  "snapshotSchema": "0x9693a45ac040db9508d25476864ec07e1f95ebaa9f76ee735a4d5b85e36fc68a",
+  "cases": [
+    {
+      "targetVersion": "1", "memberCount": 1,
+      "root": "0xeb7ee6660dd23a9d596ff131afd6873a3c2e2111416b85ee747ecd2523d29546",
+      "membersDigest": "0xe082f32827979b71da3a867c396ccc71932cf8c28cf35444fe24adea201987b2",
+      "digest": "0x7ef904aacdbb7a1669f3015bd02f69b11a913a182e9c5e43a917c2c19becf451"
+    },
+    {
+      "targetVersion": "1", "memberCount": 2,
+      "root": "0xb8b37f4dac2681a3de92ec2099bbea1ff07970f3401bc95ea7893799f7d7aa1a",
+      "membersDigest": "0xb8b37f4dac2681a3de92ec2099bbea1ff07970f3401bc95ea7893799f7d7aa1a",
+      "digest": "0x52bd5f33cc4c9bae56c9cf673fbb7699f8f8bd68fae38949a66135c8368c76e0"
+    },
+    {
+      "targetVersion": "1", "memberCount": 3,
+      "root": "0x9b0c207015fb3b310be616e42a41f6f947729cad8c72182d7313db89133ed7a2",
+      "membersDigest": "0x252afea5c8fead43e6a80f33d0640bebf42c19ab0b4ae198ee70a452f4c0ab05",
+      "digest": "0xabbb59b21ae0f71477c48077c47dc3f613507761a51b9ca1d39fbc79c890295b"
+    },
+    {
+      "targetVersion": "1", "memberCount": 5,
+      "root": "0x96343bba863fddbe3e58cd697d2a9f3286b404807f0d17afcd329b67c647ab60",
+      "membersDigest": "0xd494b7b6a277b2d407cdbcc02f51ced128cb50cac535756f95ac806d45c8c543",
+      "digest": "0x7073b7d2918da2445004ff0210b0b7ef3c446093619b62fb2be8074311be46e1"
+    }
+  ]
+}

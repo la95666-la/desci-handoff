@@ -1,0 +1,2906 @@
+{
+  "artifactStatus": "DRAFT_ONLY_NOT_PRODUCTION_EVIDENCE",
+  "schemaVersion": 4,
+  "ceV2": [
+    {
+      "id": "identity-reinclusion",
+      "initial": {
+        "identity": "i1",
+        "placements": [
+          {
+            "generation": 1,
+            "canonical": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "observe",
+          "identity": "i1",
+          "generation": 2,
+          "canonical": true
+        }
+      ],
+      "expected": {
+        "identityRows": 1,
+        "placementRows": 2,
+        "canonicalGenerations": [
+          2
+        ]
+      }
+    },
+    {
+      "id": "single-canonical-placement",
+      "initial": {
+        "canonicalGenerations": [
+          1
+        ]
+      },
+      "actions": [
+        {
+          "type": "markCanonical",
+          "generation": 2
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "canonicalGenerations": [
+          1
+        ]
+      }
+    },
+    {
+      "id": "payload-conflict",
+      "initial": {
+        "observations": [
+          "aa"
+        ],
+        "materialized": false
+      },
+      "actions": [
+        {
+          "type": "observePayload",
+          "digest": "bb"
+        }
+      ],
+      "expected": {
+        "observations": [
+          "aa",
+          "bb"
+        ],
+        "conflictOpen": true,
+        "materializationBlocked": true
+      }
+    },
+    {
+      "id": "application-replay",
+      "initial": {
+        "attempts": [
+          {
+            "id": 10,
+            "attemptNo": 1,
+            "identity": "i1"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "replay",
+          "id": 11,
+          "predecessorId": 10,
+          "attemptNo": 2,
+          "identity": "i1"
+        }
+      ],
+      "expected": {
+        "accepted": true,
+        "attemptCount": 2,
+        "latestPredecessorId": 10,
+        "historyOverwritten": false
+      }
+    },
+    {
+      "id": "shadow-ledger-multi-entry",
+      "initial": {
+        "ordinals": [],
+        "application": {
+          "txLogOrdinal": 4,
+          "rpcLogIndex": 9
+        }
+      },
+      "actions": [
+        {
+          "type": "append",
+          "ordinal": 0,
+          "txLogOrdinal": 4,
+          "rpcLogIndex": 9
+        },
+        {
+          "type": "append",
+          "ordinal": 1,
+          "txLogOrdinal": 4,
+          "rpcLogIndex": 9
+        },
+        {
+          "type": "append",
+          "ordinal": 1,
+          "txLogOrdinal": 4,
+          "rpcLogIndex": 9
+        }
+      ],
+      "expected": {
+        "accepted": [
+          0,
+          1
+        ],
+        "rejected": [
+          1
+        ],
+        "provenanceValid": true
+      }
+    },
+    {
+      "id": "shadow-ledger-reversal",
+      "initial": {
+        "reversals": []
+      },
+      "actions": [
+        {
+          "type": "reverse",
+          "originalId": 7,
+          "generation": 1
+        },
+        {
+          "type": "reverse",
+          "originalId": 7,
+          "generation": 1
+        }
+      ],
+      "expected": {
+        "reversalCount": 1,
+        "duplicateRejected": true
+      }
+    },
+    {
+      "id": "m5-quarantine",
+      "initial": {
+        "phase": "m4_shadow_read",
+        "quarantine": 1,
+        "failures": 0,
+        "coverageGaps": 0,
+        "equivalenceMismatches": 0
+      },
+      "actions": [
+        {
+          "type": "advance",
+          "to": "m5_fenced"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "phase": "m4_shadow_read"
+      }
+    },
+    {
+      "id": "m0-m5-final-reference",
+      "initial": {
+        "legacy": {
+          "identity": "i1",
+          "effect": "e1"
+        },
+        "v2": {
+          "identity": "i1",
+          "effect": "e2"
+        }
+      },
+      "actions": [
+        {
+          "type": "validate"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "reason": "effect-mismatch"
+      }
+    },
+    {
+      "id": "m5-seven-family-equivalence",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "dc5a22c92bbfcd379562c9b1c1021ad4e887330cd95c4167b3ce0bf9f2cd096e"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": true,
+        "familyCount": 7,
+        "mismatchFamilies": []
+      }
+    },
+    {
+      "id": "m5-equivalence-negative-v1-to-v2-exactly-one",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            },
+            {
+              "id": "a2",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "bd83a68eaf74baea5fd0995786eaeaabd312385d20c6e4fea51add1d2e75ae2a",
+            "mismatchCount": 1,
+            "evidenceRootDigest": "7ee3083e1bd434d67abddd76f028dad00d74e415e58206b4051f32226fc67687",
+            "resultRowDigest": "b6d33b7e6d4a3d614ae2482ecf48e5d354e407b4fa12822a296efdc1cda808b4"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "fbfc643b0117253215b361254585cd885334a137bb72b14bd24f43ae60e3b1da",
+            "actualDigest": "fbfc643b0117253215b361254585cd885334a137bb72b14bd24f43ae60e3b1da",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1b819617d24d7ab543a214288c86e544383eeeadb56156eaf49c165cf9920ab3",
+            "resultRowDigest": "03319765b854d89ad876f2cbff24f4d1ae24db5c4c1225566f0c55988f4a6a62"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "55f709be424d29603548233712400364700db0de0d036c4b420b225a191ad590"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": [
+          "v1_to_v2_exactly_one"
+        ]
+      }
+    },
+    {
+      "id": "m5-equivalence-negative-v2-to-v1-exactly-one",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            },
+            {
+              "id": "a2",
+              "identity": "i9",
+              "placement": "p9",
+              "effect": "e9",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "fbfc643b0117253215b361254585cd885334a137bb72b14bd24f43ae60e3b1da",
+            "actualDigest": "2ffcd4a7b7a88f1977c9d878cc1575a95cbf9a80cbeb01083e841db695fa41f5",
+            "mismatchCount": 1,
+            "evidenceRootDigest": "1b8b72e8006e46c3330d510fe978c220a80b62b0479f38f1d9bc72b7af61229a",
+            "resultRowDigest": "0ad58ae4a6839db197c296d1c6538a671fbb4698834e44afb6b59e193b5c1514"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "b3bd5a7d193c1e2f707fe0a9950b5f8cf1204994ca4bf7d5117783d937125631"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": [
+          "v2_to_v1_exactly_one"
+        ]
+      }
+    },
+    {
+      "id": "m5-equivalence-negative-failure-applied-disjoint",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            },
+            {
+              "identity": "i1",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "003cb59700169c591f0fb8e0cfb3495c32ee6714a0ab585ef5de1c49bf05d92e",
+            "mismatchCount": 1,
+            "evidenceRootDigest": "7499307365373dff516bc229ef5b36007837ef85ccf5e683e9da8649480686fb",
+            "resultRowDigest": "97d248e65459cab578b9ec05c9a26db80ef80fdba52034d740009666f5057660"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "54590087dec85751109e70d9a29ba4f5cf812cd78e7d670660e99ae88d619ba6"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": [
+          "failure_applied_disjoint"
+        ]
+      }
+    },
+    {
+      "id": "m5-equivalence-negative-final-reference-identity-effect",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "tampered"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "e55a821278859cba70742687dbe2458865f17b587e9e824a3bf8904433aa4918",
+            "mismatchCount": 1,
+            "evidenceRootDigest": "1a6d85e47256d0ebed701d57d227dcbf992d1538f4cc8832fa1180cf76e16a57",
+            "resultRowDigest": "29f64bb9078622c5c89558c6396756f4bbd7267368400d3d68f51491edc02b5d"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "51ca8276c49ee990949468c11dcd218d3aeb0d432b2efd50c1210057a3542fe6"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": [
+          "final_reference_identity_effect"
+        ]
+      }
+    },
+    {
+      "id": "m5-equivalence-negative-aggregate-digests",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740994"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "a191626bfd7c98bfb771b4edd3e27aa500904d1db1c67f3938d2d742706258f6",
+            "mismatchCount": 1,
+            "evidenceRootDigest": "7ab3cc7a2af2865dfb82febc9d0e87c72e7e532f02b00ff358841f6169a7d3c1",
+            "resultRowDigest": "07de60026b371ac864f52d90d7bdddacd353970bf9e80b435d11b76feddda308"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "3721df1320c8469a479434e66064945af5e8469464cd3e01d32954cd5fd789e2"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": [
+          "aggregate_digests"
+        ]
+      }
+    },
+    {
+      "id": "m5-equivalence-negative-source-coverage",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                100
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "8cd99aae4cc70e97f3997540978857239ccc10d4dc2b1482e61cd7c2c3548fe7",
+            "mismatchCount": 1,
+            "evidenceRootDigest": "c98de83c61591979e28456ea602c5f23d321b8048ecc3a8ffc31303e97c71ec1",
+            "resultRowDigest": "7b2057bd587fb69671bf644e38859abd918d4fe460476196ea23d2e288a39e97"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "13ce4f3eb4d5408f22bc781e24e71c778a65eea8906c901983a222285212210c"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": [
+          "source_coverage"
+        ]
+      }
+    },
+    {
+      "id": "m5-equivalence-negative-ordinal-reconstruction",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "wrong"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "d1d16d02639474a05ade7745f2edd943a73efbcbc6ec433e41351c351bef3289",
+            "mismatchCount": 1,
+            "evidenceRootDigest": "e82db54009ddd51de221c33aa224610afb1866353f29aaa188803f0fa069eee8",
+            "resultRowDigest": "dc3b9ee6b85bcaee5e2189e11432bd929d50413ad61bdba92f8e78c5b54ca5a6"
+          }
+        ],
+        "expectedAggregateDigest": "255f5a5c9f89a3a6900308faa89e26914e1c0441d00a6a8c310dc139d2719704"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": [
+          "ordinal_reconstruction"
+        ]
+      }
+    },
+    {
+      "id": "m5-digest-negative-query-version",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-stale",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "dc5a22c92bbfcd379562c9b1c1021ad4e887330cd95c4167b3ce0bf9f2cd096e"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": []
+      }
+    },
+    {
+      "id": "m5-digest-negative-row-digest",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "dc5a22c92bbfcd379562c9b1c1021ad4e887330cd95c4167b3ce0bf9f2cd096e"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": []
+      }
+    },
+    {
+      "id": "m5-digest-negative-aggregate-digest",
+      "initial": {
+        "queryVersion": "ce-v2-equivalence-v2",
+        "checkedThroughBlock": 200,
+        "checkedThroughBlockHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rows": {
+          "legacyRows": [
+            {
+              "id": 1,
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true
+            }
+          ],
+          "v2Applications": [
+            {
+              "id": "a1",
+              "identity": "i1",
+              "placement": "p1",
+              "effect": "e1",
+              "canonical": true,
+              "applied": true
+            }
+          ],
+          "failures": [
+            {
+              "identity": "i2",
+              "unresolved": true
+            }
+          ],
+          "finalReferences": [
+            {
+              "legacyIdentity": "i1",
+              "legacyEffect": "e1",
+              "v2Identity": "i1",
+              "v2Effect": "e1"
+            }
+          ],
+          "ledgerRows": {
+            "legacy": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ],
+            "v2": [
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "9007199254740993"
+              },
+              {
+                "key": "USDT",
+                "project": "p1",
+                "wallet": "w1",
+                "entitlement": "e1",
+                "amountRaw": "7"
+              },
+              {
+                "key": "FOS",
+                "project": "p1",
+                "wallet": "w2",
+                "entitlement": "e2",
+                "amountRaw": "20"
+              }
+            ]
+          },
+          "coverage": {
+            "start": 100,
+            "end": 103,
+            "ranges": [
+              [
+                100,
+                101
+              ],
+              [
+                102,
+                103
+              ]
+            ],
+            "finalized": true
+          },
+          "ordinalRows": [
+            {
+              "receiptTopicsData": [
+                "d0",
+                "d1"
+              ],
+              "txLogOrdinal": 1,
+              "topicsDataDigest": "d1"
+            }
+          ]
+        },
+        "expectedRows": [
+          {
+            "name": "v1_to_v2_exactly_one",
+            "expectedDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "actualDigest": "77dd6144eb1aa329b57739693e06bf5df30cf4fd0d74d3095e7dfe49fb7f2de1",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "750b48428820021717c004a4c819b2de931fbefc4771fc81c994c7c79ddaff7d",
+            "resultRowDigest": "bec28aa1ffef65508985b34b5e00b161e05ea753ba9ffb2fe0403a93f811ce5a"
+          },
+          {
+            "name": "v2_to_v1_exactly_one",
+            "expectedDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "actualDigest": "69d2382aa040595b7cd3f990b146a980ab89afd7e88de66aa0281c186b56c069",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "872a59949abc7a557e52cf42b82d5ade0756dd1296ad655eb21edef9ff7e6f19",
+            "resultRowDigest": "a8e2eff9d1d7c24208f5615754c7f3a14b7de0b0b1a3a1a1fcfc53c7a3e98de2"
+          },
+          {
+            "name": "failure_applied_disjoint",
+            "expectedDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "actualDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9a0db21cec2ccc826e89cbbb3bfcd17034f220dae877061a26d0b50e20409d15",
+            "resultRowDigest": "0e11da5a54412407147e98d58b272d90871097c5c7dbd29ed1c14ae69419fd64"
+          },
+          {
+            "name": "final_reference_identity_effect",
+            "expectedDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "actualDigest": "baec99d903807d235f58541141ef2627f261960b6ecd4cb928e7d10cf5c9dea7",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "9ad2c6d57bd9f8832d707d64460ce3234439d8b94bba3b3f81ea132ecc2e6f64",
+            "resultRowDigest": "3e40d6414c317770e04c280118a6e2f2aa60c2e1d4376725b6efde4602fa3755"
+          },
+          {
+            "name": "aggregate_digests",
+            "expectedDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "actualDigest": "d77bb80acd5beb4c831b9ce8bd02ec1cc71c223100d0ca2208be23c943381dae",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "14635e3bc78944563a0c86687fcbce4ebac4f3cdf2ec7ccdf58f5e5e8a9826e6",
+            "resultRowDigest": "b22365df1c8d06171759eaea8428e5fb7ce3a23b81129ca8eaaf93e7967949a1"
+          },
+          {
+            "name": "source_coverage",
+            "expectedDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "actualDigest": "ae728b3ce3f72e86debbdca3816e8f46908fd3779f0f916dcff1261d17b65e72",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "b23bbadcdf0fb35943f9907f7fa5a94fe02289ac4a120f1bcfa0268d36060ab5",
+            "resultRowDigest": "4939986f2824de3ecdd6347fe45fb4ea9a7dad965333933ed0efb06743ff0d2d"
+          },
+          {
+            "name": "ordinal_reconstruction",
+            "expectedDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "actualDigest": "903020c452b302a0b2271066ff11b3d43d4792b563e1910f3422c218342e56de",
+            "mismatchCount": 0,
+            "evidenceRootDigest": "1381264748889841a2290bf8076289c0731fa5f84b923376ada7e2733a34dc88",
+            "resultRowDigest": "65bb9dfc730801e212daf5fc0300dfcfa7c9cdfcc56bd092257a6cd44c7cc3c0"
+          }
+        ],
+        "expectedAggregateDigest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "actions": [
+        {
+          "type": "deriveEquivalence"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "familyCount": 7,
+        "mismatchFamilies": []
+      }
+    },
+    {
+      "id": "m6-final-reference",
+      "initial": {
+        "submission": {
+          "chainId": 56,
+          "txHash": "0xaaa",
+          "sender": "0xsender",
+          "calldataDigest": "call1",
+          "nonce": 7
+        },
+        "application": {
+          "chainId": 56,
+          "txHash": "0xaaa",
+          "sender": "0xsender",
+          "calldataDigest": "call1",
+          "nonce": 7
+        },
+        "canonical": true,
+        "finalized": true,
+        "effectVersion": 3,
+        "expectedEffectVersion": 3,
+        "applied": true,
+        "reversed": false,
+        "conflict": false
+      },
+      "actions": [
+        {
+          "type": "releaseFence"
+        }
+      ],
+      "expected": {
+        "accepted": true
+      }
+    },
+    {
+      "id": "m6-final-reference-negative",
+      "initial": {
+        "submission": {
+          "chainId": 56,
+          "txHash": "0xaaa",
+          "sender": "0xsender",
+          "calldataDigest": "call1",
+          "nonce": 7
+        },
+        "application": {
+          "chainId": 56,
+          "txHash": "0xbbb",
+          "sender": "0xsender",
+          "calldataDigest": "call1",
+          "nonce": 7
+        },
+        "canonical": true,
+        "finalized": true,
+        "effectVersion": 3,
+        "expectedEffectVersion": 3,
+        "applied": true,
+        "reversed": false,
+        "conflict": false
+      },
+      "actions": [
+        {
+          "type": "releaseFence"
+        }
+      ],
+      "expected": {
+        "accepted": false
+      }
+    },
+    {
+      "id": "m6-no-fallback",
+      "initial": {
+        "phase": "m6_v2_read",
+        "v2Present": false,
+        "v1Present": true
+      },
+      "actions": [
+        {
+          "type": "read"
+        }
+      ],
+      "expected": {
+        "servedFrom": null,
+        "sourceBlocked": true
+      }
+    },
+    {
+      "id": "source-coverage-gap",
+      "initial": {
+        "start": 100,
+        "live": 106,
+        "coverage": [
+          [
+            100,
+            102
+          ],
+          [
+            104,
+            106
+          ]
+        ]
+      },
+      "actions": [
+        {
+          "type": "validateCoverage"
+        }
+      ],
+      "expected": {
+        "caughtUp": false,
+        "missing": [
+          103
+        ]
+      }
+    }
+  ],
+  "governance": [
+    {
+      "id": "safe-same-nonce-conflict",
+      "initial": {
+        "slot": "open",
+        "candidates": [
+          "h1"
+        ],
+        "winner": "h1"
+      },
+      "actions": [
+        {
+          "type": "addCandidate",
+          "hash": "h2"
+        }
+      ],
+      "expected": {
+        "slot": "conflicted",
+        "candidates": [
+          "h1",
+          "h2"
+        ],
+        "winner": null
+      }
+    },
+    {
+      "id": "safe-external-execution",
+      "initial": {
+        "operatorNonce": 9,
+        "safeState": "threshold_reached",
+        "safe": {
+          "safeVersion": "1.4.1",
+          "chainId": 56,
+          "safeAddress": "0x1111111111111111111111111111111111111111",
+          "tx": {
+            "to": "0x2222222222222222222222222222222222222222",
+            "value": "0",
+            "data": "0x12345678",
+            "operation": 0,
+            "safeTxGas": "100000",
+            "baseGas": "21000",
+            "gasPrice": "0",
+            "gasToken": "0x0000000000000000000000000000000000000000",
+            "refundReceiver": "0x0000000000000000000000000000000000000000",
+            "nonce": "7"
+          },
+          "safeTxHash": "0xfde09c123944655248ad8e09e90c936eaf249410aa4513eea96cccecaa5a678d"
+        }
+      },
+      "actions": [
+        {
+          "type": "observeExternalExecution",
+          "emittedSafeTxHash": "0xfde09c123944655248ad8e09e90c936eaf249410aa4513eea96cccecaa5a678d",
+          "executionTxHash": "0xabababababababababababababababababababababababababababababababab",
+          "expectedExecutionTxHash": "0xabababababababababababababababababababababababababababababababab",
+          "chainId": 56,
+          "applicationIdentity": "app-i1",
+          "expectedApplicationIdentity": "app-i1",
+          "canonical": true,
+          "finalized": true
+        }
+      ],
+      "expected": {
+        "accepted": true,
+        "operatorNonce": 9,
+        "safeState": "executed"
+      }
+    },
+    {
+      "id": "safe-hash-negative-wrong-domain",
+      "initial": {
+        "operatorNonce": 9,
+        "safeState": "threshold_reached",
+        "safe": {
+          "safeVersion": "1.4.1",
+          "chainId": 56,
+          "safeAddress": "0x9999999999999999999999999999999999999999",
+          "tx": {
+            "to": "0x2222222222222222222222222222222222222222",
+            "value": "0",
+            "data": "0x12345678",
+            "operation": 0,
+            "safeTxGas": "100000",
+            "baseGas": "21000",
+            "gasPrice": "0",
+            "gasToken": "0x0000000000000000000000000000000000000000",
+            "refundReceiver": "0x0000000000000000000000000000000000000000",
+            "nonce": "7"
+          },
+          "safeTxHash": "0xfde09c123944655248ad8e09e90c936eaf249410aa4513eea96cccecaa5a678d"
+        }
+      },
+      "actions": [
+        {
+          "type": "observeExternalExecution",
+          "emittedSafeTxHash": "0xfde09c123944655248ad8e09e90c936eaf249410aa4513eea96cccecaa5a678d",
+          "executionTxHash": "0xabababababababababababababababababababababababababababababababab",
+          "expectedExecutionTxHash": "0xabababababababababababababababababababababababababababababababab",
+          "chainId": 56,
+          "applicationIdentity": "app-i1",
+          "expectedApplicationIdentity": "app-i1",
+          "canonical": true,
+          "finalized": true
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "operatorNonce": 9,
+        "safeState": "threshold_reached"
+      }
+    },
+    {
+      "id": "safe-execution-reorg",
+      "initial": {
+        "state": "applied",
+        "candidates": [
+          "h1",
+          "h2"
+        ],
+        "signatures": 3,
+        "placementCanonical": true,
+        "reversalObserved": false
+      },
+      "actions": [
+        {
+          "type": "reorg",
+          "placementCanonical": false,
+          "reversalObserved": true
+        }
+      ],
+      "expected": {
+        "accepted": true,
+        "state": "reconciling",
+        "candidateCount": 2,
+        "signatureCount": 3
+      }
+    },
+    {
+      "id": "timelock-operation-hash",
+      "initial": {
+        "kind": "batch",
+        "calls": [
+          {
+            "target": "0x3333333333333333333333333333333333333333",
+            "value": "0",
+            "calldata": "0xabcdef01"
+          },
+          {
+            "target": "0x4444444444444444444444444444444444444444",
+            "value": "5",
+            "calldata": "0xabcdef02"
+          }
+        ],
+        "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "salt": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "observedOperationId": "0xc08f06a9ae782d7af2e630af335e6d69eee2ab7fb8d8c39447319ad80a61a236"
+      },
+      "actions": [
+        {
+          "type": "validateHash"
+        }
+      ],
+      "expected": {
+        "accepted": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "timelock-hash-negative-salt",
+      "initial": {
+        "kind": "batch",
+        "calls": [
+          {
+            "target": "0x3333333333333333333333333333333333333333",
+            "value": "0",
+            "calldata": "0xabcdef01"
+          },
+          {
+            "target": "0x4444444444444444444444444444444444444444",
+            "value": "5",
+            "calldata": "0xabcdef02"
+          }
+        ],
+        "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "salt": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "observedOperationId": "0xc08f06a9ae782d7af2e630af335e6d69eee2ab7fb8d8c39447319ad80a61a236"
+      },
+      "actions": [
+        {
+          "type": "validateHash",
+          "mutation": "salt"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "reason": "operation-id-mismatch"
+      }
+    },
+    {
+      "id": "timelock-hash-negative-predecessor",
+      "initial": {
+        "kind": "batch",
+        "calls": [
+          {
+            "target": "0x3333333333333333333333333333333333333333",
+            "value": "0",
+            "calldata": "0xabcdef01"
+          },
+          {
+            "target": "0x4444444444444444444444444444444444444444",
+            "value": "5",
+            "calldata": "0xabcdef02"
+          }
+        ],
+        "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "salt": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "observedOperationId": "0xc08f06a9ae782d7af2e630af335e6d69eee2ab7fb8d8c39447319ad80a61a236"
+      },
+      "actions": [
+        {
+          "type": "validateHash",
+          "mutation": "predecessor"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "reason": "operation-id-mismatch"
+      }
+    },
+    {
+      "id": "timelock-hash-negative-calldata",
+      "initial": {
+        "kind": "batch",
+        "calls": [
+          {
+            "target": "0x3333333333333333333333333333333333333333",
+            "value": "0",
+            "calldata": "0xabcdef01"
+          },
+          {
+            "target": "0x4444444444444444444444444444444444444444",
+            "value": "5",
+            "calldata": "0xabcdef02"
+          }
+        ],
+        "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "salt": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "observedOperationId": "0xc08f06a9ae782d7af2e630af335e6d69eee2ab7fb8d8c39447319ad80a61a236"
+      },
+      "actions": [
+        {
+          "type": "validateHash",
+          "mutation": "calldata"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "reason": "operation-id-mismatch"
+      }
+    },
+    {
+      "id": "timelock-hash-negative-reordered-calls",
+      "initial": {
+        "kind": "batch",
+        "calls": [
+          {
+            "target": "0x3333333333333333333333333333333333333333",
+            "value": "0",
+            "calldata": "0xabcdef01"
+          },
+          {
+            "target": "0x4444444444444444444444444444444444444444",
+            "value": "5",
+            "calldata": "0xabcdef02"
+          }
+        ],
+        "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "salt": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "observedOperationId": "0xc08f06a9ae782d7af2e630af335e6d69eee2ab7fb8d8c39447319ad80a61a236"
+      },
+      "actions": [
+        {
+          "type": "validateHash",
+          "mutation": "reorder"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "reason": "operation-id-mismatch"
+      }
+    },
+    {
+      "id": "timelock-batch-missing-index",
+      "initial": {
+        "expectedCount": 3,
+        "indexes": [
+          0,
+          2
+        ],
+        "canonical": [
+          0,
+          2
+        ],
+        "finalized": [
+          0,
+          2
+        ]
+      },
+      "actions": [
+        {
+          "type": "validateBatch"
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "missing": [
+          1
+        ]
+      }
+    },
+    {
+      "id": "timelock-ready-time",
+      "initial": {
+        "scheduleTimestamp": 1000,
+        "delay": 172800,
+        "now": 173799
+      },
+      "actions": [
+        {
+          "type": "checkReady"
+        }
+      ],
+      "expected": {
+        "readyAt": 173800,
+        "ready": false
+      }
+    },
+    {
+      "id": "timelock-complete-batch",
+      "initial": {
+        "expectedCount": 2,
+        "indexes": [
+          0,
+          1
+        ],
+        "canonical": [
+          0,
+          1
+        ],
+        "finalized": [
+          0,
+          1
+        ],
+        "isOperationDone": true
+      },
+      "actions": [
+        {
+          "type": "validateBatch"
+        }
+      ],
+      "expected": {
+        "accepted": true,
+        "appliedEligible": true
+      }
+    },
+    {
+      "id": "timelock-partial-execution",
+      "initial": {
+        "expectedCount": 2,
+        "indexes": [
+          0,
+          1
+        ],
+        "canonical": [
+          0,
+          1
+        ],
+        "finalized": [
+          0,
+          1
+        ],
+        "isOperationDone": false
+      },
+      "actions": [
+        {
+          "type": "validateBatch"
+        }
+      ],
+      "expected": {
+        "accepted": true,
+        "appliedEligible": false
+      }
+    },
+    {
+      "id": "executor-one-active",
+      "initial": {
+        "activeSubmissionId": 7
+      },
+      "actions": [
+        {
+          "type": "reserve",
+          "submissionId": 8
+        }
+      ],
+      "expected": {
+        "accepted": false,
+        "activeSubmissionId": 7
+      }
+    },
+    {
+      "id": "executor-crash-boundary",
+      "initial": {
+        "state": "signing_reserved",
+        "gatewayJournal": "unknown"
+      },
+      "actions": [
+        {
+          "type": "recover"
+        }
+      ],
+      "expected": {
+        "state": "signing_recovery",
+        "fenceHeld": true
+      }
+    },
+    {
+      "id": "external-after-raw-commit",
+      "initial": {
+        "rawCommitted": true,
+        "nextNonce": 12,
+        "committedNonce": 11
+      },
+      "actions": [
+        {
+          "type": "externalExecution"
+        },
+        {
+          "type": "reuseNonce",
+          "nonce": 11
+        }
+      ],
+      "expected": {
+        "nextNonce": 12,
+        "nonceReused": false
+      }
+    },
+    {
+      "id": "target-event-absent",
+      "initial": {
+        "safeCanonical": true,
+        "timelockDone": true,
+        "executionCanonical": true,
+        "targetCanonical": false,
+        "safeFinalized": true,
+        "timelockFinalized": true,
+        "targetFinalized": true,
+        "safeConflict": false,
+        "timelockConflict": false,
+        "targetConflict": false
+      },
+      "actions": [
+        {
+          "type": "converge"
+        }
+      ],
+      "expected": {
+        "applied": false,
+        "state": "blocked"
+      }
+    },
+    {
+      "id": "governance-convergence",
+      "initial": {
+        "approvalPayload": "p1",
+        "safePayload": "p1",
+        "timelockPayload": "p1",
+        "safeCanonical": true,
+        "callsComplete": true,
+        "callsCanonical": true,
+        "timelockDone": true,
+        "executionCanonical": true,
+        "targetCanonical": true,
+        "effectVersion": 3,
+        "expectedEffectVersion": 3,
+        "safeFinalized": true,
+        "timelockFinalized": true,
+        "targetFinalized": true,
+        "safeConflict": false,
+        "timelockConflict": false,
+        "targetConflict": false
+      },
+      "actions": [
+        {
+          "type": "converge"
+        }
+      ],
+      "expected": {
+        "applied": true,
+        "state": "applied"
+      }
+    },
+    {
+      "id": "e8-selector-isolation",
+      "initial": {
+        "evidenceClass": "payment-token-runtime"
+      },
+      "actions": [
+        {
+          "type": "route"
+        }
+      ],
+      "expected": {
+        "selector": "invalidatePendingReleaseForPaymentToken",
+        "genericAccepted": false
+      }
+    }
+  ]
+}

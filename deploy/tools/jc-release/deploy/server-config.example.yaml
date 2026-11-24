@@ -1,0 +1,29 @@
+# jc-release-server 配置示例
+# 保存到 /etc/jc-release/server.yaml (chmod 600)
+
+# HTTP 监听地址；生产建议 127.0.0.1:8090 + nginx 前置 TLS
+listen_addr: "127.0.0.1:8090"
+
+# 所有数据 (manifest / agents / artifacts / logs) 的根目录
+data_dir: "/var/lib/jc-release"
+
+# Web UI 登录账号
+admin_username: "admin"
+
+# 用 htpasswd 生成 bcrypt hash：
+#   htpasswd -bnBC 10 "" 'YourStrongP@ssword123!' | tr -d ':\n'
+admin_password_bcrypt: "$2y$10$replaceMe...replaceMe..."
+
+# HMAC 密钥用于签 session cookie；至少 32 字符
+# 生成: openssl rand -hex 32
+session_secret: "REPLACE_WITH_openssl_rand_hex_32"
+
+# 可选：仅用于查询服务日志的只读 API token（Codex/运维脚本）。
+# 该 token 不能上传、升级、回滚或执行任意命令。
+# 生成: openssl rand -hex 32
+read_api_token: ""  # 留空即禁用；启用时填入 openssl rand -hex 32 的结果
+
+# 可选：如果 jc-release-server 自己 terminated TLS 而不是走 nginx 前置
+# tls:
+#   cert: /etc/letsencrypt/live/jc-release.example.com/fullchain.pem
+#   key:  /etc/letsencrypt/live/jc-release.example.com/privkey.pem

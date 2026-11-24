@@ -1,0 +1,337 @@
+[
+  {
+    "owned": false,
+    "selector": "0x9996b315",
+    "signature": "AddressEmptyCode(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0x086735f5",
+    "signature": "AlreadyRefunded(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0x6507689f",
+    "signature": "AlreadyWithdrawn()"
+  },
+  {
+    "owned": true,
+    "selector": "0x4ee00040",
+    "signature": "BelowMinimumContribution(uint256,uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0xb2affd61",
+    "signature": "BeneficiarySafeAttestationMismatch(address,bytes32,uint32,bytes32,uint32)"
+  },
+  {
+    "owned": true,
+    "selector": "0xf4703ec1",
+    "signature": "BeneficiarySafeNotApproved(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0xd27aedc5",
+    "signature": "CancellationWindowClosed(uint64)"
+  },
+  {
+    "owned": true,
+    "selector": "0xb32d0b8f",
+    "signature": "ClaimsArePaused(uint64)"
+  },
+  {
+    "owned": true,
+    "selector": "0x7ee6b53c",
+    "signature": "ContributionsArePaused()"
+  },
+  {
+    "owned": false,
+    "selector": "0x4c9c8ce3",
+    "signature": "ERC1967InvalidImplementation(address)"
+  },
+  {
+    "owned": false,
+    "selector": "0xb398979f",
+    "signature": "ERC1967NonPayable()"
+  },
+  {
+    "owned": true,
+    "selector": "0xd6b204cf",
+    "signature": "ExceedsMaxContribution(uint256,uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0xfcf0bbc2",
+    "signature": "ExceedsSaleTokenAmount(uint256,uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0x3f9eb0d3",
+    "signature": "ExcessiveRecoveryRequested(address,uint256,uint256)"
+  },
+  {
+    "owned": false,
+    "selector": "0xd6bda275",
+    "signature": "FailedCall()"
+  },
+  {
+    "owned": true,
+    "selector": "0x6235faf3",
+    "signature": "InsufficientProjectTokens(uint256,uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0xe6c4247b",
+    "signature": "InvalidAddress()"
+  },
+  {
+    "owned": true,
+    "selector": "0x2c5211c6",
+    "signature": "InvalidAmount()"
+  },
+  {
+    "owned": true,
+    "selector": "0x969d2ab8",
+    "signature": "InvalidClaimsPauseUntil(uint64,uint64)"
+  },
+  {
+    "owned": true,
+    "selector": "0x117c4690",
+    "signature": "InvalidFeeBps(uint16,uint16)"
+  },
+  {
+    "owned": true,
+    "selector": "0x8124f701",
+    "signature": "InvalidGovernanceInvalidationClass(uint8)"
+  },
+  {
+    "owned": false,
+    "selector": "0xf92ee8a9",
+    "signature": "InvalidInitialization()"
+  },
+  {
+    "owned": true,
+    "selector": "0x124f0efa",
+    "signature": "InvalidProjectParameters()"
+  },
+  {
+    "owned": true,
+    "selector": "0xdb28f212",
+    "signature": "InvalidProjectStatus(uint8,uint8)"
+  },
+  {
+    "owned": true,
+    "selector": "0x820b2f2f",
+    "signature": "InvalidReconciliationDigest()"
+  },
+  {
+    "owned": true,
+    "selector": "0xa77ca53c",
+    "signature": "InvalidReleaseEvidence()"
+  },
+  {
+    "owned": true,
+    "selector": "0xba014b76",
+    "signature": "InvalidTokenDecimals(uint8)"
+  },
+  {
+    "owned": true,
+    "selector": "0xfc09b758",
+    "signature": "InvalidVestingSchedule()"
+  },
+  {
+    "owned": true,
+    "selector": "0x55561ba7",
+    "signature": "NoContribution(address)"
+  },
+  {
+    "owned": false,
+    "selector": "0xd7e6bcf8",
+    "signature": "NotInitializing()"
+  },
+  {
+    "owned": true,
+    "selector": "0x09d1b88f",
+    "signature": "NoTokensToClaim(address)"
+  },
+  {
+    "owned": false,
+    "selector": "0x1e4fbdf7",
+    "signature": "OwnableInvalidOwner(address)"
+  },
+  {
+    "owned": false,
+    "selector": "0x118cdaa7",
+    "signature": "OwnableUnauthorizedAccount(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0x43a0f09c",
+    "signature": "OwnershipRenunciationDisabled()"
+  },
+  {
+    "owned": true,
+    "selector": "0x129dd9ad",
+    "signature": "PaymentTokenGovernanceInvalidationRequired()"
+  },
+  {
+    "owned": true,
+    "selector": "0x8df7d645",
+    "signature": "PaymentTokenNotInvalidatable()"
+  },
+  {
+    "owned": true,
+    "selector": "0x025d77a8",
+    "signature": "PaymentTokenPolicyRevisionAlreadyExists(address,uint32)"
+  },
+  {
+    "owned": true,
+    "selector": "0x47bf525f",
+    "signature": "PaymentTokenPolicyRevisionDoesNotExist(address,uint32)"
+  },
+  {
+    "owned": true,
+    "selector": "0x2d441d49",
+    "signature": "PayoutsArePaused()"
+  },
+  {
+    "owned": true,
+    "selector": "0xc5e0852d",
+    "signature": "ProjectAlreadyExists(uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0x063b715b",
+    "signature": "ProjectDoesNotExist(uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0xd4ae7673",
+    "signature": "ProjectEndedAlready(uint64)"
+  },
+  {
+    "owned": true,
+    "selector": "0x38aed962",
+    "signature": "ProjectNotEnded(uint64)"
+  },
+  {
+    "owned": true,
+    "selector": "0xa1677f9b",
+    "signature": "ProjectNotStarted(uint64)"
+  },
+  {
+    "owned": true,
+    "selector": "0x994fa992",
+    "signature": "ProjectTokenRuntimeStillMatches()"
+  },
+  {
+    "owned": false,
+    "selector": "0x3ee5aeb5",
+    "signature": "ReentrancyGuardReentrantCall()"
+  },
+  {
+    "owned": true,
+    "selector": "0xa7b5f5ab",
+    "signature": "ReleaseConfirmationDepthNotReached(uint256,uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0xddae7b5d",
+    "signature": "ReleasePolicyNotEnabled(bytes32)"
+  },
+  {
+    "owned": true,
+    "selector": "0xdfa45cdb",
+    "signature": "ReleasePolicySnapshotMismatch(bytes32,uint32,uint32)"
+  },
+  {
+    "owned": true,
+    "selector": "0xced6a205",
+    "signature": "SettlementAnchorMismatch(uint256,bytes32,uint256,bytes32)"
+  },
+  {
+    "owned": true,
+    "selector": "0x1ce94586",
+    "signature": "TokenDecimalsChanged(address,uint8,uint8)"
+  },
+  {
+    "owned": true,
+    "selector": "0x799c5042",
+    "signature": "TokenEmergencyBlocked(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0xd0b1b2a7",
+    "signature": "TokenHasNoCode(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0x94403b70",
+    "signature": "TokenNotAllowed(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0xa5be5e0f",
+    "signature": "TokenNotConfigured(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0x6bef3037",
+    "signature": "TokenPolicySnapshotChanged(address,bytes32,uint32,bytes32,uint32)"
+  },
+  {
+    "owned": true,
+    "selector": "0x6719ada8",
+    "signature": "TokenReserveInsolvent(address,uint256,uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0x277814af",
+    "signature": "TokenRuntimeMismatch(address,bytes32,bytes32)"
+  },
+  {
+    "owned": true,
+    "selector": "0x89908768",
+    "signature": "UnauthorizedBeneficiary(address,address)"
+  },
+  {
+    "owned": true,
+    "selector": "0x740fbe61",
+    "signature": "UnauthorizedOperator(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0xd02c6a9e",
+    "signature": "UnauthorizedPauseGuardian(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0x7051d5af",
+    "signature": "UnauthorizedProjectOwner(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0xa18f91a3",
+    "signature": "UnauthorizedUnpauseTimelock(address)"
+  },
+  {
+    "owned": true,
+    "selector": "0x2c73d269",
+    "signature": "UnsupportedOutgoingTokenBehavior(address,uint256,uint256,uint256)"
+  },
+  {
+    "owned": true,
+    "selector": "0xf0598740",
+    "signature": "UnsupportedTokenBehavior(address,uint256,uint256)"
+  },
+  {
+    "owned": false,
+    "selector": "0xe07c8dba",
+    "signature": "UUPSUnauthorizedCallContext()"
+  },
+  {
+    "owned": false,
+    "selector": "0xaa1d49a4",
+    "signature": "UUPSUnsupportedProxiableUUID(bytes32)"
+  }
+]

@@ -1,0 +1,11 @@
+# syntax=docker/dockerfile:1
+# Job-only runtime image; do not copy Core binaries or Backend config.
+FROM debian:bookworm-slim
+ENV DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai
+RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends ca-certificates tzdata curl && \
+    ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo Asia/Shanghai > /etc/timezone && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY artifacts/job/joincare-job /app/joincare-job
+RUN chmod 0755 /app/joincare-job
+CMD ["/app/joincare-job", "--path", "/app/config/"]

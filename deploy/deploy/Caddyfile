@@ -1,0 +1,114 @@
+# JoinCare · Host-layer reverse proxy (Caddy 2)
+# - Auto TLS via Let's Encrypt (email 由 JC_TLS_EMAIL 传入)
+# - 三个域名分流：C 端 / Admin / API（Admin 有 IP 白名单）
+# - HSTS + CSP + 安全 headers
+# - Rate limit（用 caddy-ratelimit 插件，见 Dockerfile.caddy）
+# - WebSocket 反代（reverse_proxy 默认支持 upgrade）
+
+{
+    # Let's Encrypt 联系邮件（证书到期通知；生产必须填真实邮箱）
+    email {$JC_TLS_EMAIL}
+    # 生产禁用 admin API endpoint，减少攻击面
+    admin off
+}
+
+# ═══════════════════════════════════════════════════════════════════
+# 通用 snippet：安全 headers
+# ═══════════════════════════════════════════════════════════════════
+(security_headers) {
+    header {
+        # HSTS: 强制 1 年 HTTPS + preload
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        # 拒 MIME sniff
+        X-Content-Type-Options "nosniff"
+        # 拒 iframe 嵌入（同源仍可，跨源禁）
+        X-Frame-Options "SAMEORIGIN"
+        # 引荐信息只在同源发送
+        Referrer-Policy "strict-origin-when-cross-origin"
+        # 权限策略：只允许必要的 API
+        Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+        # CSP（生产建议 tune）: 允许 self + wagmi/reown 依赖的外部资源
+        # 若前端加 CDN / analytics 需扩展 default-src / connect-src
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.loli.net; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.loli.net; font-src 'self' https: data:; img-src 'self' data: blob: https:; connect-src 'self' wss: https://*.walletconnect.com https://*.walletconnect.org https://*.reown.com https://*.web3modal.org https://api.web3modal.org https://*.bnbchain.org https://*.binance.org https://cca-lite.coinbase.com https://*.coinbase.com; frame-src 'self' https://*.walletconnect.com https://*.reown.com;"
+        # 隐藏 server 版本
+        -Server
+    }
+}
+
+# ═══════════════════════════════════════════════════════════════════
+# C 端（joincare.io）
+# ═══════════════════════════════════════════════════════════════════
+www.joincarelabs.com {
+    redir https://joincarelabs.com{uri} 308
+}
+
+{$JC_APP_DOMAIN} {
+    import security_headers
+
+    # 全站限流：每 IP 每分钟 3000 请求（SPA 冷启动 + 图片资源多，实际用户 <200）
+    rate_limit {
+        zone joincare_app {
+            key {remote_host}
+            events 3000
+            window 1m
+        }
+    }
+
+    # WebSocket 通知（notice 服务，当前未部署 → 若 backend 也无 WS 就返回 503）
+    # 部署 cmd/notice 后取消注释
+    # handle /ws/* {
+    #     reverse_proxy notice:13005
+    # }
+
+    reverse_proxy frontend:80
+}
+
+# ═══════════════════════════════════════════════════════════════════
+# Admin 后台（admin.joincare.io）· 带 IP 白名单
+# ═══════════════════════════════════════════════════════════════════
+{$JC_ADMIN_DOMAIN} {
+    import security_headers
+
+    # Admin 面板：限流（SPA 加载 + API 调用可能瞬时 100+ 请求，600/min 够用）
+    # + IP 白名单
+    rate_limit {
+        zone joincare_admin {
+            key {remote_host}
+            events 600
+            window 1m
+        }
+    }
+
+    # IP 白名单（install 时输入的 CIDR，空格分隔；空 = 不限制，仍有 rate_limit）
+    @allowed remote_ip {$JC_ADMIN_ALLOW_IPS}
+    handle @allowed {
+        reverse_proxy admin:80
+    }
+    # 未命中白名单 → 直接 403（不暴露 admin 面板存在）
+    handle {
+        respond "Forbidden" 403 {
+            close
+        }
+    }
+}
+
+# ═══════════════════════════════════════════════════════════════════
+# API 独立域名（可选，api.joincare.io）· 若前端跨域调 API 才用
+# 若前端 & API 走同一 apex 域名（joincare.io/client/*），删掉本 block
+# ═══════════════════════════════════════════════════════════════════
+{$JC_API_DOMAIN} {
+    import security_headers
+
+    rate_limit {
+        zone joincare_api {
+            key {remote_host}
+            events 120
+            window 1m
+        }
+    }
+
+    # X-Real-IP / X-Forwarded-For / X-Forwarded-Proto Caddy 默认就会传，无需显式
+    reverse_proxy backend:13004 {
+        header_up X-Real-IP {remote_host}
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "domain": "joincare.recovery-portal.external-anchor.v1",
+  "environmentId": "joincare-mainnet",
+  "generation": 1,
+  "minimumGeneration": 1,
+  "acceptedManifestDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "previousManifestDigest": null,
+  "previousAnchorDigest": null,
+  "issuedAt": "2026-09-06T00:00:00Z",
+  "expiresAt": "2026-09-07T00:00:00Z",
+  "keySetVersion": 1
+}

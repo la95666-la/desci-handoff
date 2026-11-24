@@ -1,0 +1,1403 @@
+{
+  "schemaVersion": "fair-launch-event-signature-index-manifest-v1",
+  "status": "UNADMITTED_OFFLINE_EVIDENCE_ONLY",
+  "sourceClassification": "GENERATED_FROM_REVIEWER_FROZEN_ABI",
+  "source": "scripts/audit/golden/abi.golden.json",
+  "input": {
+    "path": "scripts/audit/golden/abi.golden.json",
+    "sha256": "38595f38d126a7e6784e3f1ad237893255c21f209219ff637666e849d01584da",
+    "selection": "type=event AND name startsWith FairLaunch",
+    "frozenEventCount": 32
+  },
+  "eventCount": 32,
+  "events": [
+    {
+      "name": "FairLaunchActivated",
+      "signature": "FairLaunchActivated(uint256)",
+      "topic0": "0x51ad4a9357cf54fabe7a7a771766e578c14072ed4269e738af00ee06bba91bda",
+      "indexedMask": [
+        true
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchBeneficiarySafeConfigured",
+      "signature": "FairLaunchBeneficiarySafeConfigured(address,bool,bytes32,uint32)",
+      "topic0": "0x44f2c4c0d44fbcb8e256b7da92a789c42e72f4e6635aa443185706c4bf8f2add",
+      "indexedMask": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "account",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "approved",
+          "type": "bool",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "attestationDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 3,
+          "name": "attestationVersion",
+          "type": "uint32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchCancelled",
+      "signature": "FairLaunchCancelled(uint256,uint8,bytes32,bytes32,address)",
+      "topic0": "0x7fde7503d80ddb51b9fccaf83f1be6c245b9886450c9138c3302301282555b80",
+      "indexedMask": [
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "previousStatus",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "reasonCode",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 3,
+          "name": "evidenceHash",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "operator",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchClaimed",
+      "signature": "FairLaunchClaimed(uint256,address,address,uint256,uint256,address)",
+      "topic0": "0x753a2fc11251255f097a5b029c63bd37a981db1085fb93f35567408168604f7a",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "user",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "projectToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "totalUserClaimed",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 5,
+          "name": "caller",
+          "type": "address",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchClaimsPaused",
+      "signature": "FairLaunchClaimsPaused(address,uint64,bytes32,bytes32)",
+      "topic0": "0x834cdd95450ba5f94c564677f3aa0fa7a6ff16c7a054580bad82559392589c95",
+      "indexedMask": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "guardian",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "pauseUntil",
+          "type": "uint64",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "reasonCode",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 3,
+          "name": "evidenceHash",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchClaimsUnpaused",
+      "signature": "FairLaunchClaimsUnpaused(address,bytes32)",
+      "topic0": "0x35129f51334637de5fbb137ee5df012b487ee66018a743ecfca30371630e56f8",
+      "indexedMask": [
+        true,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "timelock",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "operationId",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchContribution",
+      "signature": "FairLaunchContribution(uint256,address,address,uint256,uint256,uint256)",
+      "topic0": "0x016a4f58f150c07be663a85ee14b334dc4eae351039d3ea973e8d194efc0b473",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "user",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "paymentToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "paymentAmount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "userContribution",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 5,
+          "name": "totalRaised",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchContributionsPaused",
+      "signature": "FairLaunchContributionsPaused(address,bytes32,bytes32)",
+      "topic0": "0xe0e68cf6f28654fb1e0e4030193954f3490ff17fe22e9866b9e7f37a6a0448de",
+      "indexedMask": [
+        true,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "guardian",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "reasonCode",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "evidenceHash",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchContributionsUnpaused",
+      "signature": "FairLaunchContributionsUnpaused(address,bytes32)",
+      "topic0": "0x06da999c13c7cbd37e36b9ba481099abf6835375bf8ab888d1226ba7d8db184c",
+      "indexedMask": [
+        true,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "timelock",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "operationId",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchEnded",
+      "signature": "FairLaunchEnded(uint256,uint8,uint8,address,uint256,uint256,uint256,uint256,uint256,bytes32)",
+      "topic0": "0x64b5b344ab818654e0ff334e61147205b634ed8b31332641e02373cc84368cc0",
+      "indexedMask": [
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "status",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "terminalReason",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "ordinal": 3,
+          "name": "paymentToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 4,
+          "name": "finalTotalRaised",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 5,
+          "name": "finalPriceNumerator",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 6,
+          "name": "finalPriceDenominator",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 7,
+          "name": "settlementBlockNumber",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 8,
+          "name": "settlementAnchorBlockNumber",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 9,
+          "name": "settlementAnchorBlockHash",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchExcessTokensRecovered",
+      "signature": "FairLaunchExcessTokensRecovered(address,address,uint256)",
+      "topic0": "0x8ae62788f5f128807d9448a87ed3710586875748d9d651b40593a03ecb6f042c",
+      "indexedMask": [
+        true,
+        true,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "treasury",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchFailedProjectTokensWithdrawn",
+      "signature": "FairLaunchFailedProjectTokensWithdrawn(uint256,address,address,uint256)",
+      "topic0": "0x7f22ab954b786dfe2bac6b2ce6744381ca3b90fc9529f9e8ffab1dca54943c45",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "projectToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "projectOwner",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchOperatorUpdated",
+      "signature": "FairLaunchOperatorUpdated(address,address)",
+      "topic0": "0xc169c4a69abf72c386bf252ee7bfdfb3f530c5021d8bc35680e7f50329af5ca5",
+      "indexedMask": [
+        true,
+        true
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "previousOperator",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "newOperator",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPauseGuardianUpdated",
+      "signature": "FairLaunchPauseGuardianUpdated(address,address)",
+      "topic0": "0x9f9d61fa7284b51d1c40be4d97d87d37279a351469878b7f6c4f5897b064d715",
+      "indexedMask": [
+        true,
+        true
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "previousGuardian",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "newGuardian",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPaymentTokenAdmissionUpdated",
+      "signature": "FairLaunchPaymentTokenAdmissionUpdated(address,uint32,bool)",
+      "topic0": "0x3981544e14e5eb86316aa6accf56db5625ff791647064153e30548d2ccf5235f",
+      "indexedMask": [
+        true,
+        true,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "currentPolicyVersion",
+          "type": "uint32",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "enabledForNewProjects",
+          "type": "bool",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPaymentTokenEmergencyBlockUpdated",
+      "signature": "FairLaunchPaymentTokenEmergencyBlockUpdated(address,bool)",
+      "topic0": "0xca76b0e65d243783e16a1e57489462ce1af1201d628e4813b446448e4cb7aa4f",
+      "indexedMask": [
+        true,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "emergencyBlocked",
+          "type": "bool",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPaymentTokenInvalidated",
+      "signature": "FairLaunchPaymentTokenInvalidated(uint256,address,address,bytes32,bytes32,bytes32,uint32,bytes32,uint32,bool,bytes32,bytes32)",
+      "topic0": "0x55ca7ca903d58edce354726aa78a0367b4a17a762c2f35352fa5790ac3267c48",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "paymentToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "timelock",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "expectedRuntimeCodeHash",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "observedRuntimeCodeHash",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 5,
+          "name": "expectedPolicyDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 6,
+          "name": "expectedPolicyVersion",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 7,
+          "name": "observedPolicyDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 8,
+          "name": "observedPolicyVersion",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 9,
+          "name": "emergencyBlocked",
+          "type": "bool",
+          "indexed": false
+        },
+        {
+          "ordinal": 10,
+          "name": "reasonCode",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 11,
+          "name": "evidenceHash",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPaymentTokenPolicyRevisionRegistered",
+      "signature": "FairLaunchPaymentTokenPolicyRevisionRegistered(address,uint32,uint8,bytes32,bytes32)",
+      "topic0": "0x02d02daadea900b46ee91139709579daeddfe91c130522b6e5394f888b384551",
+      "indexedMask": [
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "policyVersion",
+          "type": "uint32",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "decimals",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "ordinal": 3,
+          "name": "runtimeCodeHash",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "policyDigest",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPayoutsPaused",
+      "signature": "FairLaunchPayoutsPaused(address,bytes32,bytes32)",
+      "topic0": "0xa6027dda71427c3882faeae9428ad532c156f431f419a17e42184093b96f0a2d",
+      "indexedMask": [
+        true,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "guardian",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "reasonCode",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "evidenceHash",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPayoutsUnpaused",
+      "signature": "FairLaunchPayoutsUnpaused(address,bytes32)",
+      "topic0": "0x1e0d806101840b964cf2703de16f02724b8f25e93dadf859fbb63229acf2b980",
+      "indexedMask": [
+        true,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "timelock",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "operationId",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPendingReleaseInvalidated",
+      "signature": "FairLaunchPendingReleaseInvalidated(uint256,uint8,uint8,bytes32,bytes32,address)",
+      "topic0": "0xe335d6eb4489db31a3021f6e0c21809f3b0ad20e469b90c0ef7190a8b875a26a",
+      "indexedMask": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "terminalReason",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "invalidationClass",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "ordinal": 3,
+          "name": "reasonCode",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "evidenceHash",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 5,
+          "name": "caller",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPlatformFeeUpdated",
+      "signature": "FairLaunchPlatformFeeUpdated(uint16,uint16,address,address)",
+      "topic0": "0xfad803a789bdb49132f395dbfce47e8bf0e5a817151f99148f69efc11c59976a",
+      "indexedMask": [
+        false,
+        false,
+        true,
+        true
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "previousFeeBps",
+          "type": "uint16",
+          "indexed": false
+        },
+        {
+          "ordinal": 1,
+          "name": "newFeeBps",
+          "type": "uint16",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "previousReceiver",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "newReceiver",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchPlatformFeeWithdrawn",
+      "signature": "FairLaunchPlatformFeeWithdrawn(uint256,address,address,uint256)",
+      "topic0": "0x5663f97764829a1aff5a12ba6c2f3e1cbc025a5a94d56e82114807c15f565d25",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "paymentToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "platformFeeReceiver",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchProjectCreated",
+      "signature": "FairLaunchProjectCreated(uint256,address,address,address,address,bytes32,uint32,address,bytes32,uint32,uint16,uint256,uint256,uint256,uint256,uint64,uint64,bytes32,uint32,bytes32,uint32,bytes32,uint32)",
+      "topic0": "0x5866aeb1a03b17ffb3e5b25b4c19b9c840427eabb3dc491067492923d719803d",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "projectToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "paymentToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "projectOwner",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "projectProceedsReceiver",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "ordinal": 5,
+          "name": "projectProceedsReceiverAttestationDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 6,
+          "name": "projectProceedsReceiverAttestationVersion",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 7,
+          "name": "platformFeeReceiver",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "ordinal": 8,
+          "name": "platformFeeReceiverAttestationDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 9,
+          "name": "platformFeeReceiverAttestationVersion",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 10,
+          "name": "platformFeeBps",
+          "type": "uint16",
+          "indexed": false
+        },
+        {
+          "ordinal": 11,
+          "name": "saleTokenAmount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 12,
+          "name": "softCap",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 13,
+          "name": "minContribution",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 14,
+          "name": "maxContribution",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 15,
+          "name": "startTime",
+          "type": "uint64",
+          "indexed": false
+        },
+        {
+          "ordinal": 16,
+          "name": "endTime",
+          "type": "uint64",
+          "indexed": false
+        },
+        {
+          "ordinal": 17,
+          "name": "projectTokenPolicyDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 18,
+          "name": "projectTokenPolicyVersion",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 19,
+          "name": "paymentTokenPolicyDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 20,
+          "name": "paymentTokenPolicyVersion",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 21,
+          "name": "releasePolicyDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 22,
+          "name": "releasePolicyVersion",
+          "type": "uint32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchProjectProceedsWithdrawn",
+      "signature": "FairLaunchProjectProceedsWithdrawn(uint256,address,address,uint256,uint256)",
+      "topic0": "0xfc7eda407e6e3fd8b307f91f31b19699234724ad8d197643d70ed5021f7118dd",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "paymentToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "projectProceedsReceiver",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "platformFeeReserved",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchProjectTokenConfigured",
+      "signature": "FairLaunchProjectTokenConfigured(address,bool,bool,uint8,uint32,bytes32,bytes32)",
+      "topic0": "0x79cfbf4b013b9a6a1c5118a2e8402e2e38629533080a7909fd8b68f98ef0776c",
+      "indexedMask": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "enabledForNewProjects",
+          "type": "bool",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "emergencyBlocked",
+          "type": "bool",
+          "indexed": false
+        },
+        {
+          "ordinal": 3,
+          "name": "decimals",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "policyVersion",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 5,
+          "name": "runtimeCodeHash",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 6,
+          "name": "policyDigest",
+          "type": "bytes32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchRefunded",
+      "signature": "FairLaunchRefunded(uint256,address,address,uint256,address)",
+      "topic0": "0x026b0d3d74ac0fd472106e9a3c9b9f98a23ac4239cee37f3307176b9878bc6d5",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "user",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "paymentToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "caller",
+          "type": "address",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchReleasePolicyConfigured",
+      "signature": "FairLaunchReleasePolicyConfigured(bytes32,uint32,bool)",
+      "topic0": "0x3b98a1623a2c19737bb6487544f45ff75a3340c231414892935041b8bb8be1ef",
+      "indexedMask": [
+        true,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "policyDigest",
+          "type": "bytes32",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "policyVersion",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 2,
+          "name": "enabled",
+          "type": "bool",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchSuccessfulReleased",
+      "signature": "FairLaunchSuccessfulReleased(uint256,uint256,address,uint256,bytes32,bytes32,uint32,bytes32,bytes32,uint32)",
+      "topic0": "0xd408a63098e7a111cfe9fbe37147079227bde8d2628ba30d296bf8a6327dab0f",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "settlementBlockNumber",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "attester",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "settlementAnchorBlockNumber",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "settlementAnchorBlockHash",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 5,
+          "name": "settlementTxHash",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 6,
+          "name": "settlementTxLogOrdinal",
+          "type": "uint32",
+          "indexed": false
+        },
+        {
+          "ordinal": 7,
+          "name": "releaseManifestDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 8,
+          "name": "releasePolicyDigest",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "ordinal": 9,
+          "name": "releasePolicyVersion",
+          "type": "uint32",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchTokensDeposited",
+      "signature": "FairLaunchTokensDeposited(uint256,address,address,uint256,uint256)",
+      "topic0": "0xb8f9c8dac4ac8a73bd0c8755c864ce71f85fa6d8338e631fb486c6969b6f6f51",
+      "indexedMask": [
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "projectId",
+          "type": "uint256",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "projectToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 2,
+          "name": "from",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 3,
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "ordinal": 4,
+          "name": "totalDeposited",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchTreasuryUpdated",
+      "signature": "FairLaunchTreasuryUpdated(address,address)",
+      "topic0": "0x9853f6e754160099679b130d3602fd242739d75fb219734c74142f9d29919dd2",
+      "indexedMask": [
+        true,
+        true
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "previousTreasury",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "newTreasury",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "FairLaunchUnpauseTimelockUpdated",
+      "signature": "FairLaunchUnpauseTimelockUpdated(address,address)",
+      "topic0": "0x9fa465ec8e4a98dd83e630966304c67a9f139de86fdbeedc58178bca21a7fd1c",
+      "indexedMask": [
+        true,
+        true
+      ],
+      "inputs": [
+        {
+          "ordinal": 0,
+          "name": "previousTimelock",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "ordinal": 1,
+          "name": "newTimelock",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    }
+  ],
+  "sha256": "59bf9bd1162a4550a4456adf3ae9999998ac7d4a79e03a41b87117cc9b80da35"
+}

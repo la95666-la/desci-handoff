@@ -1,0 +1,21 @@
+[Unit]
+Description=JoinCare Deployment Agent (jc-agent)
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+# 需要 docker 权限；用 root 最简单，或者切成 docker group 里的普通用户
+User=root
+ExecStart=/usr/local/bin/jc-agent -config /etc/jc-agent/agent.yaml daemon
+Restart=on-failure
+RestartSec=10s
+StandardOutput=journal
+StandardError=journal
+
+# 允许 30 秒收尾正在执行的升级命令
+TimeoutStopSec=30s
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target

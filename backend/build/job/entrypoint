@@ -1,0 +1,8 @@
+#!/bin/bash
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+
+cd "$script_dir" ||  exit 1
+
+mkdir -p /home/logs/
+/home/job --path=./config/ >> /home/logs/job-stdout.log 2>&1

@@ -1,0 +1,60 @@
+# .stage 是 deploy.sh 的 build 暂存目录，全部忽略（deploy 每次会重建）
+.stage/
+
+# Volumes / data 持久化目录
+.stage/volumes/
+volumes/
+data/
+
+# 日志
+*.log
+.stage/logs/
+logs/
+
+# 已生成的 deploy tarball
+joincare-deploy.tar.gz
+*.tar.gz
+
+# 编译产物与本地密钥工具输出
+bin/output/
+bin/encrypt-key
+bin/enc_key.txt
+
+# 本地脚本临时缓存
+.tmp/
+.cache/
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 敏感配置（生产前必须从 .stage/config/secret 移到此外）
+.stage/config/secret/config.local.yaml
+config/secret/config.local.yaml
+
+# 交互式部署工具 · .deploy.env 保存密钥不入 git
+.deploy.env
+.stage-config/
+.stage-config.tar.gz
+
+# DB 备份
+backups/
+
+# 本地 build 产物（./build.sh 生成）
+artifacts/
+
+# pack.sh 输出的分发 tarball
+dist/
+.pack-stage/
+
+# 含真实凭据的运行时配置 —— 由 config/template/*.tpl + .deploy.env 渲染生成，不入 git
+config/core/config.yaml
+config/secret/config.yaml
+
+# release builder output (tarballs + staging packages)
+release/out/

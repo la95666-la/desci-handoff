@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joincare.example/schemas/fair-launch/environment-bootstrap.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "domain",
+    "environmentId",
+    "chainId",
+    "minimumDiscoveryBlock",
+    "releaseControlPlaneId",
+    "pinnedHttpsUrl",
+    "tlsSpkiSha256",
+    "watermarkRootKeySetDigest",
+    "sourceRegistryAuthorityKind",
+    "sourceRegistrySignerKeySetDigest",
+    "hostStateVolumeId",
+    "enrollmentGeneration",
+    "issuedAt",
+    "expiresAt",
+    "previousBootstrapDigest"
+  ],
+  "properties": {
+    "domain": {
+      "const": "joincare.release.environment-bootstrap.v1"
+    },
+    "environmentId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$"
+    },
+    "chainId": {
+      "$ref": "common.schema.json#/$defs/uint"
+    },
+    "fairLaunchProxyAddress": {
+      "$ref": "common.schema.json#/$defs/evmAddress"
+    },
+    "approvedDeploymentFactoryAddress": {
+      "$ref": "common.schema.json#/$defs/evmAddress"
+    },
+    "minimumDiscoveryBlock": {
+      "$ref": "common.schema.json#/$defs/uint"
+    },
+    "releaseControlPlaneId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pinnedHttpsUrl": {
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "tlsSpkiSha256": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "watermarkRootKeySetDigest": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "sourceRegistryAuthorityKind": {
+      "const": "offchain-signed-registry"
+    },
+    "sourceRegistrySignerKeySetDigest": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "hostStateVolumeId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._:-]{3,128}$"
+    },
+    "enrollmentGeneration": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    },
+    "issuedAt": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "expiresAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "previousBootstrapDigest": {
+      "$ref": "common.schema.json#/$defs/nullableDigest"
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "fairLaunchProxyAddress"
+      ],
+      "not": {
+        "required": [
+          "approvedDeploymentFactoryAddress"
+        ]
+      }
+    },
+    {
+      "required": [
+        "approvedDeploymentFactoryAddress"
+      ],
+      "not": {
+        "required": [
+          "fairLaunchProxyAddress"
+        ]
+      }
+    }
+  ]
+}

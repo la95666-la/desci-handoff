@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "fair-launch-mainnet-deployment-input-v1",
+  "environment": "bsc-mainnet",
+  "chainId": 56,
+  "changeTicket": "REPLACE-WITH-APPROVED-TICKET",
+  "observation": {
+    "blockNumber": "1",
+    "blockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+    "observedAt": "2026-01-01T00:00:00.000Z"
+  },
+  "deployer": {
+    "address": "0x1111111111111111111111111111111111111111",
+    "codeType": "eoa",
+    "runtimeCodeHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+    "startingNonce": "0",
+    "latestNonce": "0",
+    "pendingNonce": "0",
+    "balanceWei": "1",
+    "attestationDigest": "0x1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "roles": {
+    "governanceOwner": {
+      "address": "0x2222222222222222222222222222222222222222",
+      "authorityKind": "timelock",
+      "codeType": "contract",
+      "runtimeCodeHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+      "attestationDigest": "0x2222222222222222222222222222222222222222222222222222222222222222",
+      "attestationVersion": 1
+    },
+    "operator": {
+      "address": "0x3333333333333333333333333333333333333333",
+      "authorityKind": "durable-signer",
+      "codeType": "eoa",
+      "runtimeCodeHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+      "attestationDigest": "0x3333333333333333333333333333333333333333333333333333333333333333",
+      "attestationVersion": 1
+    },
+    "pauseGuardian": {
+      "address": "0x4444444444444444444444444444444444444444",
+      "authorityKind": "guardian",
+      "codeType": "eoa",
+      "runtimeCodeHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+      "attestationDigest": "0x4444444444444444444444444444444444444444444444444444444444444444",
+      "attestationVersion": 1
+    },
+    "unpauseTimelock": {
+      "address": "0x5555555555555555555555555555555555555555",
+      "authorityKind": "timelock",
+      "codeType": "contract",
+      "runtimeCodeHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+      "attestationDigest": "0x5555555555555555555555555555555555555555555555555555555555555555",
+      "attestationVersion": 1
+    },
+    "treasury": {
+      "address": "0x6666666666666666666666666666666666666666",
+      "authorityKind": "safe",
+      "codeType": "contract",
+      "runtimeCodeHash": "0x6666666666666666666666666666666666666666666666666666666666666666",
+      "attestationDigest": "0x6666666666666666666666666666666666666666666666666666666666666666",
+      "attestationVersion": 1
+    },
+    "platformFeeReceiver": {
+      "address": "0x7777777777777777777777777777777777777777",
+      "authorityKind": "safe",
+      "codeType": "contract",
+      "runtimeCodeHash": "0x7777777777777777777777777777777777777777777777777777777777777777",
+      "attestationDigest": "0x7777777777777777777777777777777777777777777777777777777777777777",
+      "attestationVersion": 1
+    },
+    "projectProceedsReceiver": {
+      "address": "0x8888888888888888888888888888888888888888",
+      "authorityKind": "safe",
+      "codeType": "contract",
+      "runtimeCodeHash": "0x8888888888888888888888888888888888888888888888888888888888888888",
+      "attestationDigest": "0x8888888888888888888888888888888888888888888888888888888888888888",
+      "attestationVersion": 1
+    }
+  },
+  "platformFee": {
+    "bps": 0,
+    "decisionDigest": "0x9999999999999999999999999999999999999999999999999999999999999999",
+    "decisionVersion": 1
+  }
+}

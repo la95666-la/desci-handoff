@@ -1,0 +1,11 @@
+{
+  "domain": "joincare.release.key-revocation.v1",
+  "keySetVersion": 1,
+  "revokedKeyIds": [
+    "key-c"
+  ],
+  "effectiveGeneration": 50,
+  "reason": "deterministic emergency-revocation vector",
+  "issuedAt": "2026-09-06T01:00:00Z",
+  "previousRevocationDigest": null
+}

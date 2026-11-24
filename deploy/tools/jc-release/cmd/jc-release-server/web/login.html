@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>jc-release · 登录</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-page">
+<div class="login-box">
+  <h1>jc-release</h1>
+  <p class="sub">发布 · 部署 · 回滚</p>
+  <form id="login-form" onsubmit="return doLogin(event)">
+    <label>用户名</label>
+    <input type="text" id="u" autocomplete="username" required>
+    <label>密码</label>
+    <input type="password" id="p" autocomplete="current-password" required>
+    <button type="submit">登录</button>
+    <div id="err" class="err"></div>
+  </form>
+</div>
+<script>
+async function doLogin(e){
+  e.preventDefault();
+  const u = document.getElementById('u').value;
+  const p = document.getElementById('p').value;
+  const err = document.getElementById('err');
+  err.textContent = '';
+  try {
+    const r = await fetch('/api/v1/auth/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({username:u, password:p})
+    });
+    const j = await r.json();
+    if (!r.ok || !j.status) { err.textContent = j.message || '登录失败'; return false; }
+    window.location.href = '/';
+  } catch (e) {
+    err.textContent = e.message || '网络错误';
+  }
+  return false;
+}
+</script>
+</body>
+</html>

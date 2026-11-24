@@ -1,0 +1,27 @@
+# jc-agent 配置示例
+# 保存到 /etc/jc-agent/agent.yaml (chmod 600)
+
+# jc-release-server 的公网可达 URL
+server_url: "https://jc-release.example.com"
+
+# 一次性 enroll token —— 在 Web UI 里点"生成 Enroll Token"复制过来
+# 首次 register 成功后 agent 会自动清空此字段
+enroll_token: "PASTE_ENROLL_TOKEN_HERE"
+
+# agent 本地数据目录 (state / backups / incoming)
+data_dir: "/var/lib/jc-agent"
+
+# JoinCare 部署根路径 (含 docker-compose.yml 和 config/)
+root: "/opt/joincare-prod"
+
+# Backend, Frontend and Admin deployment/rollback are operational. Job, scanner,
+# materializer, TGBot and language mutation remain unavailable in this release.
+
+# poll 间隔
+poll_interval_commands: 5s
+poll_interval_manifest: 5m
+
+# 保留字段，未来做自动升级用；当前 Web UI 点按钮触发的升级永远会执行
+auto_upgrade: false
+
+# Production config requires verified HTTPS. TLS verification cannot be disabled.

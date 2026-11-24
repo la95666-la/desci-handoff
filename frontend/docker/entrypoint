@@ -1,0 +1,26 @@
+#!/bin/bash
+
+mkdir -p /home/logs/
+
+# 使用 nginx 服务静态文件
+# 清除默认配置，避免端口冲突
+rm -f /etc/nginx/sites-enabled/*
+rm -f /etc/nginx/conf.d/*
+
+# 复制配置文件到 nginx 目录并创建启用链接
+cp /home/frontend/nginx.conf /etc/nginx/sites-available/default
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+# 确保 nginx 运行时目录权限正确
+mkdir -p /var/lib/nginx/body /var/lib/nginx/proxy /var/lib/nginx/fastcgi /var/lib/nginx/uwsgi /var/lib/nginx/scgi
+chown -R pm_user:pm_user /var/lib/nginx /var/log/nginx /var/www/html /run
+
+# 复制静态文件到 nginx 默认目录
+cp -r /home/frontend/dist/* /var/www/html/
+
+# 停止可能已在运行的 nginx 实例
+nginx -s stop 2>/dev/null || true
+sleep 1
+
+# 启动 nginx（前台运行）
+nginx -g 'daemon off;' >> /home/logs/frontend-stdout.log 2>&1

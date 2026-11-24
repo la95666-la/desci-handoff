@@ -1,0 +1,199 @@
+{
+  "schema": "joincare.fair-launch.test-server-backend-rollout-admission.v1",
+  "admissionId": "fair-launch-bsc-mainnet-test-server-backend-rollout-r1",
+  "revision": 1,
+  "status": "ACTIVE_BACKEND_ROLLOUT_ONLY",
+  "environment": "test-server",
+  "profile": "test-server-fair-launch-bsc-mainnet",
+  "issuedAt": "2026-09-16T15:56:19Z",
+  "permissions": {
+    "packageBuildPermitted": false,
+    "operationalApplyPermitted": true,
+    "artifactUploadPermitted": true,
+    "databaseMigrationPermitted": false,
+    "serviceMutationPermitted": true,
+    "scannerStartPermitted": false,
+    "materializerStartPermitted": false,
+    "walletSubmissionPermitted": false,
+    "adminDispatchPermitted": false
+  },
+  "identities": {
+    "deployBaseline": {
+      "commit": "74bebf6cc3c4a2905fa1d74e948af0316029281e"
+    },
+    "contract": {
+      "commit": "fe29c78c6c281cfeaa6507e8659e1d0c4dd45e41"
+    },
+    "backend": {
+      "commit": "acf2d461f537a15f55b1aa85722c386674fd9c7a"
+    },
+    "frontend": {
+      "commit": "58cf098fc965a72c98d0278f31f0b2b4b427b1e4"
+    },
+    "admin": {
+      "commit": "5ffbb2b97c0a1752ac079753d2b0d2c7fafb6ff5"
+    }
+  },
+  "chain": {
+    "chainId": 56,
+    "sourceRevision": "fe29c78c6c281cfeaa6507e8659e1d0c4dd45e41",
+    "proxyAddress": "0xaEC57de2b134e3539edbB70a552483031a14BD84",
+    "implementationAddress": "0x45BE772bF52624c3cA5938832571687c5C59384C",
+    "startBlock": 122194506,
+    "deploymentTransactionHash": "0x0183670dddc0943cd7f58ef7b1724892460e9784088da5f22fabc10d19043559",
+    "deploymentBlockHash": "0x1a60b4adbb026ce7f59280eaf6da13016851c577c123014d8fa96e209d343476",
+    "confirmationPolicy": "20_blocks",
+    "requiredSuccessorBlocks": 20,
+    "proxyRuntimeCodeHash": "0x160941bd580b2632c64b1811d3438319bfce40e0418e8ad850fb541ee6ee74ee",
+    "implementationRuntimeCodeHash": "0x35b4f5b4e71d62242e67df5e68d9e075a3bcb4f64eb46314b6a6abcdd1a3322f",
+    "contractVersionHash": "0x7527a03973ddcfc59859ab47d7cfb8907aefe04b2a58bcb0817ed2709a1df0c0"
+  },
+  "bundle": {
+    "sha256": "c9e7cad3d19d41d9500980a6d8349199b5f0ea1c93de573dcb039454bfbd2896",
+    "bundleDigest": "0xc52e25ed8b9fc15bcd9fbc857553f8457d1da5329703a5d1a38467cec711265b",
+    "fullSetDigest": "0xd0b95526b585f941fd65047f11e72fd3ca759caafe3398d356408b1dfd51d8f0",
+    "initializerHash": "0x20d18a92f10bc967abc7bf20472719a888ec66658bdc56d28f8dd4bfc3a2888b",
+    "aggregateAbiDigest": "0xf8c991864388ccd88a22f012ccb2b4dd02257c123ab2db827e188fcdffd7271a",
+    "selectorMapDigest": "0x627193356a476185bf6481c2c63fe4e09f08a202a5eb0f683d40d698b9411312",
+    "storageLayoutDigest": "0x78adcd57e8671c1b2d1f021fc061ee51434840447ef72e561b413ec9893eab09"
+  },
+  "components": [
+    {
+      "key": "logic",
+      "address": "0x7a78F769D0CE93615c9a1a78B7Df9cc9376fbd79",
+      "runtimeCodeHash": "0x6492f8abb8e77c9d421923dbb036583d3122824243bbc6b992b89658806990d0"
+    },
+    {
+      "key": "runtime",
+      "address": "0x3e08DB515592aCAe733119861999C179aC50ab6E",
+      "runtimeCodeHash": "0xd508f1cba6d943971ad6fd3f28bddc1979a4643ea9ff37026cf5fdbc1ae9b9b7"
+    },
+    {
+      "key": "core",
+      "address": "0x25c6808be02fEfe43D7574f8b34E731F844d7141",
+      "runtimeCodeHash": "0xecfab74e694ab890edf315d2d5b4531408f316f6ff9a2fd7f2cc09202d21610a"
+    },
+    {
+      "key": "release",
+      "address": "0xF77af7c40788b9c6ecB070229b186bF6c95d099a",
+      "runtimeCodeHash": "0x1c7e3c7c9da37f9552162f93c6e2e2751dcba1d37df5f0900928c5cc174cf1b4"
+    },
+    {
+      "key": "funds",
+      "address": "0x0902E0131DAC3C8Eb566997476f04db227AA5c2b",
+      "runtimeCodeHash": "0xdb90423c0eb894e951e512a3412f0cc736676b928e89444ea255eb926fbc307d"
+    },
+    {
+      "key": "admin",
+      "address": "0xC7f62cccBFF48bF8920AfF57797d702eb6291D8E",
+      "runtimeCodeHash": "0x467bd3a49dbc40a5f8777be4c3a38113329d588806dff1da3ec282c171887154"
+    },
+    {
+      "key": "views",
+      "address": "0x9D280BF09326546cf634AD14ee9723Cf503e918B",
+      "runtimeCodeHash": "0x4e2480b3d5c3a455e4b6f4b60222dfcf74d728c9395ce10cc07a58279bf86f0a"
+    },
+    {
+      "key": "dispatcher",
+      "address": "0x45BE772bF52624c3cA5938832571687c5C59384C",
+      "runtimeCodeHash": "0x35b4f5b4e71d62242e67df5e68d9e075a3bcb4f64eb46314b6a6abcdd1a3322f"
+    },
+    {
+      "key": "proxy",
+      "address": "0xaEC57de2b134e3539edbB70a552483031a14BD84",
+      "runtimeCodeHash": "0x160941bd580b2632c64b1811d3438319bfce40e0418e8ad850fb541ee6ee74ee"
+    }
+  ],
+  "authorities": {
+    "governanceSafe": "0x79c527B8Af5b1E27d5052f8dCe04D20733e72350",
+    "governanceTimelock": "0x0eE7f9f79B44446eFE8741037D5d46419266083D",
+    "emergencySafe": "0x070EBAE10689CB90EEC1377d2F23b3825Ab8c0C8",
+    "unpauseTimelock": "0xD8950F857a3485501E6cDcBE12Deae23911F35c0",
+    "treasurySafe": "0x67D704A3C4c52f590C02050ee1e18652A6D784f1",
+    "platformFeeSafe": "0xdBD2A66D827AeaFca9b65a6DC79501263730cbE1",
+    "projectProceedsSafe": "0x4aBA60fe416f5500E58eb07B5b487dbdF3A34dD9",
+    "operator": "0x1cB633B1B9D8ABa8DD26acB36cA5780373048b9d",
+    "platformFeeBps": 250
+  },
+  "paymentTokens": [
+    {
+      "symbol": "USDT",
+      "address": "0x55d398326f99059fF775485246999027B3197955",
+      "decimals": 18,
+      "policyVersion": 0,
+      "enabledForNewProjects": false
+    },
+    {
+      "symbol": "USDC",
+      "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+      "decimals": 18,
+      "policyVersion": 0,
+      "enabledForNewProjects": false
+    }
+  ],
+  "migrations": [
+    {
+      "file": "migrations/2026_09_13_fair_launch_bsc_mainnet_activation.sql",
+      "sha256": "d37a23cda4d7275def17274330ab86d578d647414b0cf92c3d6926632fe82b48"
+    },
+    {
+      "file": "migrations/2026_09_14_fair_launch_mainnet_bootstrap_receipt.sql",
+      "sha256": "e9a50f51231e1119bfb7ee72dd0c804f1e735a3c5b4fa65f6a769545520f86d0"
+    },
+    {
+      "file": "migrations/2026_09_15_fair_launch_mainnet_archive_scanner.sql",
+      "sha256": "4e89740b08cec470c05911b7ea21627579e89db3c95460affa4691aa001f6865"
+    },
+    {
+      "file": "migrations/2026_09_16_fair_launch_mainnet_archive_recovery.sql",
+      "sha256": "f8d79d287b14387af70028cbe22f21a7c7244f698aa110531ca1a0adddacbe70"
+    },
+    {
+      "file": "migrations/2026_09_17_fair_launch_mainnet_recovery_provider.sql",
+      "sha256": "3673b8d61f84d420e43974c9534dc190421b629c9ba0849835582d5980ea4891"
+    },
+    {
+      "file": "migrations/2026_09_18_fair_launch_mainnet_materialization_authority.sql",
+      "sha256": "17a60b0ab09c311cca5ecb9aeda5085e5c79a2e70ff9a73665478217c8409770"
+    }
+  ],
+  "releaseScope": {
+    "components": [
+      "backend",
+      "job",
+      "notice",
+      "frontend",
+      "admin"
+    ],
+    "excluded": [
+      "contracts",
+      "deployment-scripts",
+      "database-dumps",
+      "secrets"
+    ]
+  },
+  "artifact": {
+    "candidateManifestSha256": "e9fcfd0d75de555a80257fb27bfd897fcd5c3f674dcabe91e44f40c460a377ac",
+    "imageArchiveSha256": "194605434c4cdac30b3e6b624f6b1f1b6218b3b3dd998c5e2991f0172f74e623",
+    "imageId": "sha256:99bdddf5fc8defb60e878e88d7681b62b3cbca02ff6af1b3c3fed7c942f66e9e",
+    "imageTag": "joincare/backend:candidate-acf2d46",
+    "backendCommit": "acf2d461f537a15f55b1aa85722c386674fd9c7a",
+    "deployCommit": "5a27df6d773e347af3e8835a46898df5de768bed"
+  },
+  "rollback": {
+    "currentImageId": "sha256:ec2c285c981e1c2bbadf9f3d98b8d2f3cedbe992e82f4f873f602d8c7e929c96",
+    "requiredTag": "joincare/backend:rollback-pre-acf2d46",
+    "healthEndpoint": "http://127.0.0.1:13004/health",
+    "healthTimeoutSeconds": 120
+  },
+  "authorizationEvidenceDigest": "834f14b4994a37bb548c781553941d498eea73648218a42c487c21ca1be3221a",
+  "rolloutScope": {
+    "service": "backend",
+    "composeProject": "joincare-test",
+    "composeFile": "/opt/joincare-test/docker-compose.yml",
+    "container": "jc-backend",
+    "databaseWritesPermitted": false,
+    "jobMutationPermitted": false,
+    "authorityWritesPermitted": false
+  }
+}

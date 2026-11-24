@@ -1,0 +1,961 @@
+{
+  "inheritedNamespaces": [
+    "erc7201:openzeppelin.storage.Initializable",
+    "erc7201:openzeppelin.storage.Ownable",
+    "erc7201:openzeppelin.storage.Ownable2Step",
+    "erc7201:openzeppelin.storage.ReentrancyGuard"
+  ],
+  "layoutVersion": "1.2",
+  "members": [
+    {
+      "label": "operator",
+      "offset": 0,
+      "slot": "0",
+      "type": {
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    },
+    {
+      "label": "pauseGuardian",
+      "offset": 0,
+      "slot": "1",
+      "type": {
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    },
+    {
+      "label": "unpauseTimelock",
+      "offset": 0,
+      "slot": "2",
+      "type": {
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    },
+    {
+      "label": "treasury",
+      "offset": 0,
+      "slot": "3",
+      "type": {
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    },
+    {
+      "label": "platformFeeReceiver",
+      "offset": 0,
+      "slot": "4",
+      "type": {
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    },
+    {
+      "label": "platformFeeBps",
+      "offset": 20,
+      "slot": "4",
+      "type": {
+        "label": "uint16",
+        "numberOfBytes": "2"
+      }
+    },
+    {
+      "label": "contributionsPaused",
+      "offset": 22,
+      "slot": "4",
+      "type": {
+        "label": "bool",
+        "numberOfBytes": "1"
+      }
+    },
+    {
+      "label": "payoutsPaused",
+      "offset": 23,
+      "slot": "4",
+      "type": {
+        "label": "bool",
+        "numberOfBytes": "1"
+      }
+    },
+    {
+      "label": "claimsPauseUntil",
+      "offset": 24,
+      "slot": "4",
+      "type": {
+        "label": "uint64",
+        "numberOfBytes": "8"
+      }
+    },
+    {
+      "label": "paymentTokenAdmissions",
+      "offset": 0,
+      "slot": "5",
+      "type": {
+        "key": {
+          "label": "address",
+          "numberOfBytes": "20"
+        },
+        "label": "mapping(address => struct JoinCareFairLaunchV1ArtifactBaseline.PaymentTokenAdmission)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "struct JoinCareFairLaunchV1ArtifactBaseline.PaymentTokenAdmission",
+          "members": [
+            {
+              "label": "currentPolicyVersion",
+              "offset": 0,
+              "slot": "0",
+              "type": {
+                "label": "uint32",
+                "numberOfBytes": "4"
+              }
+            },
+            {
+              "label": "enabledForNewProjects",
+              "offset": 4,
+              "slot": "0",
+              "type": {
+                "label": "bool",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "emergencyBlocked",
+              "offset": 5,
+              "slot": "0",
+              "type": {
+                "label": "bool",
+                "numberOfBytes": "1"
+              }
+            }
+          ],
+          "numberOfBytes": "32"
+        }
+      }
+    },
+    {
+      "label": "paymentTokenPolicyRevisions",
+      "offset": 0,
+      "slot": "6",
+      "type": {
+        "key": {
+          "label": "address",
+          "numberOfBytes": "20"
+        },
+        "label": "mapping(address => mapping(uint32 => struct JoinCareFairLaunchV1ArtifactBaseline.PaymentTokenPolicyRevision))",
+        "numberOfBytes": "32",
+        "value": {
+          "key": {
+            "label": "uint32",
+            "numberOfBytes": "4"
+          },
+          "label": "mapping(uint32 => struct JoinCareFairLaunchV1ArtifactBaseline.PaymentTokenPolicyRevision)",
+          "numberOfBytes": "32",
+          "value": {
+            "label": "struct JoinCareFairLaunchV1ArtifactBaseline.PaymentTokenPolicyRevision",
+            "members": [
+              {
+                "label": "exists",
+                "offset": 0,
+                "slot": "0",
+                "type": {
+                  "label": "bool",
+                  "numberOfBytes": "1"
+                }
+              },
+              {
+                "label": "decimals",
+                "offset": 1,
+                "slot": "0",
+                "type": {
+                  "label": "uint8",
+                  "numberOfBytes": "1"
+                }
+              },
+              {
+                "label": "policyVersion",
+                "offset": 2,
+                "slot": "0",
+                "type": {
+                  "label": "uint32",
+                  "numberOfBytes": "4"
+                }
+              },
+              {
+                "label": "runtimeCodeHash",
+                "offset": 0,
+                "slot": "1",
+                "type": {
+                  "label": "bytes32",
+                  "numberOfBytes": "32"
+                }
+              },
+              {
+                "label": "policyDigest",
+                "offset": 0,
+                "slot": "2",
+                "type": {
+                  "label": "bytes32",
+                  "numberOfBytes": "32"
+                }
+              }
+            ],
+            "numberOfBytes": "96"
+          }
+        }
+      }
+    },
+    {
+      "label": "projectTokenPolicies",
+      "offset": 0,
+      "slot": "7",
+      "type": {
+        "key": {
+          "label": "address",
+          "numberOfBytes": "20"
+        },
+        "label": "mapping(address => struct JoinCareFairLaunchV1ArtifactBaseline.ProjectTokenPolicy)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "struct JoinCareFairLaunchV1ArtifactBaseline.ProjectTokenPolicy",
+          "members": [
+            {
+              "label": "enabledForNewProjects",
+              "offset": 0,
+              "slot": "0",
+              "type": {
+                "label": "bool",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "emergencyBlocked",
+              "offset": 1,
+              "slot": "0",
+              "type": {
+                "label": "bool",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "decimals",
+              "offset": 2,
+              "slot": "0",
+              "type": {
+                "label": "uint8",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "policyVersion",
+              "offset": 3,
+              "slot": "0",
+              "type": {
+                "label": "uint32",
+                "numberOfBytes": "4"
+              }
+            },
+            {
+              "label": "runtimeCodeHash",
+              "offset": 0,
+              "slot": "1",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "policyDigest",
+              "offset": 0,
+              "slot": "2",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            }
+          ],
+          "numberOfBytes": "96"
+        }
+      }
+    },
+    {
+      "label": "reservedBalances",
+      "offset": 0,
+      "slot": "8",
+      "type": {
+        "key": {
+          "label": "address",
+          "numberOfBytes": "20"
+        },
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "uint256",
+          "numberOfBytes": "32"
+        }
+      }
+    },
+    {
+      "label": "approvedBeneficiarySafes",
+      "offset": 0,
+      "slot": "9",
+      "type": {
+        "key": {
+          "label": "address",
+          "numberOfBytes": "20"
+        },
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "bool",
+          "numberOfBytes": "1"
+        }
+      }
+    },
+    {
+      "label": "beneficiarySafeAttestations",
+      "offset": 0,
+      "slot": "10",
+      "type": {
+        "key": {
+          "label": "address",
+          "numberOfBytes": "20"
+        },
+        "label": "mapping(address => bytes32)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "bytes32",
+          "numberOfBytes": "32"
+        }
+      }
+    },
+    {
+      "label": "beneficiarySafeAttestationVersions",
+      "offset": 0,
+      "slot": "11",
+      "type": {
+        "key": {
+          "label": "address",
+          "numberOfBytes": "20"
+        },
+        "label": "mapping(address => uint32)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "uint32",
+          "numberOfBytes": "4"
+        }
+      }
+    },
+    {
+      "label": "releasePolicies",
+      "offset": 0,
+      "slot": "12",
+      "type": {
+        "key": {
+          "label": "bytes32",
+          "numberOfBytes": "32"
+        },
+        "label": "mapping(bytes32 => bool)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "bool",
+          "numberOfBytes": "1"
+        }
+      }
+    },
+    {
+      "label": "releasePolicyVersions",
+      "offset": 0,
+      "slot": "13",
+      "type": {
+        "key": {
+          "label": "bytes32",
+          "numberOfBytes": "32"
+        },
+        "label": "mapping(bytes32 => uint32)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "uint32",
+          "numberOfBytes": "4"
+        }
+      }
+    },
+    {
+      "label": "projects",
+      "offset": 0,
+      "slot": "14",
+      "type": {
+        "key": {
+          "label": "uint256",
+          "numberOfBytes": "32"
+        },
+        "label": "mapping(uint256 => struct JoinCareFairLaunchV1ArtifactBaseline.Project)",
+        "numberOfBytes": "32",
+        "value": {
+          "label": "struct JoinCareFairLaunchV1ArtifactBaseline.Project",
+          "members": [
+            {
+              "label": "projectId",
+              "offset": 0,
+              "slot": "0",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "projectToken",
+              "offset": 0,
+              "slot": "1",
+              "type": {
+                "label": "address",
+                "numberOfBytes": "20"
+              }
+            },
+            {
+              "label": "paymentToken",
+              "offset": 0,
+              "slot": "2",
+              "type": {
+                "label": "address",
+                "numberOfBytes": "20"
+              }
+            },
+            {
+              "label": "projectOwner",
+              "offset": 0,
+              "slot": "3",
+              "type": {
+                "label": "address",
+                "numberOfBytes": "20"
+              }
+            },
+            {
+              "label": "projectProceedsReceiver",
+              "offset": 0,
+              "slot": "4",
+              "type": {
+                "label": "address",
+                "numberOfBytes": "20"
+              }
+            },
+            {
+              "label": "projectProceedsReceiverAttestationDigest",
+              "offset": 0,
+              "slot": "5",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "projectProceedsReceiverAttestationVersion",
+              "offset": 0,
+              "slot": "6",
+              "type": {
+                "label": "uint32",
+                "numberOfBytes": "4"
+              }
+            },
+            {
+              "label": "platformFeeReceiver",
+              "offset": 4,
+              "slot": "6",
+              "type": {
+                "label": "address",
+                "numberOfBytes": "20"
+              }
+            },
+            {
+              "label": "platformFeeReceiverAttestationDigest",
+              "offset": 0,
+              "slot": "7",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "platformFeeReceiverAttestationVersion",
+              "offset": 0,
+              "slot": "8",
+              "type": {
+                "label": "uint32",
+                "numberOfBytes": "4"
+              }
+            },
+            {
+              "label": "projectTokenDecimals",
+              "offset": 4,
+              "slot": "8",
+              "type": {
+                "label": "uint8",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "paymentTokenDecimals",
+              "offset": 5,
+              "slot": "8",
+              "type": {
+                "label": "uint8",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "platformFeeBps",
+              "offset": 6,
+              "slot": "8",
+              "type": {
+                "label": "uint16",
+                "numberOfBytes": "2"
+              }
+            },
+            {
+              "label": "status",
+              "offset": 8,
+              "slot": "8",
+              "type": {
+                "label": "enum JoinCareFairLaunchV1ArtifactBaseline.ProjectStatus",
+                "members": [
+                  "Pending",
+                  "Active",
+                  "SuccessfulPendingRelease",
+                  "Successful",
+                  "Failed",
+                  "Cancelled"
+                ],
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "terminalReason",
+              "offset": 9,
+              "slot": "8",
+              "type": {
+                "label": "enum JoinCareFairLaunchV1ArtifactBaseline.TerminalReason",
+                "members": [
+                  "None",
+                  "SoftCapNotReached",
+                  "CancelledByOperator",
+                  "TokenRuntimeInvalid",
+                  "GovernanceInvalidation",
+                  "PaymentTokenGovernanceInvalidation"
+                ],
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "projectTokenPolicyVersion",
+              "offset": 10,
+              "slot": "8",
+              "type": {
+                "label": "uint32",
+                "numberOfBytes": "4"
+              }
+            },
+            {
+              "label": "paymentTokenPolicyVersion",
+              "offset": 14,
+              "slot": "8",
+              "type": {
+                "label": "uint32",
+                "numberOfBytes": "4"
+              }
+            },
+            {
+              "label": "startTime",
+              "offset": 18,
+              "slot": "8",
+              "type": {
+                "label": "uint64",
+                "numberOfBytes": "8"
+              }
+            },
+            {
+              "label": "endTime",
+              "offset": 0,
+              "slot": "9",
+              "type": {
+                "label": "uint64",
+                "numberOfBytes": "8"
+              }
+            },
+            {
+              "label": "saleTokenAmount",
+              "offset": 0,
+              "slot": "10",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "softCap",
+              "offset": 0,
+              "slot": "11",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "minContribution",
+              "offset": 0,
+              "slot": "12",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "maxContribution",
+              "offset": 0,
+              "slot": "13",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "totalRaised",
+              "offset": 0,
+              "slot": "14",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "totalTokensDeposited",
+              "offset": 0,
+              "slot": "15",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "totalTokensClaimed",
+              "offset": 0,
+              "slot": "16",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "participantCount",
+              "offset": 0,
+              "slot": "17",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "finalTotalRaised",
+              "offset": 0,
+              "slot": "18",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "finalPriceNumerator",
+              "offset": 0,
+              "slot": "19",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "finalPriceDenominator",
+              "offset": 0,
+              "slot": "20",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "settlementBlockNumber",
+              "offset": 0,
+              "slot": "21",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "settlementAnchorBlockNumber",
+              "offset": 0,
+              "slot": "22",
+              "type": {
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "settlementAnchorBlockHash",
+              "offset": 0,
+              "slot": "23",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "settlementTxHash",
+              "offset": 0,
+              "slot": "24",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "settlementTxLogOrdinal",
+              "offset": 0,
+              "slot": "25",
+              "type": {
+                "label": "uint32",
+                "numberOfBytes": "4"
+              }
+            },
+            {
+              "label": "releaseManifestDigest",
+              "offset": 0,
+              "slot": "26",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "projectTokenCodeHash",
+              "offset": 0,
+              "slot": "27",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "projectTokenPolicyDigest",
+              "offset": 0,
+              "slot": "28",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "paymentTokenCodeHash",
+              "offset": 0,
+              "slot": "29",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "paymentTokenPolicyDigest",
+              "offset": 0,
+              "slot": "30",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "releasePolicyDigest",
+              "offset": 0,
+              "slot": "31",
+              "type": {
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "releasePolicyVersion",
+              "offset": 0,
+              "slot": "32",
+              "type": {
+                "label": "uint32",
+                "numberOfBytes": "4"
+              }
+            },
+            {
+              "label": "projectProceedsWithdrawn",
+              "offset": 4,
+              "slot": "32",
+              "type": {
+                "label": "bool",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "platformFeeWithdrawn",
+              "offset": 5,
+              "slot": "32",
+              "type": {
+                "label": "bool",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "failedProjectTokensWithdrawn",
+              "offset": 6,
+              "slot": "32",
+              "type": {
+                "label": "bool",
+                "numberOfBytes": "1"
+              }
+            }
+          ],
+          "numberOfBytes": "1056"
+        }
+      }
+    },
+    {
+      "label": "positions",
+      "offset": 0,
+      "slot": "15",
+      "type": {
+        "key": {
+          "label": "uint256",
+          "numberOfBytes": "32"
+        },
+        "label": "mapping(uint256 => mapping(address => struct JoinCareFairLaunchV1ArtifactBaseline.UserPosition))",
+        "numberOfBytes": "32",
+        "value": {
+          "key": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "label": "mapping(address => struct JoinCareFairLaunchV1ArtifactBaseline.UserPosition)",
+          "numberOfBytes": "32",
+          "value": {
+            "label": "struct JoinCareFairLaunchV1ArtifactBaseline.UserPosition",
+            "members": [
+              {
+                "label": "contributionAmount",
+                "offset": 0,
+                "slot": "0",
+                "type": {
+                  "label": "uint256",
+                  "numberOfBytes": "32"
+                }
+              },
+              {
+                "label": "claimedTokens",
+                "offset": 0,
+                "slot": "1",
+                "type": {
+                  "label": "uint256",
+                  "numberOfBytes": "32"
+                }
+              },
+              {
+                "label": "refunded",
+                "offset": 0,
+                "slot": "2",
+                "type": {
+                  "label": "bool",
+                  "numberOfBytes": "1"
+                }
+              }
+            ],
+            "numberOfBytes": "96"
+          }
+        }
+      }
+    },
+    {
+      "label": "hasParticipated",
+      "offset": 0,
+      "slot": "16",
+      "type": {
+        "key": {
+          "label": "uint256",
+          "numberOfBytes": "32"
+        },
+        "label": "mapping(uint256 => mapping(address => bool))",
+        "numberOfBytes": "32",
+        "value": {
+          "key": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "label": "mapping(address => bool)",
+          "numberOfBytes": "32",
+          "value": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    {
+      "label": "vestingTimes",
+      "offset": 0,
+      "slot": "17",
+      "type": {
+        "key": {
+          "label": "uint256",
+          "numberOfBytes": "32"
+        },
+        "label": "mapping(uint256 => uint64[])",
+        "numberOfBytes": "32",
+        "value": {
+          "base": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "label": "uint64[]",
+          "numberOfBytes": "32"
+        }
+      }
+    },
+    {
+      "label": "vestingBps",
+      "offset": 0,
+      "slot": "18",
+      "type": {
+        "key": {
+          "label": "uint256",
+          "numberOfBytes": "32"
+        },
+        "label": "mapping(uint256 => uint16[])",
+        "numberOfBytes": "32",
+        "value": {
+          "base": {
+            "label": "uint16",
+            "numberOfBytes": "2"
+          },
+          "label": "uint16[]",
+          "numberOfBytes": "32"
+        }
+      }
+    },
+    {
+      "label": "__gap",
+      "offset": 0,
+      "slot": "19",
+      "type": {
+        "base": {
+          "label": "uint256",
+          "numberOfBytes": "32"
+        },
+        "label": "uint256[32]",
+        "numberOfBytes": "1024"
+      }
+    }
+  ],
+  "namespace": "erc7201:joincare.storage.JoinCareFairLaunchV1",
+  "namespaceSlot": "0x7ebb4c309dc14c823b32233ea7cfb602ee106e1bc7e105581a751cd0bcb46700"
+}

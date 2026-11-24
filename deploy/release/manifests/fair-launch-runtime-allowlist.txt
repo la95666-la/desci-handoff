@@ -1,0 +1,9 @@
+# Runtime-only Fair Launch release paths. No source, migration, deploy script or key.
+artifacts/backend/joincare-core
+artifacts/backend/joincare-job
+packages/joincare-frontend-*.tar.gz
+packages/joincare-admin-*.tar.gz
+release-manifest.json
+SHA256SUMS
+SHA256SUMS.asc
+README-DEPLOY.md

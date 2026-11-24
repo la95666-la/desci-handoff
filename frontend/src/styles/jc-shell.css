@@ -1,0 +1,671 @@
+/* ============================================================
+   jc-shell.css — 复用首页设计语言的子页面骨架样式
+   • 1440 画布缩放
+   • 浮动 navbar、深色 footer 条带
+   • [data-reveal] 滚动初现
+   • 通用动效（headline 瀑布、scale-pop、rise-card、按钮箭头等）
+   ============================================================ */
+
+/* === canvas 缩放容器（同 Home.vue） === */
+.jc-canvas-host {
+  width: 100%;
+  overflow-x: clip;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  background: #ffffff;
+}
+.jc-canvas-host::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/figma/v2/noise-bg.png');
+  background-size: 500px 500px;
+  background-repeat: repeat;
+  background-position: top left;
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 0;
+}
+.jc-canvas-host > * {
+  position: relative;
+  z-index: 1;
+}
+.jc-scaled-wrapper { position: relative; }
+.jc-canvas-1440 {
+  width: 1440px;
+  position: relative;
+  transform-origin: top left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  color: #212121;
+}
+
+/* 深色全幅条带（footer/partners 风格）+ 噪点底纹叠加
+   颜色 / 噪点参数与首页 .dark-strip 完全一致：#222 底 + noise-bg.png opacity 0.12 */
+.jc-dark-strip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  background: #222;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.jc-dark-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/figma/v2/noise-bg.png');
+  background-size: 500px 500px;
+  background-repeat: repeat;
+  background-position: top left;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* === Floating navbar（白色胶囊） === */
+.jc-floating-navbar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  transform-origin: top center;
+  pointer-events: auto;
+}
+.jc-floating-navbar .jc-nav-pill {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 5px 6px 5px 24px;
+  border-radius: 7px;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* === Playfair Display italic（同 Home） === */
+.font-playfair { font-family: 'Playfair Display', Georgia, serif; }
+
+.jc-canvas-1440 .jc-hero-headline-line,
+.jc-canvas-1440 .reveal-headline-line,
+.jc-canvas-1440 .reveal-headline {
+  line-height: 1.03 !important;
+  padding-bottom: 0.035em;
+}
+
+/* === arrow-icon + arrow-diag（同 Home，箭头按钮共用） === */
+.arrow-icon {
+  display: inline-block;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  background: #9bff00;
+  border-radius: 4px;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: background 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.arrow-img {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: #212121;
+  -webkit-mask-image: var(--mask);
+          mask-image: var(--mask);
+  -webkit-mask-size: contain;
+          mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity 0.3s ease;
+}
+.arrow-diag .arrow-a { left: 10px; top: 10px; }
+.arrow-diag .arrow-b { left: -20px; top: 40px; }
+.arrow-vert .arrow-a { left: 10px; top: 10px; transform: rotate(45deg); }
+.arrow-vert .arrow-b { left: -20px; top: 40px; transform: rotate(45deg); }
+
+.white-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  background: #fff;
+  border-radius: 7px;
+  padding: 7px 7px 7px 14px;
+  gap: 8px;
+  cursor: pointer;
+  transition: box-shadow .3s ease, transform .3s ease;
+}
+.white-pill-btn:hover { box-shadow: 0 12px 28px -4px rgba(0,0,0,0.14); transform: translateY(-1px); }
+.white-pill-btn:hover .arrow-diag { background: #212121; }
+.white-pill-btn:hover .arrow-diag .arrow-img { background-color: #9bff00; }
+.white-pill-btn:hover .arrow-diag .arrow-a { transform: translate(30px, -30px); }
+.white-pill-btn:hover .arrow-diag .arrow-b { transform: translate(30px, -30px); }
+
+/* === 滚动初现通用样式（与 Home.vue 中的非 scoped 块一致） === */
+[data-reveal] {
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+[data-reveal].is-revealed { opacity: 1; }
+
+[data-reveal] .reveal-eyebrow {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-reveal].is-revealed .reveal-eyebrow { opacity: 1; transform: translateY(0); }
+
+@keyframes reveal-headline-waterfall {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+    clip-path: inset(0 0 100% 0);
+    -webkit-clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+    -webkit-clip-path: inset(0 0 0 0);
+  }
+}
+[data-reveal] .reveal-headline {
+  opacity: 0;
+  line-height: 1.03 !important;
+  padding-bottom: 0.035em;
+  will-change: opacity, transform, clip-path;
+}
+[data-reveal].is-revealed .reveal-headline {
+  animation: reveal-headline-waterfall 0.85s cubic-bezier(0.83, 0, 0.17, 1) both;
+  animation-delay: 0.10s;
+}
+[data-reveal] .reveal-headline-line {
+  display: block;
+  opacity: 0;
+  line-height: 1.03 !important;
+  padding-bottom: 0.035em;
+  will-change: opacity, transform, clip-path;
+}
+[data-reveal].is-revealed .reveal-headline-line {
+  animation: reveal-headline-waterfall 0.78s cubic-bezier(0.83, 0, 0.17, 1) both;
+}
+[data-reveal].is-revealed .reveal-headline-line-1 { animation-delay: 0.10s; }
+[data-reveal].is-revealed .reveal-headline-line-2 { animation-delay: 0.30s; }
+
+/* 卡片：rise（自下而上） */
+[data-reveal] .rise-card {
+  opacity: 0;
+  transform: translateY(80px);
+  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-reveal].is-revealed .rise-card { opacity: 1; transform: translateY(0); }
+[data-reveal].is-revealed .rise-card-1 { transition-delay: 0.22s; }
+[data-reveal].is-revealed .rise-card-2 { transition-delay: 0.36s; }
+[data-reveal].is-revealed .rise-card-3 { transition-delay: 0.50s; }
+[data-reveal].is-revealed .rise-card-4 { transition-delay: 0.64s; }
+
+/* 卡片：scale-pop（缩放回弹） */
+[data-reveal] .scale-pop {
+  opacity: 0;
+  transform: scale(0.55);
+  transform-origin: center;
+  transition: opacity 0.6s cubic-bezier(0.22, 1.6, 0.4, 1),
+              transform 0.6s cubic-bezier(0.22, 1.6, 0.4, 1);
+}
+[data-reveal].is-revealed .scale-pop { opacity: 1; transform: scale(1); }
+[data-reveal].is-revealed .scale-pop-1 { transition-delay: 0.28s; }
+[data-reveal].is-revealed .scale-pop-2 { transition-delay: 0.42s; }
+[data-reveal].is-revealed .scale-pop-3 { transition-delay: 0.56s; }
+[data-reveal].is-revealed .scale-pop-4 { transition-delay: 0.70s; }
+
+/* 卡片：train（从右侧滑入） */
+[data-reveal] .train-item {
+  opacity: 0;
+  transform: translateX(180px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-reveal].is-revealed .train-item { opacity: 1; transform: translateX(0); }
+[data-reveal].is-revealed .train-item:nth-child(1) { transition-delay: 0.12s; }
+[data-reveal].is-revealed .train-item:nth-child(2) { transition-delay: 0.24s; }
+[data-reveal].is-revealed .train-item:nth-child(3) { transition-delay: 0.36s; }
+[data-reveal].is-revealed .train-item:nth-child(4) { transition-delay: 0.48s; }
+
+/* hero-style fade-up（single-shot 入场） */
+@keyframes jc-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.jc-hero-anim {
+  opacity: 0;
+  animation: jc-rise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.jc-hero-anim-1 { animation-delay: 0.20s; }
+.jc-hero-anim-2 { animation-delay: 0.35s; }
+.jc-hero-anim-3 { animation-delay: 0.50s; }
+.jc-hero-anim-4 { animation-delay: 0.65s; }
+
+/* hero 大标题瀑布（直接播放，不依赖 data-reveal） */
+.jc-hero-headline-line {
+  display: block;
+  opacity: 0;
+  line-height: 1.03 !important;
+  padding-bottom: 0.035em;
+  will-change: opacity, transform, clip-path;
+  animation: reveal-headline-waterfall 0.78s cubic-bezier(0.83, 0, 0.17, 1) both;
+}
+.jc-hero-headline-line-1 { animation-delay: 0.30s; }
+.jc-hero-headline-line-2 { animation-delay: 0.55s; }
+
+/* ============================================================
+   暗色主题（首页风格的 4 个路由：Home / Ecosystem / Launchpad / Quest Center）
+   ------------------------------------------------------------
+   触发：<html> 上挂 .home-dark-root，wrapper（.canvas-host 或 .jc-canvas-host）
+        上挂 .home-dark。由 App.vue 全局管理。
+   ============================================================ */
+
+/* === 切换标签 —— 视口右侧 0.382 位置，紧凑方形含 sun/moon === */
+.theme-toggle-tab {
+  position: fixed;
+  right: 0;
+  top: 38.2%;
+  transform: translateY(-50%);
+  z-index: 900;   /* 低于 splash(1000)，开幕动画会盖住它 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  color: #212121;
+  border: none;
+  border-radius: 12px 0 0 12px;
+  cursor: pointer;
+  box-shadow: -4px 0 14px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+.theme-toggle-tab:hover { transform: translate(-3px, -50%); }
+.theme-toggle-tab.is-dark { background: #212121; color: #fff; }
+.theme-toggle-tab .ttt-icon { display: block; }
+
+/* === html / body 在暗色下统一深底（防视口空白漏白） === */
+html.home-dark-root,
+html.home-dark-root body { background: #282828; }
+
+/* === 切换主题瞬间：广播 0.35s 颜色过渡（仅在切换那一刻临时生效） ===
+   JS 在 toggle 时给 <html> 临时加 .home-dark-transition，350ms 后移除，
+   平时不影响页面其它过渡 */
+html.home-dark-transition,
+html.home-dark-transition *,
+html.home-dark-transition *::before,
+html.home-dark-transition *::after {
+  transition: background-color 0.35s ease,
+              background 0.35s ease,
+              color 0.35s ease,
+              border-color 0.35s ease,
+              fill 0.35s ease,
+              filter 0.35s ease,
+              box-shadow 0.35s ease !important;
+}
+
+/* === wrapper 主底色 ===
+   注意 !important：Home.vue 的 <style scoped> .canvas-host { background: #fff }
+   会因 data-v 属性选择器获得同等特异性（0,2,0），且 scoped 在导入后注入会赢源序，
+   不加 !important 就被白底覆盖回去 */
+.canvas-host.home-dark,
+.jc-canvas-host.home-dark {
+  background: #282828 !important;
+}
+.canvas-host.home-dark::before,
+.jc-canvas-host.home-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/figma/v2/noise-bg.png');
+  background-size: 500px 500px;
+  background-repeat: repeat;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === 通用文字反色 === */
+.home-dark [class*="text-[#212121]"],
+.home-dark .text-black,
+.home-dark [class*="text-black"] {
+  color: #f0f0f0 !important;
+}
+.home-dark [class*="text-[#9bff00]"] { color: #9bff00 !important; }
+
+/* === 通用卡片背景：bg-white → 与 navbar 同色 (#161616) === */
+.home-dark .bg-white,
+.home-dark [class*="bg-white"] {
+  background-color: #161616 !important;
+}
+.home-dark .bg-\[\#f5f5f3\],
+.home-dark [class*="bg-[#f5f5f3]"] {
+  background-color: #1c1c1c !important;
+}
+.home-dark .compare-row { background-color: #1c1c1c !important; }
+.home-dark .project-chip {
+  background-color: #161616 !important;
+  color: #f0f0f0 !important;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* === Section 类胶囊按钮：白底 → 与卡片同色，文字 hover → 绿 === */
+.home-dark .white-pill-btn,
+.home-dark .fp-detail-btn {
+  background: #161616 !important;
+}
+.home-dark .white-pill-btn:hover [class*="text-[#212121]"],
+.home-dark .fp-detail-btn:hover [class*="text-[#212121]"] {
+  color: #9bff00 !important;
+}
+
+/* === Floating navbar 暗化（自身 fixed 在 wrapper 之外，用 html 范围选择器） === */
+html.home-dark-root .floating-navbar .bg-white {
+  background-color: #161616 !important;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.45) !important;
+}
+html.home-dark-root .floating-navbar [class*="text-[#212121]"] {
+  color: #f0f0f0 !important;
+}
+html.home-dark-root .floating-navbar [class*="bg-[#f0efec]"] {
+  background-color: #232323 !important;
+}
+/* 黑色 logo / icon 反成白色 */
+html.home-dark-root .floating-navbar img[alt="JoinCare"],
+html.home-dark-root .floating-navbar img[src*="nav-icon"] {
+  filter: brightness(0) invert(1);
+}
+
+/* === wallet 胶囊 / dropdown 菜单（也是 navbar 内 fixed 元素） === */
+html.home-dark-root .wallet-pill { background: #232323 !important; }
+html.home-dark-root .wallet-pill,
+html.home-dark-root .wallet-pill * { color: #f0f0f0 !important; }
+html.home-dark-root .wallet-menu {
+  background: #161616 !important;
+  color: #f0f0f0 !important;
+}
+html.home-dark-root .wallet-menu-item { color: #f0f0f0 !important; }
+html.home-dark-root .wallet-menu-item:hover { background: #232323 !important; }
+
+/* === 子页面（Ecosystem / Launchpad / Quest Center）的 footer：
+   每页 footer 内含 .jc-dark-strip 全幅深色条带 —— 暗模式翻成浅色 + 噪音 === */
+.home-dark .jc-dark-strip {
+  background: #f5f5f3 !important;
+}
+.home-dark .jc-dark-strip::before {
+  /* 保留底部 noise 子层，但调到浅底合适的密度 */
+  opacity: 0.10 !important;
+}
+/* 子页面 footer 内白字 → 黑 */
+.home-dark footer [class*="text-white"],
+.home-dark footer .text-white {
+  color: #212121 !important;
+}
+.home-dark footer [class*="text-[#999]"] {
+  color: #6a6a6a !important;
+}
+/* footer 白色 logo → 黑 */
+.home-dark footer img[alt="JoinCare"] {
+  filter: brightness(0);
+}
+
+/* ============================================================
+   MOBILE ADAPTATION (<= 768px)
+   仅禁用 1440 canvas + scale 的容器约束，具体布局由每个页面
+   自己的 v-if="isMobile" 分支独立设计 —— 不强制覆盖桌面 CSS
+   ============================================================ */
+@media (max-width: 768px) {
+  /* 让 canvas 容器不占据固定 1440 宽度，让 mobile 模板自己流式撑开 */
+  .jc-canvas-host {
+    height: auto !important;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: block !important;
+  }
+  .jc-canvas-host::before { display: none; }
+  .jc-scaled-wrapper {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .jc-canvas-1440 {
+    width: 100% !important;
+    max-width: 100vw;
+    transform: none !important;
+    align-items: stretch !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    display: block !important;
+  }
+  /* 通用移动端页面根容器（供各 v-if=isMobile 独立模板使用）*/
+  .jc-mobile-page {
+    padding-top: 20px;   /* 左上角浮动 FAB 只占 44px，不遮挡内容 */
+    padding-bottom: 0;   /* footer 顶到底，暗色下不留深色边 */
+    min-height: 100vh;
+    background: #f6f6f6;
+    font-family: 'Inter', sans-serif;
+    color: #212121;
+  }
+  .jc-mobile-page.home-dark {
+    background: #191919;
+    color: #fafaf7;
+  }
+
+  /* ============ 通用移动布局元件 ============ */
+  .jc-mobile-page .m-eyebrow {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1.4px;
+    text-transform: uppercase; color: #212121;
+  }
+  .jc-mobile-page.home-dark .m-eyebrow { color: #fafaf7; }
+  .jc-mobile-page .m-eyebrow-tag {
+    width: 14px; height: 14px; background: #9bff00;
+    border-radius: 10px 3px 3px 3px; transform: rotate(15deg);
+    display: inline-block; flex-shrink: 0;
+  }
+
+  /* Hero */
+  .jc-mobile-page .m-hero {
+    padding: 72px 20px 32px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .jc-mobile-page .m-hero-title {
+    font-size: 40px; line-height: 1.1; letter-spacing: -1px;
+    margin: 8px 0 0; color: #212121;
+    font-weight: 700;
+  }
+  .jc-mobile-page.home-dark .m-hero-title { color: #fafaf7; }
+  .jc-mobile-page .m-hero-sub {
+    font-size: 14px; line-height: 1.55; color: #4c5148; margin: 0;
+  }
+  .jc-mobile-page.home-dark .m-hero-sub { color: #b8b8b0; }
+
+  /* Section wrapper */
+  .jc-mobile-page .m-section {
+    padding: 32px 20px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .jc-mobile-page .m-section-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 4px;
+  }
+  .jc-mobile-page .m-section-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.4px;
+    text-transform: uppercase; color: #212121; margin: 0;
+  }
+  .jc-mobile-page.home-dark .m-section-title { color: #fafaf7; }
+  .jc-mobile-page .m-section-headline {
+    font-size: 28px; line-height: 1.18; letter-spacing: -0.5px;
+    color: #212121; margin: 4px 0 0; font-weight: 600;
+  }
+  .jc-mobile-page.home-dark .m-section-headline { color: #fafaf7; }
+  .jc-mobile-page .m-section-copy {
+    font-size: 14px; line-height: 1.55; color: #4c5148; margin: 8px 0 0;
+  }
+  .jc-mobile-page.home-dark .m-section-copy { color: #b8b8b0; }
+
+  /* Cards */
+  .jc-mobile-page .m-card-list {
+    display: flex; flex-direction: column; gap: 12px; margin-top: 12px;
+  }
+  .jc-mobile-page .m-card-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px;
+  }
+  .jc-mobile-page .m-card {
+    background: white;
+    border: 1px solid #ececea;
+    border-radius: 14px;
+    padding: 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .jc-mobile-page.home-dark .m-card {
+    background: #1f1f1f; border-color: rgba(255,255,255,0.06);
+  }
+  .jc-mobile-page .m-card h4 {
+    font-size: 16px; font-weight: 700; color: #212121; margin: 4px 0 0;
+  }
+  .jc-mobile-page.home-dark .m-card h4 { color: #fafaf7; }
+  .jc-mobile-page .m-card p {
+    font-size: 13px; line-height: 1.5; color: #5f6659; margin: 0;
+  }
+  .jc-mobile-page.home-dark .m-card p { color: #b8b8b0; }
+  .jc-mobile-page .m-card-icon,
+  .jc-mobile-page .m-card-icon-tag {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .jc-mobile-page .m-card-icon-tag {
+    width: 36px; height: 36px;
+    background: rgba(155, 255, 0, 0.3);
+    border-radius: 8px;
+  }
+  .jc-mobile-page .m-card-hero {
+    background: linear-gradient(160deg, #f9fbe7 0%, #ffffff 60%);
+  }
+  .jc-mobile-page.home-dark .m-card-hero {
+    background: linear-gradient(160deg, #1f2b1e 0%, #1f1f1f 60%);
+  }
+  .jc-mobile-page .m-card-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    align-self: flex-start;
+    background: rgba(155, 255, 0, 0.3);
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: #1aa64a;
+  }
+  .jc-mobile-page .m-card-pill .wallet-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #9bff00; box-shadow: 0 0 0 2px rgba(155,255,0,0.25);
+  }
+  .jc-mobile-page .m-utility-kicker {
+    font-size: 10px; font-weight: 700; color: #808080;
+    letter-spacing: 1.5px; text-transform: uppercase; margin: 8px 0 0;
+  }
+
+  /* Buttons */
+  .jc-mobile-page .m-btn-primary,
+  .jc-mobile-page .m-btn-secondary {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; height: 46px; padding: 0 22px;
+    border: none; border-radius: 999px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+  }
+  .jc-mobile-page .m-btn-primary {
+    background: #212121; color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    align-self: flex-start;
+  }
+  .jc-mobile-page.home-dark .m-btn-primary {
+    background: #9bff00; color: #212121;
+  }
+  .jc-mobile-page .m-btn-secondary {
+    background: white; color: #212121;
+    border: 1px solid #ececea;
+    align-self: flex-start;
+  }
+  .jc-mobile-page.home-dark .m-btn-secondary {
+    background: #1f1f1f; color: #fafaf7;
+    border-color: rgba(255,255,255,0.1);
+  }
+  .jc-mobile-page .m-btn-primary .material-symbols-outlined,
+  .jc-mobile-page .m-btn-secondary .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  /* CTA */
+  .jc-mobile-page .m-cta-section {
+    margin: 32px 20px;
+    padding: 32px 24px;
+    background: linear-gradient(135deg, #9bff00 0%, #7ce000 100%);
+    border-radius: 20px;
+    text-align: center;
+  }
+  .jc-mobile-page .m-cta-inner {
+    display: flex; flex-direction: column; gap: 14px; align-items: center;
+  }
+  .jc-mobile-page .m-cta-title {
+    font-size: 24px; font-weight: 700; color: #212121; margin: 0;
+  }
+  .jc-mobile-page .m-cta-sub {
+    font-size: 14px; color: #1a1a1a; margin: 0; line-height: 1.5;
+  }
+  .jc-mobile-page .m-cta-section .m-btn-primary {
+    background: #212121; color: white;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    align-self: center;
+  }
+  .jc-mobile-page .m-cta-section .m-btn-secondary {
+    background: rgba(255,255,255,0.7); color: #212121;
+    border: none;
+    align-self: center;
+  }
+
+  /* Footer */
+  .jc-mobile-page .m-footer {
+    background: #222; color: white;
+    padding: 40px 24px 32px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .jc-mobile-page .m-footer-logo {
+    /* footer-logo.svg 用 width/height=100%，无固有尺寸；按 viewBox 399.6:111 (≈3.6:1) 固定 width */
+    width: 160px;
+    height: auto;
+    aspect-ratio: 399.638 / 111;
+    align-self: center;
+    display: block;
+  }
+  .jc-mobile-page .m-footer-links {
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .jc-mobile-page .m-footer-label {
+    font-size: 13px; font-weight: 700; color: white; margin: 0 0 4px;
+  }
+  .jc-mobile-page .m-footer-value {
+    font-size: 12px; color: #999; margin: 0; line-height: 1.5;
+  }
+  .jc-mobile-page .m-footer-copy {
+    font-size: 11px; color: #666; text-align: center; margin: 0;
+  }
+  /* dark 模式 footer 反色 */
+  .jc-mobile-page.home-dark .m-footer {
+    background: #f5f5f3; color: #212121;
+  }
+  .jc-mobile-page.home-dark .m-footer-logo { filter: brightness(0); }
+  .jc-mobile-page.home-dark .m-footer-label { color: #212121; }
+  .jc-mobile-page.home-dark .m-footer-value { color: #6a6a6a; }
+  .jc-mobile-page.home-dark .m-footer-copy { color: #6a6a6a; }
+}

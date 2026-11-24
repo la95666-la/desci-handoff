@@ -1,0 +1,10 @@
+'use strict';
+// Executable-only fixture adapter. Production code never imports this file.
+if(require.main!==module)throw Error('test authority adapter is executable-only');
+const fs=require('fs'),crypto=require('crypto'),path=require('path');
+function requireTestProcess(){if(process.env.NODE_ENV!=='test'||process.env.JC_FAIR_LAUNCH_TEST_AUTHORITY!=='1')throw Error('test authority adapter requires NODE_ENV=test and explicit test flag');}
+function canonical(v){if(v===null)return'null';if(typeof v==='string'||typeof v==='boolean'||typeof v==='number')return JSON.stringify(v);if(Array.isArray(v))return`[${v.map(canonical).join(',')}]`;return`{${Object.keys(v).sort().map(k=>`${JSON.stringify(k)}:${canonical(v[k])}`).join(',')}}`;}
+function read(file){const real=path.resolve(file),raw=fs.readFileSync(real,'utf8').trim(),value=JSON.parse(raw);return{real,value,digest:crypto.createHash('sha256').update(canonical(value)).digest('hex')}}
+function authority(file,subject,digest){const a=read(file);if(a.value.domain!=='joincare.fair-launch.reviewer-release-authority.v1'||a.value.status!=='REVIEWER_ADMITTED'||a.value.subjects?.[subject]!==digest)throw Error('test reviewer authority mismatch');return a;}
+function monotonic(file,environment,generation,digest,previous){const s=read(file);if(s.value.domain!=='joincare.fair-launch.monotonic-state.v1'||s.value.environment!==environment||s.value.currentGeneration!==generation||s.value.currentManifestDigest!==digest||s.value.previousManifestDigest!==previous)throw Error('test monotonic state mismatch');return s;}
+try{requireTestProcess();const command=process.argv[2];let result;if(command==='authority')result=authority(process.argv[3],process.argv[4],process.argv[5]);else if(command==='monotonic')result=monotonic(process.argv[3],process.argv[4],Number(process.argv[5]),process.argv[6],process.argv[7]==='null'?null:process.argv[7]);else throw Error('unknown test authority command');process.stdout.write(JSON.stringify({digest:result.digest,path:result.real})+'\n')}catch(error){console.error(error.message);process.exit(1)}

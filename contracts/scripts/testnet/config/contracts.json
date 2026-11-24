@@ -1,0 +1,19 @@
+{
+  "network": "bsc-testnet",
+  "chainId": 97,
+  "rpcUrl": "https://data-seed-prebsc-1-s1.bnbchain.org:8545",
+  "contracts": {
+    "jccToken": "0xFc6C84ac73c11f6C162B9dd5B4A94e7bfb3308EA",
+    "joinCarePlatform": "0xe6F01eC4dEA815c9dAAb79d7A7D0FA16b2cB368A",
+    "projectToken": "0xbCA8400D0e76E417746A0fd0bBf6cdedfcD42153"
+  },
+  "deployer": {
+    "address": "0x7c1b87b00bB80688705790Ac20c9F4dB8a8d8302",
+    "initialJCC": "1000000",
+    "initialBNB": "0.83"
+  },
+  "explorer": {
+    "url": "https://testnet.bscscan.com",
+    "apiUrl": "https://api-testnet.bscscan.com/api"
+  }
+}

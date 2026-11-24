@@ -1,0 +1,9 @@
+/scripts/test-job-readiness-stream-mysql.sh text eol=lf
+/scripts/test-project-freshness-mysql.sh text eol=lf
+/scripts/test-project-tracking-mysql.sh text eol=lf
+/scripts/test-v3-fee-status-mysql.sh text eol=lf
+/scripts/test-v3-retired-nonce-mysql.sh text eol=lf
+/scripts/test-v3-policy-request-mysql.sh text eol=lf
+/scripts/test-login-primary-wallet-mysql.sh text eol=lf
+/scripts/test-v3-candidate-index-mysql.sh text eol=lf
+/scripts/test-v3-create-runway-mysql.sh text eol=lf

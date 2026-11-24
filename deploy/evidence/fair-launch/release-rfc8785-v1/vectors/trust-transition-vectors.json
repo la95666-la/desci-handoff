@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 2,
+  "keyRotation": {
+    "previousKeySet": {
+      "domain": "joincare.release.key-set.v1",
+      "keySetVersion": 1,
+      "threshold": 2,
+      "keys": [
+        {
+          "keyId": "key-a",
+          "algorithm": "Ed25519",
+          "publicKeyBase64": "AxLvrY71IotFdIwFOyYi/agOflZC4q+Va3+lFL9pKCM="
+        },
+        {
+          "keyId": "key-b",
+          "algorithm": "Ed25519",
+          "publicKeyBase64": "xFIp2clRWaPl5WNdModY+u1Y7igLnW3jK+cnHsuBzCc="
+        },
+        {
+          "keyId": "key-c",
+          "algorithm": "Ed25519",
+          "publicKeyBase64": "L23fEmvBnVnhEgTzS/SXJAtOqGD8SfYm4T00cc4QmQk="
+        }
+      ],
+      "validFromGeneration": 1,
+      "validThroughGeneration": 100,
+      "supersedesKeySetVersion": null,
+      "previousKeySetDigest": null,
+      "revokedAtGeneration": null,
+      "revocationReason": null,
+      "issuedAt": "2026-09-06T00:00:00Z",
+      "signaturesByPreviousKeySet": []
+    },
+    "nextKeySet": {
+      "domain": "joincare.release.key-set.v1",
+      "keySetVersion": 2,
+      "threshold": 2,
+      "keys": [
+        {
+          "keyId": "key-a",
+          "algorithm": "Ed25519",
+          "publicKeyBase64": "4AwiDOLBwGxUVgw7VqYARR9eMkqJgPGZJp9v3oykZvE="
+        },
+        {
+          "keyId": "key-b",
+          "algorithm": "Ed25519",
+          "publicKeyBase64": "0Rx4xWOCzGfojE030O3r/oeXb3PwT1ImT8ved1AHDKc="
+        },
+        {
+          "keyId": "key-c",
+          "algorithm": "Ed25519",
+          "publicKeyBase64": "+OJox6JvtJeF5ChIqMD3hA5fEsH1lsitCTGSqf/oWDc="
+        }
+      ],
+      "validFromGeneration": 101,
+      "validThroughGeneration": 200,
+      "supersedesKeySetVersion": 1,
+      "previousKeySetDigest": "9c63546deba3e5a22e2089902705d283c52b7c438fd1014c0493ac03d9f9c4db",
+      "revokedAtGeneration": null,
+      "revocationReason": null,
+      "issuedAt": "2026-10-01T00:00:00Z",
+      "signaturesByPreviousKeySet": [
+        {
+          "keyId": "key-a",
+          "algorithm": "Ed25519",
+          "signatureBase64": "/sOtNLHctcpzib/0+DpZq8Q6HHb3wGg8NEA2PyOZpR8Wz5tpw+4BsANwBn7VxieJblxUi6d10lqPouwhV0NUDA=="
+        },
+        {
+          "keyId": "key-b",
+          "algorithm": "Ed25519",
+          "signatureBase64": "dUtJD8neBtZbLrUsWT5/+F5Nr6Uj2ikdWhE+S92+Spqgpxs9wOfJ+lJIJgyr6STTMQN+qPl2DnVBWL4gragwAQ=="
+        }
+      ]
+    },
+    "signingPayloadSha256": "a4e63d75e4d2989092e55bb399093a08950aaa29c81ef272242c1dad0cd66d96",
+    "expected": {
+      "accepted": true
+    },
+    "negative": [
+      {
+        "id": "wrong-predecessor-digest",
+        "mutation": "previousKeySetDigest",
+        "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "accepted": false
+      },
+      {
+        "id": "insufficient-predecessor-signatures",
+        "mutation": "dropSignature",
+        "accepted": false
+      },
+      {
+        "id": "wrong-predecessor-signer",
+        "mutation": "unknownSigner",
+        "accepted": false
+      },
+      {
+        "id": "tampered-new-key-set",
+        "mutation": "validThroughGeneration",
+        "value": 201,
+        "accepted": false
+      },
+      {
+        "id": "new-key-before-valid-from",
+        "manifestGeneration": 100,
+        "accepted": false
+      },
+      {
+        "id": "old-key-after-valid-through",
+        "manifestGeneration": 101,
+        "accepted": false
+      }
+    ]
+  },
+  "revocation": [
+    {
+      "id": "revoked-signer-after-effective-generation",
+      "keyId": "key-c",
+      "manifestGeneration": 50,
+      "accepted": false
+    },
+    {
+      "id": "unrevoked-threshold-before-effective-generation",
+      "keyIds": [
+        "key-a",
+        "key-b"
+      ],
+      "manifestGeneration": 49,
+      "accepted": true
+    }
+  ],
+  "previousDigest": [
+    {
+      "id": "manifest-generation-two-requires-link",
+      "previousGeneration": 1,
+      "nextGeneration": 2,
+      "previousDigest": "af10c3f2859c36ce95e8a5d53d64fd1d985f5115f88f9f67da7a97be13cced97",
+      "nextPreviousDigest": "af10c3f2859c36ce95e8a5d53d64fd1d985f5115f88f9f67da7a97be13cced97",
+      "accepted": true
+    },
+    {
+      "id": "manifest-rollback-rejected",
+      "previousGeneration": 2,
+      "nextGeneration": 1,
+      "previousDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "nextPreviousDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "accepted": false
+    },
+    {
+      "id": "same-generation-different-digest-rejected",
+      "previousGeneration": 2,
+      "nextGeneration": 2,
+      "previousDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "nextPreviousDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "accepted": false
+    }
+  ],
+  "typedJoin": [
+    {
+      "id": "capability-union-and-max",
+      "left": {
+        "environmentId": "joincare-mainnet",
+        "chainId": 56,
+        "proxyAddress": "0x1111111111111111111111111111111111111111",
+        "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "sourceRegistryRevision": 1,
+        "generation": 2,
+        "eventModel": "CE-V2-shadow",
+        "schemaVersion": "2026_09_fair_expand",
+        "capabilities": [
+          "fair-launch.ingestion"
+        ]
+      },
+      "right": {
+        "environmentId": "joincare-mainnet",
+        "chainId": 56,
+        "proxyAddress": "0x1111111111111111111111111111111111111111",
+        "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "sourceRegistryRevision": 2,
+        "generation": 3,
+        "eventModel": "CE-V2-only",
+        "schemaVersion": "2026_09_fair_v2_constraints",
+        "capabilities": [
+          "fair-launch.reconciliation"
+        ]
+      },
+      "expected": {
+        "accepted": true,
+        "generation": 3,
+        "eventModel": "CE-V2-only",
+        "schemaVersion": "2026_09_fair_v2_constraints",
+        "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "sourceRegistryRevision": 2,
+        "capabilities": [
+          "fair-launch.ingestion",
+          "fair-launch.reconciliation"
+        ]
+      }
+    },
+    {
+      "id": "proxy-identity-conflict-fail-closed",
+      "conflictField": "proxyAddress",
+      "left": {
+        "environmentId": "joincare-mainnet",
+        "chainId": 56,
+        "proxyAddress": "0x1111111111111111111111111111111111111111",
+        "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "sourceRegistryRevision": 1
+      },
+      "right": {
+        "environmentId": "joincare-mainnet",
+        "chainId": 56,
+        "proxyAddress": "0x2222222222222222222222222222222222222222",
+        "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "sourceRegistryRevision": 1
+      },
+      "expected": {
+        "accepted": false,
+        "reason": "identity-conflict:proxyAddress"
+      }
+    },
+    {
+      "id": "implementation-conflict-fail-closed",
+      "conflictField": "implementationCodeHash",
+      "left": {
+        "environmentId": "joincare-mainnet",
+        "chainId": 56,
+        "proxyAddress": "0x1111111111111111111111111111111111111111",
+        "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "sourceRegistryRevision": 2
+      },
+      "right": {
+        "environmentId": "joincare-mainnet",
+        "chainId": 56,
+        "proxyAddress": "0x1111111111111111111111111111111111111111",
+        "implementationCodeHash": "7777777777777777777777777777777777777777777777777777777777777777",
+        "sourceRegistryRevision": 2
+      },
+      "expected": {
+        "accepted": false,
+        "reason": "identity-conflict:implementationCodeHash"
+      }
+    },
+    {
+      "id": "source-revision-regression-fail-closed",
+      "conflictField": "sourceRegistryRevision",
+      "left": {
+        "environmentId": "joincare-mainnet",
+        "chainId": 56,
+        "proxyAddress": "0x1111111111111111111111111111111111111111",
+        "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "sourceRegistryRevision": 3
+      },
+      "right": {
+        "environmentId": "joincare-mainnet",
+        "chainId": 56,
+        "proxyAddress": "0x1111111111111111111111111111111111111111",
+        "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "sourceRegistryRevision": 2
+      },
+      "expected": {
+        "accepted": false,
+        "reason": "source-registry-regression"
+      }
+    }
+  ],
+  "schemaOrder": [
+    "2026_09_fair_expand",
+    "2026_09_fair_v2_constraints"
+  ],
+  "eventOrder": [
+    "CE-V1",
+    "CE-V2-shadow",
+    "CE-V2-read",
+    "CE-V2-only"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joincare.example/schemas/fair-launch/deployment-attestation.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "domain",
+    "environmentId",
+    "chainId",
+    "proxyAddress",
+    "implementationCodeHash",
+    "sourceRegistryRevision",
+    "component",
+    "manifestGeneration",
+    "manifestDigest",
+    "artifactSha256",
+    "containerImageId",
+    "deployedAt",
+    "agentHostId",
+    "previousDeploymentAttestationDigest",
+    "keySetVersion"
+  ],
+  "properties": {
+    "domain": {
+      "const": "joincare.release.deployment-attestation.v1"
+    },
+    "environmentId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$"
+    },
+    "chainId": {
+      "$ref": "common.schema.json#/$defs/uint"
+    },
+    "proxyAddress": {
+      "$ref": "common.schema.json#/$defs/evmAddress"
+    },
+    "implementationCodeHash": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "sourceRegistryRevision": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    },
+    "component": {
+      "const": "backend-job"
+    },
+    "manifestGeneration": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    },
+    "manifestDigest": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "artifactSha256": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "containerImageId": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "deployedAt": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "agentHostId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "previousDeploymentAttestationDigest": {
+      "$ref": "common.schema.json#/$defs/nullableDigest"
+    },
+    "keySetVersion": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    }
+  }
+}

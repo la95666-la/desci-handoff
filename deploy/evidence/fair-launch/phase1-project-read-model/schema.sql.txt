@@ -1,0 +1,22 @@
+DO_NOT_EXECUTE: FAIR LAUNCH PHASE-1 PROJECT DISCRIMINATOR / READ-MODEL SPECIMEN ONLY
+SPECIMEN_FORMAT: every remaining nonblank line begins with SPEC> and cannot be submitted as SQL
+
+SPEC> -- Review draft only. Production migration, backfill, cutover, grants and rollback are out of scope.
+SPEC> -- Existing capped-presale rows keep their current meaning; no default may silently classify them as Fair Launch.
+SPEC> -- Required application discriminator pair: funding_mode=fair_launch and contract_version=fair_launch_v1.
+SPEC> -- Unknown or contradictory discriminator pairs must fail closed in Backend, Job, Admin and C-end routing.
+SPEC> -- Suggested nullable additive field for pre-lock project authoring: projects.funding_mode VARCHAR(32).
+SPEC> -- Suggested allowed authoring values: capped_presale, fair_launch; NULL means legacy/unclassified and never Fair Launch.
+SPEC> -- Existing projects.contract_version remains the deployed-source discriminator.
+SPEC> -- Before on-chain lock, fair_launch requires contract_version in (unassigned, fair_launch_v1).
+SPEC> -- At/after on-chain lock, fair_launch requires contract_version=fair_launch_v1 plus a trusted source-registry identity.
+SPEC> -- capped_presale must reject contract_version=fair_launch_v1; fair_launch must reject v1_legacy/v2_stablecoin.
+SPEC> -- Read-model output must expose funding_mode and contract_version independently; clients must not infer one from the other.
+SPEC> -- Fair Launch read-model fields use raw decimal strings: sale_token_amount_raw, min_contribution_raw,
+SPEC> -- max_contribution_raw, total_raised_raw, final_total_raised_raw, final_sale_token_amount_raw.
+SPEC> -- Semantic availability is explicit: unlimited/not_applicable/pending_settlement/unavailable/invalid; zero is not a sentinel.
+SPEC> -- Fair Launch read models never expose token_price_raw or hard_cap_raw as applicable financial values.
+SPEC> -- During Active, estimated allocation/price are projections and must be labelled estimated.
+SPEC> -- SuccessfulPendingRelease is distinct from Successful and keeps claim/proceeds/fee unavailable.
+SPEC> -- Authoring and read-model rows are non-authoritative until the production migration and source registry pass later gates.
+SPEC> -- No CREATE/ALTER/INSERT/UPDATE/DELETE/GRANT/CALL statement in this specimen is executable.

@@ -1,0 +1,311 @@
+{
+  "schemaVersion": "fair-launch-abi-intentionally-unnamed-policy-v1",
+  "authority": "reviewer-approved-freeze-policy",
+  "notice": "Only these reviewer-approved golden fields are intentionally unnamed. The listed production names are authoritative and compared exactly; all other names must match the reviewer-owned golden exactly.",
+  "entries": [
+    {
+      "path": "function:activateProject(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:calculateClaimable(uint256,address).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:calculateClaimable(uint256,address).inputs[1]",
+      "expectedProductionName": "user"
+    },
+    {
+      "path": "function:calculateFinalAllocation(uint256,address).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:calculateFinalAllocation(uint256,address).inputs[1]",
+      "expectedProductionName": "user"
+    },
+    {
+      "path": "function:cancelProject(uint256,bytes32,bytes32).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:cancelProject(uint256,bytes32,bytes32).inputs[1]",
+      "expectedProductionName": "reason"
+    },
+    {
+      "path": "function:cancelProject(uint256,bytes32,bytes32).inputs[2]",
+      "expectedProductionName": "evidence"
+    },
+    {
+      "path": "function:claim(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:claimFor(uint256,address).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:claimFor(uint256,address).inputs[1]",
+      "expectedProductionName": "user"
+    },
+    {
+      "path": "function:configureBeneficiarySafe(address,bool,bytes32,uint32).inputs[0]",
+      "expectedProductionName": "account"
+    },
+    {
+      "path": "function:configureBeneficiarySafe(address,bool,bytes32,uint32).inputs[1]",
+      "expectedProductionName": "approved"
+    },
+    {
+      "path": "function:configureBeneficiarySafe(address,bool,bytes32,uint32).inputs[2]",
+      "expectedProductionName": "digest"
+    },
+    {
+      "path": "function:configureBeneficiarySafe(address,bool,bytes32,uint32).inputs[3]",
+      "expectedProductionName": "version"
+    },
+    {
+      "path": "function:configureProjectToken(address,(bool,bool,uint8,uint32,bytes32,bytes32)).inputs[0]",
+      "expectedProductionName": "token"
+    },
+    {
+      "path": "function:configureProjectToken(address,(bool,bool,uint8,uint32,bytes32,bytes32)).inputs[1]",
+      "expectedProductionName": "p"
+    },
+    {
+      "path": "function:configureReleasePolicy(bytes32,uint32,bool).inputs[0]",
+      "expectedProductionName": "digest"
+    },
+    {
+      "path": "function:configureReleasePolicy(bytes32,uint32,bool).inputs[1]",
+      "expectedProductionName": "version"
+    },
+    {
+      "path": "function:configureReleasePolicy(bytes32,uint32,bool).inputs[2]",
+      "expectedProductionName": "enabled"
+    },
+    {
+      "path": "function:contribute(uint256,uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:contribute(uint256,uint256).inputs[1]",
+      "expectedProductionName": "amount"
+    },
+    {
+      "path": "function:createProject((uint256,address,address,address,address,bytes32,uint32,address,bytes32,uint32,uint16,uint256,uint256,uint256,uint256,uint64,uint64,bytes32,uint32,bytes32,uint32,bytes32,uint32),uint64[],uint16[]).inputs[0]",
+      "expectedProductionName": "p"
+    },
+    {
+      "path": "function:createProject((uint256,address,address,address,address,bytes32,uint32,address,bytes32,uint32,uint16,uint256,uint256,uint256,uint256,uint64,uint64,bytes32,uint32,bytes32,uint32,bytes32,uint32),uint64[],uint16[]).inputs[1]",
+      "expectedProductionName": "times"
+    },
+    {
+      "path": "function:createProject((uint256,address,address,address,address,bytes32,uint32,address,bytes32,uint32,uint16,uint256,uint256,uint256,uint256,uint64,uint64,bytes32,uint32,bytes32,uint32,bytes32,uint32),uint64[],uint16[]).inputs[2]",
+      "expectedProductionName": "bps"
+    },
+    {
+      "path": "function:depositProjectTokens(uint256,uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:depositProjectTokens(uint256,uint256).inputs[1]",
+      "expectedProductionName": "amount"
+    },
+    {
+      "path": "function:endProject(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:failPendingReleaseForProjectTokenRuntimeMismatch(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:invalidatePendingRelease(uint256,uint8,bytes32,bytes32).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:invalidatePendingRelease(uint256,uint8,bytes32,bytes32).inputs[1]",
+      "expectedProductionName": "c"
+    },
+    {
+      "path": "function:invalidatePendingRelease(uint256,uint8,bytes32,bytes32).inputs[2]",
+      "expectedProductionName": "reason"
+    },
+    {
+      "path": "function:invalidatePendingRelease(uint256,uint8,bytes32,bytes32).inputs[3]",
+      "expectedProductionName": "evidence"
+    },
+    {
+      "path": "function:invalidatePendingReleaseForPaymentToken(uint256,bytes32,bytes32).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:invalidatePendingReleaseForPaymentToken(uint256,bytes32,bytes32).inputs[1]",
+      "expectedProductionName": "reason"
+    },
+    {
+      "path": "function:invalidatePendingReleaseForPaymentToken(uint256,bytes32,bytes32).inputs[2]",
+      "expectedProductionName": "evidence"
+    },
+    {
+      "path": "function:pauseClaims(uint64,bytes32,bytes32).inputs[0]",
+      "expectedProductionName": "until"
+    },
+    {
+      "path": "function:pauseClaims(uint64,bytes32,bytes32).inputs[1]",
+      "expectedProductionName": "reason"
+    },
+    {
+      "path": "function:pauseClaims(uint64,bytes32,bytes32).inputs[2]",
+      "expectedProductionName": "evidence"
+    },
+    {
+      "path": "function:pauseContributions(bytes32,bytes32).inputs[0]",
+      "expectedProductionName": "reason"
+    },
+    {
+      "path": "function:pauseContributions(bytes32,bytes32).inputs[1]",
+      "expectedProductionName": "evidence"
+    },
+    {
+      "path": "function:pausePayouts(bytes32,bytes32).inputs[0]",
+      "expectedProductionName": "reason"
+    },
+    {
+      "path": "function:pausePayouts(bytes32,bytes32).inputs[1]",
+      "expectedProductionName": "evidence"
+    },
+    {
+      "path": "function:paymentTokenRuntimeMatches(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:projectTokenRuntimeMatches(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:recoverExcessTokens(address,uint256).inputs[0]",
+      "expectedProductionName": "token"
+    },
+    {
+      "path": "function:recoverExcessTokens(address,uint256).inputs[1]",
+      "expectedProductionName": "amount"
+    },
+    {
+      "path": "function:refund(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:refundFor(uint256,address).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:refundFor(uint256,address).inputs[1]",
+      "expectedProductionName": "user"
+    },
+    {
+      "path": "function:registerPaymentTokenPolicyRevision(address,(bool,uint8,uint32,bytes32,bytes32)).inputs[0]",
+      "expectedProductionName": "token"
+    },
+    {
+      "path": "function:registerPaymentTokenPolicyRevision(address,(bool,uint8,uint32,bytes32,bytes32)).inputs[1]",
+      "expectedProductionName": "r"
+    },
+    {
+      "path": "function:releaseSuccessfulProject(uint256,uint256,uint256,bytes32,bytes32,uint32,bytes32).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:releaseSuccessfulProject(uint256,uint256,uint256,bytes32,bytes32,uint32,bytes32).inputs[1]",
+      "expectedProductionName": "blockNumber"
+    },
+    {
+      "path": "function:releaseSuccessfulProject(uint256,uint256,uint256,bytes32,bytes32,uint32,bytes32).inputs[2]",
+      "expectedProductionName": "anchorNumber"
+    },
+    {
+      "path": "function:releaseSuccessfulProject(uint256,uint256,uint256,bytes32,bytes32,uint32,bytes32).inputs[3]",
+      "expectedProductionName": "anchorHash"
+    },
+    {
+      "path": "function:releaseSuccessfulProject(uint256,uint256,uint256,bytes32,bytes32,uint32,bytes32).inputs[4]",
+      "expectedProductionName": "txHash"
+    },
+    {
+      "path": "function:releaseSuccessfulProject(uint256,uint256,uint256,bytes32,bytes32,uint32,bytes32).inputs[5]",
+      "expectedProductionName": "ordinal"
+    },
+    {
+      "path": "function:releaseSuccessfulProject(uint256,uint256,uint256,bytes32,bytes32,uint32,bytes32).inputs[6]",
+      "expectedProductionName": "manifest"
+    },
+    {
+      "path": "function:setOperator(address).inputs[0]",
+      "expectedProductionName": "v"
+    },
+    {
+      "path": "function:setPauseGuardian(address).inputs[0]",
+      "expectedProductionName": "v"
+    },
+    {
+      "path": "function:setPaymentTokenAdmission(address,uint32,bool).inputs[0]",
+      "expectedProductionName": "token"
+    },
+    {
+      "path": "function:setPaymentTokenAdmission(address,uint32,bool).inputs[1]",
+      "expectedProductionName": "version"
+    },
+    {
+      "path": "function:setPaymentTokenAdmission(address,uint32,bool).inputs[2]",
+      "expectedProductionName": "enabled"
+    },
+    {
+      "path": "function:setPaymentTokenEmergencyBlocked(address,bool).inputs[0]",
+      "expectedProductionName": "token"
+    },
+    {
+      "path": "function:setPaymentTokenEmergencyBlocked(address,bool).inputs[1]",
+      "expectedProductionName": "blocked"
+    },
+    {
+      "path": "function:setPlatformFee(uint16,address).inputs[0]",
+      "expectedProductionName": "bps"
+    },
+    {
+      "path": "function:setPlatformFee(uint16,address).inputs[1]",
+      "expectedProductionName": "receiver"
+    },
+    {
+      "path": "function:setTreasury(address).inputs[0]",
+      "expectedProductionName": "v"
+    },
+    {
+      "path": "function:setUnpauseTimelock(address).inputs[0]",
+      "expectedProductionName": "v"
+    },
+    {
+      "path": "function:unpauseClaims(bytes32).inputs[0]",
+      "expectedProductionName": "op"
+    },
+    {
+      "path": "function:unpauseContributions(bytes32).inputs[0]",
+      "expectedProductionName": "op"
+    },
+    {
+      "path": "function:unpausePayouts(bytes32).inputs[0]",
+      "expectedProductionName": "op"
+    },
+    {
+      "path": "function:withdrawFailedProjectTokens(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:withdrawPlatformFee(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    },
+    {
+      "path": "function:withdrawProjectProceeds(uint256).inputs[0]",
+      "expectedProductionName": "id"
+    }
+  ]
+}

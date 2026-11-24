@@ -1,0 +1,9 @@
+# Fair Launch MySQL 8 schema/checkpoint authority contract
+
+Repository SQL parsing is **not** schema authority. Production migration, resume and post-apply entrypoints require reviewer-admitted JSON artifacts outside this repository, mode 0600/non-symlink, observed from `information_schema` only after loading the pinned baseline and applying the pinned five migrations on real MySQL 8.
+
+The final snapshot domain is `joincare.database.mysql8-information-schema-snapshot.v1`; checkpoint domain is `joincare.database.mysql8-resume-checkpoint.v1`. Both bind MySQL version, baseline SHA-256, all five migration SHA-256 values, observation digest, exact expected counts and complete normalized definitions for tables, columns, ordered index rows, ordered FK rows/actions, CHECK clauses/enforcement, views and triggers including `ACTION_STATEMENT` and `ACTION_ORDER`. Duplicate identities or malformed/incomplete arrays are rejected.
+
+Each frozen 0903-0906 interruption checkpoint is independently admitted as `mysql8ResumeCheckpoint:<filename>`. It binds the exact completed migration prefix, the exact approved partial object, the absent future suffix (including additive 0907), every observed definition, and a phase digest. A final-schema candidate cannot authorize resume. Migration 0907 has no partial-object checkpoint and must be observed only as part of the complete post-0907 schema candidate.
+
+No admitted artifacts exist in this repository. `UNADMITTED_PLACEHOLDER` is intentional. Repository generators, including `generate-schema-manifest.js` and `generate-resume-checkpoint.js`, are always unavailable and cannot generate candidates. Only a future external, reviewer-owned collector operating against admitted disposable MySQL 8 infrastructure may produce a candidate; that candidate still cannot admit itself.

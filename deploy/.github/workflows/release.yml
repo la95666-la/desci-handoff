@@ -1,0 +1,201 @@
+# JoinCare Release · UNADMITTED OFFLINE EVIDENCE WORKFLOW
+#
+# CURRENT RELEASE: every job is mechanically disabled (`if: false`) because no
+# locally verified immutable SHA is admitted for third-party GitHub Actions. This
+# file records the intended evidence contract only and cannot publish or deploy.
+#
+# 与旧发布流水线的本质区别（2026-09 安全审计结论落地）：
+#   - 组件 commit 由 workflow_dispatch 输入固定（完整 40 位 SHA），checkout 后
+#     逐一断言实际 SHA 与输入一致 —— 禁止浮动分支 HEAD 出现在发布产物里
+#   - 只构建 backend / frontend / admin；无合约、无 Hardhat、无部署/升级脚本
+#   - 链身份来自 scripts/release/profiles/<profile>.env（fail-closed 校验：
+#     CheckIn 必须 56 + 批准地址、VITE_HARDHAT_RPC 必须为空、REOWN 必须显式提供）
+#   - pnpm --frozen-lockfile + lockfile SHA256 入 manifest；构建后 bundle 门禁
+#   - 打包为显式文件清单 + SHA256SUMS；打包后从 tarball 重新解包校验
+#   - 预期产物仅是未准入离线证据；当前 job 不运行，也不上传任何 artifact
+#
+# workflow_dispatch 仅保留输入合同审阅；所有 job 为 false，不会执行。
+#
+# 前置仓库变量 / 密钥：
+#   vars.REOWN_PROJECT_ID   32-hex WalletConnect 项目 ID（必须配置，缺失即失败）
+#   secrets.PAT_REPO_READ   跨仓读取 token
+
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      backend_sha:
+        description: 'reviewed backend commit for unadmitted offline evidence (full 40-hex SHA)'
+        required: true
+      frontend_sha:
+        description: 'reviewed frontend commit for unadmitted offline evidence (full 40-hex SHA)'
+        required: true
+      admin_sha:
+        description: 'reviewed admin commit for unadmitted offline evidence (full 40-hex SHA)'
+        required: true
+      contract_sha:
+        description: 'reviewed contract commit for unadmitted offline evidence (full 40-hex SHA)'
+        required: true
+      deploy_sha:
+        description: 'current reviewed deploy commit for unadmitted offline evidence; must equal github.sha'
+        required: true
+      profile:
+        description: 'release profile'
+        required: true
+        default: 'test-server-mainnet-checkin'
+        type: choice
+        options:
+          - test-server-mainnet-checkin
+          - test-server-fair-launch-bsc-mainnet
+      push_ghcr:
+        description: 'UNAVAILABLE: Backend GHCR publication is disabled; archive artifact only'
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: release-runtime
+  cancel-in-progress: false
+
+env:
+  BACKEND_REPO: la95666-la/desci-backend
+  FRONTEND_REPO: la95666-la/desci-frontend
+  ADMIN_REPO: la95666-la/desci-admin
+
+jobs:
+  # ---------------------------------------------------------------
+  # 1. 固定 SHA 校验：三个组件 checkout 后断言与输入完全一致
+  # ---------------------------------------------------------------
+  verify-commits:
+    runs-on: ubuntu-24.04
+    if: ${{ false }} # archive evidence workflow; external action trust root unadmitted
+    outputs:
+      backend_sha: ${{ steps.shas.outputs.backend }}
+      frontend_sha: ${{ steps.shas.outputs.frontend }}
+      admin_sha: ${{ steps.shas.outputs.admin }}
+    steps:
+      - name: Validate input SHA format
+        env:
+          B: ${{ inputs.backend_sha }}
+          F: ${{ inputs.frontend_sha }}
+          A: ${{ inputs.admin_sha }}
+          C: ${{ inputs.contract_sha }}
+          D: ${{ inputs.deploy_sha }}
+          CURRENT_DEPLOY: ${{ github.sha }}
+          ADMITTED_B: ${{ vars.FAIR_LAUNCH_REVIEWED_BACKEND_REF }}
+          ADMITTED_F: ${{ vars.FAIR_LAUNCH_REVIEWED_FRONTEND_REF }}
+          ADMITTED_A: ${{ vars.FAIR_LAUNCH_REVIEWED_ADMIN_REF }}
+          ADMITTED_C: ${{ vars.FAIR_LAUNCH_REVIEWED_CONTRACT_REF }}
+        run: |
+          for v in "$B" "$F" "$A" "$C" "$D" "$CURRENT_DEPLOY"; do
+            echo "$v" | grep -Eq '^[0-9a-f]{40}$' || { echo "::error::commit must be a full 40-hex SHA, got $v"; exit 1; }
+          done
+          [ "$B" = "$ADMITTED_B" ] && [ "$F" = "$ADMITTED_F" ] && [ "$A" = "$ADMITTED_A" ] && [ "$C" = "$ADMITTED_C" ] || { echo "::error::runtime inputs do not match the four reviewed immutable refs"; exit 1; }
+          [ "$D" = "$CURRENT_DEPLOY" ] || { echo "::error::deploy_sha must equal github.sha for this evidence build"; exit 1; }
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: Assert checked-out commits match inputs exactly
+        id: shas
+        run: |
+          for pair in "backend:${{ inputs.backend_sha }}" "frontend:${{ inputs.frontend_sha }}" "admin:${{ inputs.admin_sha }}"; do
+            name="${pair%%:*}"; want="${pair#*:}"
+            case "$name" in backend) dir=src/backend ;; frontend) dir=src/frontend ;; admin) dir=src/admin ;; esac
+            got="$(git -C "$dir" rev-parse HEAD)"
+            if [ "$got" != "$want" ]; then
+              echo "::error::$name checked out $got but input was $want"
+              exit 1
+            fi
+            echo "$name=$got" >> "$GITHUB_OUTPUT"
+            echo "$name OK: $got"
+          done
+      - name: Refuse dirty worktrees
+        run: |
+          for dir in src/backend src/frontend src/admin; do
+            dirty="$(git -C "$dir" status --porcelain)"
+            [ -z "$dirty" ] || { echo "::error::$dir is dirty"; exit 1; }
+          done
+
+  # ---------------------------------------------------------------
+  # 2. runtime-only 构建 + 门禁 + 归档（离线复核，不提供安装/Apply）
+  # ---------------------------------------------------------------
+  build-release:
+    needs: verify-commits
+    runs-on: ubuntu-24.04
+    if: ${{ false }} # archive evidence workflow; external action trust root unadmitted
+    permissions:
+      contents: read
+    steps:
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: Check REOWN project id is configured
+        env:
+          RID: ${{ vars.REOWN_PROJECT_ID }}
+        run: |
+          echo "$RID" | grep -Eq '^[0-9a-fA-F]{32}$' || { echo "::error::vars.REOWN_PROJECT_ID missing or malformed"; exit 1; }
+      - name: Build runtime-only release package
+        env:
+          VITE_REOWN_PROJECT_ID: ${{ vars.REOWN_PROJECT_ID }}
+          SRC_BACKEND: ${{ github.workspace }}/src/backend
+          SRC_FRONTEND: ${{ github.workspace }}/src/frontend
+          SRC_ADMIN: ${{ github.workspace }}/src/admin
+          FAIR_LAUNCH_REVIEWED_CONTRACT_REF: ${{ inputs.contract_sha }}
+          FAIR_LAUNCH_REVIEWED_DEPLOY_REF: ${{ inputs.deploy_sha }}
+          RELEASE_STAGE_ROOT: ${{ runner.temp }}/jc-release-stage
+        run: |
+          bash scripts/release/build-test-runtime.sh "${{ inputs.profile }}"
+      - name: Standalone re-verification of the tarball
+        run: |
+          T="$(ls release/out/${{ inputs.profile }}/joincare-release-*.tar.gz | head -1)"
+          bash scripts/release/verify-test-runtime.sh "$T" --profile "${{ inputs.profile }}"
+          S="$T.sha256"
+          test -f "$S"
+          base="$(basename "$T")"
+          test "$(wc -l < "$S")" -eq 1
+          grep -Eq "^[0-9a-f]{64}  ${base//./\\.}$" "$S"
+          (cd "$(dirname "$T")" && sha256sum -c --strict "$(basename "$S")")
+          echo "TARBALL_PATH=$T" >> "$GITHUB_ENV"
+          echo "TARBALL_SIDECAR_PATH=$S" >> "$GITHUB_ENV"
+          echo "TARBALL_NAME=$base" >> "$GITHUB_ENV"
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+  # Backend remains a checksum-bound workflow archive only. There is deliberately
+  # no GHCR publication job while activation is unavailable.

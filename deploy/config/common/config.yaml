@@ -1,0 +1,7 @@
+logger:
+  level: info
+  maxDay: 7
+  dir: /app/logs
+
+# db / redis / jwt 配置已移至 secret 层（config/secret/config.yaml，
+# 由 config/template/secret.yaml.tpl + .deploy.env 渲染生成，不入 git）。

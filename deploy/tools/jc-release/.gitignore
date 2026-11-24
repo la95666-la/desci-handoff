@@ -1,0 +1,6 @@
+# local build outputs (with real secrets embedded during test deployment)
+dist/
+
+# binaries at expected build paths
+cmd/jc-release-server/jc-release-server
+cmd/jc-agent/jc-agent

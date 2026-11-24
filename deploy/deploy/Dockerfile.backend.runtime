@@ -1,0 +1,21 @@
+# syntax=docker/dockerfile:1
+# Runtime-only Dockerfile · 不编译源码，只 COPY 预先 build 好的产物
+# Build context = joincare-deploy 根目录（含 artifacts/backend/）
+
+FROM debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251
+
+ENV DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai
+RUN apt-get -qq update && \
+    apt-get -qq install -y --no-install-recommends ca-certificates tzdata curl && \
+    ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo Asia/Shanghai > /etc/timezone && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --chmod=0755 artifacts/backend/joincare-core   /app/joincare-core
+COPY --chmod=0755 artifacts/backend/joincare-job    /app/joincare-job
+COPY --chmod=0755 artifacts/backend/joincare-notice /app/joincare-notice
+
+# Config is mounted at runtime via docker compose volumes
+EXPOSE 13004
+CMD ["/app/joincare-core", "--path", "/app/config/"]

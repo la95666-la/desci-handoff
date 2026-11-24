@@ -1,0 +1,18 @@
+{
+  "domain": "joincare.release.detached-signature-envelope.v1",
+  "payloadDomain": "joincare.release.fair-launch-watermark.v1",
+  "payloadSha256": "5237e59011f9592d2c3edbdbebd00ebad53b3c15c935e8cdd4a69ea0a8deed6a",
+  "keySetVersion": 1,
+  "signatures": [
+    {
+      "keyId": "key-a",
+      "algorithm": "Ed25519",
+      "signatureBase64": "Xm9BcoHE+xtqayn/Pp0l1pQGLiILmoDYtid3gjHEf5CWMAC4ENcVGIwcqXKaaxU727nQFC6+HB9F8IWPgJWTDQ=="
+    },
+    {
+      "keyId": "key-b",
+      "algorithm": "Ed25519",
+      "signatureBase64": "xLFIKX7gnBBsAIRq/nJiqYdW7bnP0NQKb/Yu9nOBSU9QpIdxYKdSCmJCj+4gFHJMy12qfhDusOi+T+W8/sXnCQ=="
+    }
+  ]
+}

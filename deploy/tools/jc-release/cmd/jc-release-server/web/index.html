@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>jc-release</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">jc-release <span class="tag">v1</span></div>
+  <nav>
+    <a href="#agents" class="tab active" data-tab="agents">Agents</a>
+    <a href="#releases" class="tab" data-tab="releases">Releases</a>
+    <a href="#logs" class="tab" data-tab="logs">服务日志 / 升级日志</a>
+  </nav>
+  <div class="user">
+    <span id="me"></span>
+    <button onclick="doLogout()" class="btn-small">登出</button>
+  </div>
+</header>
+
+<main>
+  <!-- ========== Agents ========== -->
+  <section id="view-agents" class="view">
+    <h2>Agents · 部署节点</h2>
+    <div class="card">Backend / Frontend / Admin 继续通过上传组件包、再由 Agent 接收发布命令部署；IDO Job 镜像身份由上传制品自动提取。上传不会自动部署。</div>
+    <div class="toolbar">
+      <button onclick="genEnrollToken()">生成 Enroll Token</button>
+      <span id="enroll-hint" class="hint"></span>
+      <button onclick="loadAgents()" class="btn-small">刷新</button>
+    </div>
+    <div id="agents-list"></div>
+    <div id="upgrade-status" class="hint" role="status"></div>
+  </section>
+
+  <!-- ========== Releases ========== -->
+  <section id="view-releases" class="view hidden">
+    <h2>Releases · 版本包</h2>
+    <div class="upload-card">
+      <h3>上传新包</h3>
+      <form id="upload-form" onsubmit="return doUpload(event)">
+        <label>组件</label>
+        <select id="up-comp" required>
+          <option value="backend">backend</option>
+          <option value="frontend">frontend</option>
+          <option value="admin">admin</option>
+          <option value="job">job (IDO only)</option>
+        </select>
+        <label>版本号</label>
+        <input type="text" id="up-ver" placeholder="e.g. 20260708-tgdedup 或 v1.2.3" required>
+        <label>更新说明 (可选)</label>
+        <textarea id="up-notes" rows="3" placeholder="本次改动 …"></textarea>
+        <label>Artifact 文件 (tar.gz)</label>
+        <input type="file" id="up-file" required>
+        <button type="submit" id="up-btn">上传</button>
+        <span id="up-status" class="hint"></span>
+      </form>
+    </div>
+    <h3>版本历史</h3>
+    <div class="toolbar">
+      <label>组件筛选:</label>
+      <select id="rel-comp" onchange="loadReleases()">
+        <option value="">全部</option>
+        <option value="backend">backend</option>
+        <option value="frontend">frontend</option>
+        <option value="admin">admin</option>
+        <option value="job">job (IDO only)</option>
+      </select>
+      <button onclick="loadReleases()" class="btn-small">刷新</button>
+    </div>
+    <div id="releases-status" class="hint" role="status"></div>
+    <div id="releases-list"></div>
+  </section>
+
+  <!-- ========== Logs ========== -->
+  <section id="view-logs" class="view hidden">
+    <h2>最近服务日志</h2>
+    <div class="card service-log-card">
+      <div class="toolbar service-log-toolbar">
+        <label>Agent</label>
+        <select id="service-log-agent"></select>
+        <label>Service</label>
+        <select id="service-log-target">
+          <option value="frontend">frontend</option>
+          <option value="admin">admin</option>
+          <option value="agent">agent</option>
+        </select>
+        <label>Lines</label>
+        <input id="service-log-lines" type="number" min="1" max="2000" value="200">
+        <label>Since (minutes)</label>
+        <input id="service-log-since" type="number" min="1" max="10080" value="60">
+        <button id="service-log-query" onclick="queryServiceLogs()">获取最近日志</button>
+      </div>
+      <div id="service-log-status" class="hint">仅读取允许的 Frontend/Admin/Agent 现有日志，不会等待新消息。</div>
+      <div id="service-log-result" class="service-log-result hidden"></div>
+    </div>
+    <h2>升级日志 · 命令执行历史</h2>
+    <div class="toolbar">
+      <label>Agent:</label>
+      <select id="log-agent" onchange="loadLogs()">
+        <option value="">全部</option>
+      </select>
+      <button onclick="loadLogs()" class="btn-small">刷新</button>
+    </div>
+    <div id="logs-status" class="hint" role="status"></div>
+    <div id="logs-list"></div>
+  </section>
+</main>
+
+<!-- Modal shell -->
+<div id="modal" class="modal hidden" onclick="closeModal(event)">
+  <div class="modal-body" onclick="event.stopPropagation()">
+    <div id="modal-content"></div>
+    <button class="btn-small" onclick="closeModal()">关闭</button>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

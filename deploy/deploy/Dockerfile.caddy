@@ -1,0 +1,15 @@
+# Custom Caddy with rate_limit plugin
+# Base image 无 rate_limit，用 xcaddy 编译一份带插件的 caddy
+
+FROM caddy:2-builder AS builder
+RUN xcaddy build \
+    --with github.com/mholt/caddy-ratelimit
+
+FROM caddy:2
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+
+# Caddy 默认监听 :80 + :443（TLS 自动申请）
+EXPOSE 80 443
+
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

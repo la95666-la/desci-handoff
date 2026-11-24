@@ -1,0 +1,327 @@
+[
+  {
+    "selector": "0x79ba5097",
+    "signature": "acceptOwnership()",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x41544a82",
+    "signature": "activateProject(uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xff21b1eb",
+    "signature": "beneficiarySafeConfig(address)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xbfe1ed9c",
+    "signature": "calculateClaimable(uint256,address)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x78c18441",
+    "signature": "calculateFinalAllocation(uint256,address)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xe04dcbe1",
+    "signature": "cancelProject(uint256,bytes32,bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x379607f5",
+    "signature": "claim(uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x10ee3f00",
+    "signature": "claimFor(uint256,address)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x2924c90e",
+    "signature": "configureBeneficiarySafe(address,bool,bytes32,uint32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xde177536",
+    "signature": "configureProjectToken(address,(bool,bool,uint8,uint32,bytes32,bytes32))",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x2e6a47d8",
+    "signature": "configureReleasePolicy(bytes32,uint32,bool)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xa0a8e460",
+    "signature": "contractVersion()",
+    "stateMutability": "pure"
+  },
+  {
+    "selector": "0x8c590917",
+    "signature": "contribute(uint256,uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x60da64b4",
+    "signature": "createProject((uint256,address,address,address,address,bytes32,uint32,address,bytes32,uint32,uint16,uint256,uint256,uint256,uint256,uint64,uint64,bytes32,uint32,bytes32,uint32,bytes32,uint32),uint64[],uint16[])",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x8bf92653",
+    "signature": "depositProjectTokens(uint256,uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x744bc369",
+    "signature": "endProject(uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x5e0f1e7d",
+    "signature": "failPendingReleaseForProjectTokenRuntimeMismatch(uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xd29f541d",
+    "signature": "getPosition(uint256,address)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xf0f3f2c8",
+    "signature": "getProject(uint256)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xbeb8f883",
+    "signature": "getVestingSchedule(uint256)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x71c654ee",
+    "signature": "initialize(address,address,address,address,address,address,uint16)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x12da34f3",
+    "signature": "invalidatePendingRelease(uint256,uint8,bytes32,bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x94a2e11d",
+    "signature": "invalidatePendingReleaseForPaymentToken(uint256,bytes32,bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x9aaf7019",
+    "signature": "isClaimsPaused()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x570ca735",
+    "signature": "operator()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x8da5cb5b",
+    "signature": "owner()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x6421f2ba",
+    "signature": "pauseClaims(uint64,bytes32,bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x85d93ede",
+    "signature": "pauseContributions(bytes32,bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x24a3d622",
+    "signature": "pauseGuardian()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xb795f2ce",
+    "signature": "pausePayouts(bytes32,bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x32e7b8ce",
+    "signature": "paymentTokenAdmission(address)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x5908a7df",
+    "signature": "paymentTokenPolicyRevision(address,uint32)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x723e6760",
+    "signature": "paymentTokenRuntimeMatches(uint256)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xe30c3978",
+    "signature": "pendingOwner()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x4d700d1c",
+    "signature": "platformFeeConfig()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x703d52af",
+    "signature": "projectExists(uint256)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xbd197dbe",
+    "signature": "projectTokenPolicy(address)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x4e2d7c6a",
+    "signature": "projectTokenRuntimeMatches(uint256)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x52d1902d",
+    "signature": "proxiableUUID()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x6414af20",
+    "signature": "recoverExcessTokens(address,uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x278ecde1",
+    "signature": "refund(uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xa386a381",
+    "signature": "refundFor(uint256,address)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x5342b0e9",
+    "signature": "registerPaymentTokenPolicyRevision(address,(bool,uint8,uint32,bytes32,bytes32))",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x7fb55513",
+    "signature": "releasePolicyConfig(bytes32)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xf1bbc681",
+    "signature": "releaseSuccessfulProject(uint256,uint256,uint256,bytes32,bytes32,uint32,bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x715018a6",
+    "signature": "renounceOwnership()",
+    "stateMutability": "pure"
+  },
+  {
+    "selector": "0xe2c61aeb",
+    "signature": "reservedBalance(address)",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xb3ab15fb",
+    "signature": "setOperator(address)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x48bde20c",
+    "signature": "setPauseGuardian(address)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xecfc38b6",
+    "signature": "setPaymentTokenAdmission(address,uint32,bool)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xd261fedf",
+    "signature": "setPaymentTokenEmergencyBlocked(address,bool)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xccad5ff8",
+    "signature": "setPlatformFee(uint16,address)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xf0f44260",
+    "signature": "setTreasury(address)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x44c68738",
+    "signature": "setUnpauseTimelock(address)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xf2fde38b",
+    "signature": "transferOwnership(address)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x61d027b3",
+    "signature": "treasury()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x0ef5cdd1",
+    "signature": "unpauseClaims(bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xa38c8e01",
+    "signature": "unpauseContributions(bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x60a5e73c",
+    "signature": "unpausePayouts(bytes32)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xb70c33f8",
+    "signature": "unpauseTimelock()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0xad3cb1cc",
+    "signature": "UPGRADE_INTERFACE_VERSION()",
+    "stateMutability": "view"
+  },
+  {
+    "selector": "0x4f1ef286",
+    "signature": "upgradeToAndCall(address,bytes)",
+    "stateMutability": "payable"
+  },
+  {
+    "selector": "0x052ce894",
+    "signature": "withdrawFailedProjectTokens(uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0xdde7c190",
+    "signature": "withdrawPlatformFee(uint256)",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "selector": "0x9b75f37a",
+    "signature": "withdrawProjectProceeds(uint256)",
+    "stateMutability": "nonpayable"
+  }
+]

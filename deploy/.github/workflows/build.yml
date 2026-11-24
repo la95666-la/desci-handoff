@@ -1,0 +1,226 @@
+# JoinCare CI · GitHub Actions
+#
+# CURRENT RELEASE: mechanically disabled (`if: false`) because no locally verified
+# immutable SHA is admitted for third-party Actions. This file is review evidence only;
+# it does not run tests, compile, package, publish, deploy, or hold release authority.
+#
+# 历史说明：本文件曾是完整发布流水线（pack → GHCR → GitHub Release）。
+# 2026-09 安全审计判定其不可作为受信发布入口（外部仓占位引用、浮动 HEAD、
+# 发布包含合约部署/升级能力、无链身份校验），故机械关闭并仅保留审阅证据。
+
+name: ci
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BACKEND_REPO: la95666-la/desci-backend
+  FRONTEND_REPO: la95666-la/desci-frontend
+  ADMIN_REPO: la95666-la/desci-admin
+  # Production Fair Launch refs are intentionally unset until the completed
+  # diffs have independent review and immutable commits. CI/release must fail
+  # closed rather than bless the older Phase-1 commits.
+  BACKEND_REF: ${{ vars.FAIR_LAUNCH_REVIEWED_BACKEND_REF }}
+  FRONTEND_REF: ${{ vars.FAIR_LAUNCH_REVIEWED_FRONTEND_REF }}
+  ADMIN_REF: ${{ vars.FAIR_LAUNCH_REVIEWED_ADMIN_REF }}
+  CONTRACT_REF: ${{ vars.FAIR_LAUNCH_REVIEWED_CONTRACT_REF }}
+
+jobs:
+  # ---------------------------------------------------------------
+  # 1. Backend：go test + linux/amd64 编译
+  # ---------------------------------------------------------------
+  backend:
+    runs-on: ubuntu-24.04
+    if: ${{ false }} # archive evidence workflow; external action trust root unadmitted
+    steps:
+      - name: Require reviewed Backend immutable ref
+        run: '[[ "${BACKEND_REF:-}" =~ ^[0-9a-f]{40}$ ]] || { echo "FAIR_LAUNCH_REVIEWED_BACKEND_REF is not admitted"; exit 1; }'
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: Record checked-out commit
+        run: git -C src/backend rev-parse HEAD | tee backend.sha
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: go test
+        env:
+          GOEXPERIMENT: jsonv2
+        run: |
+          cd src/backend
+          go test ./... -count=1
+      - name: go build (linux/amd64)
+        run: |
+          cd src/backend
+          export GOEXPERIMENT=jsonv2 CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+          for cmd in core job notice; do
+            go build -trimpath -ldflags="-s -w" -o /tmp/joincare-$cmd ./cmd/$cmd
+          done
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+  # ---------------------------------------------------------------
+  # 2. Frontend：锁文件安装 + 单元测试（70）
+  #    生产构建与链身份门禁在 release.yml 做成，这里不带任何 secret
+  # ---------------------------------------------------------------
+  frontend:
+    runs-on: ubuntu-24.04
+    if: ${{ false }} # archive evidence workflow; external action trust root unadmitted
+    steps:
+      - name: Require reviewed Frontend immutable ref
+        run: '[[ "${FRONTEND_REF:-}" =~ ^[0-9a-f]{40}$ ]] || { echo "FAIR_LAUNCH_REVIEWED_FRONTEND_REF is not admitted"; exit 1; }'
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: Record checked-out commit
+        run: git -C src/frontend rev-parse HEAD | tee frontend.sha
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: pnpm install (frozen)
+        run: |
+          cd src/frontend/joincare-web
+          pnpm install --frozen-lockfile
+      - name: unit tests
+        run: |
+          cd src/frontend/joincare-web
+          node --test tests/*.test.js
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+  # ---------------------------------------------------------------
+  # 3. Admin：锁文件安装 + 生产构建（无 secret 依赖）
+  # ---------------------------------------------------------------
+  admin:
+    runs-on: ubuntu-24.04
+    if: ${{ false }} # archive evidence workflow; external action trust root unadmitted
+    steps:
+      - name: Require reviewed Admin immutable ref
+        run: '[[ "${ADMIN_REF:-}" =~ ^[0-9a-f]{40}$ ]] || { echo "FAIR_LAUNCH_REVIEWED_ADMIN_REF is not admitted"; exit 1; }'
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: Record checked-out commit
+        run: git -C src/admin rev-parse HEAD | tee admin.sha
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: pnpm install (frozen) + build
+        run: |
+          cd src/admin
+          printf "VITE_GLOB_API_URL=/admin\nVITE_NITRO_MOCK=false\n" > apps/web-antd/.env.production
+          pnpm install --frozen-lockfile
+          pnpm build:antd
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+  # ---------------------------------------------------------------
+  # 4. Deploy 仓：shell 语法 + 发布/迁移策略测试
+  # ---------------------------------------------------------------
+  deploy-policy:
+    runs-on: ubuntu-24.04
+    if: ${{ false }} # archive evidence workflow; external action trust root unadmitted
+    steps:
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: shell syntax (all release + cmd scripts)
+        run: |
+          bash -n scripts/release/build-test-runtime.sh
+          bash -n scripts/release/verify-test-runtime.sh
+          bash -n scripts/release/lib/release_common.sh
+          for f in scripts/cmd/*.sh scripts/fair-launch/*.sh scripts/fair-launch/lib/*.sh; do bash -n "$f"; done
+      - name: release runtime package policy
+        run: bash scripts/tests/release_runtime_package_test.sh
+      - name: GitHub Actions immutable dependency fail-closed policy
+        run: bash scripts/tests/github_actions_pin_policy_test.sh
+      - name: IDO Set execution shutdown policy
+        run: python3 scripts/tests/ido_prepare_set_shutdown_test.py
+      - name: safe tar adversarial policy
+        run: python3 scripts/tests/safe_tar_adversarial_test.py
+      - name: backend archive adversarial policy
+        run: bash scripts/tests/backend_archive_adversarial_test.sh
+      - name: Docker save normalization policy
+        run: bash scripts/tests/docker_save_normalizer_test.sh
+      - name: official release workflow adjacent sidecar contract
+        run: bash scripts/tests/release_workflow_artifact_contract_test.sh
+      - name: Fair Launch Phase-1 evidence policy
+        run: bash scripts/tests/fair_launch_phase1_policy_test.sh
+      - name: Fair Launch implementation policy
+        run: bash scripts/tests/fair_launch_implementation_policy_test.sh
+      - name: Fair Launch executable migration static validation
+        run: bash scripts/tests/fair_launch_migration_static_test.sh
+      - name: Fair Launch Source Registry signed privilege policy validation
+        run: node scripts/tests/fair_launch_source_registry_privilege_test.js
+      - name: Confirm MySQL-derived schema/checkpoint authority remains unadmitted
+        run: |
+          grep -Fq 'UNADMITTED_PLACEHOLDER' migrations/verify/UNADMITTED_MYSQL8_AUTHORITY.json
+          test ! -e migrations/verify/2026_09_fair_launch_schema_manifest.json
+          if JC_FAIR_LAUNCH_TEST_AUTHORITY=1 node scripts/fair-launch/render-schema-assertions.js /tmp/missing.json; then exit 1; fi
+          if JC_FAIR_LAUNCH_TEST_AUTHORITY=1 bash scripts/release/build-test-runtime.sh; then exit 1; fi
+      - name: Fair Launch protected-service, remote-helper, logs and authority shutdown
+        run: bash scripts/tests/fair_launch_activation_static_test.sh
+      - name: jc-release full protected-strategy regression suite
+        working-directory: tools/jc-release
+        run: go test ./...
+      - name: Fair Launch explicit action execution migration
+        run: bash scripts/tests/fair_launch_action_execution_migration_test.sh
+      - name: Fair Launch ordered dependency manifest
+        run: bash scripts/tests/fair_launch_dependency_manifest_test.sh
+      - name: Recovery Portal pinned trust root and history chain
+        run: node scripts/tests/recovery_portal_verifier_test.js
+      - name: Require reviewed Contract immutable ref
+        run: '[[ "${CONTRACT_REF:-}" =~ ^[0-9a-f]{40}$ ]] || { echo "FAIR_LAUNCH_REVIEWED_CONTRACT_REF is not admitted"; exit 1; }'
+      - name: External contract checkout unavailable until immutable Action SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: External GitHub Action unavailable until an immutable reviewed SHA is admitted
+        run: |
+          echo 'github_action_dependency_unadmitted' >&2
+          exit 78
+      - name: Preserve reviewed contract bytes
+        run: |
+          git -C src/fair-launch-contract show HEAD:hardhat.audit.config.js > src/fair-launch-contract/hardhat.audit.config.js
+          git -C src/fair-launch-contract show HEAD:package-lock.json > src/fair-launch-contract/package-lock.json
+      - name: Install contract audit dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: src/fair-launch-contract
+      - name: Fair Launch contract behavioral model
+        run: npm run test:fair-launch-model
+        working-directory: src/fair-launch-contract
+      - name: Fair Launch mechanical evidence
+        env:
+          FAIR_LAUNCH_CONTRACT_REPO: ${{ github.workspace }}/src/fair-launch-contract
+        run: bash scripts/tests/fair_launch_mechanical_evidence_test.sh
+      - name: migration checksum compatibility policy
+        run: bash scripts/tests/migration_checksum_policy_test.sh
+      - name: CheckIn CLI preflight ordering
+        run: bash scripts/tests/checkin_preflight_cli_test.sh

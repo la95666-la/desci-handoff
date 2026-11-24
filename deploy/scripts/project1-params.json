@@ -1,0 +1,23 @@
+{
+  "project_id": 1,
+  "chain_id": 31337,
+  "ido_contract_address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+  "fee_receiver": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+  "success_fee_rate": 250,
+  "token_address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+  "token_decimals": 18,
+  "payment_token": "USDT",
+  "payment_token_address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+  "payment_token_decimals": 6,
+  "owner_address": "0x4C9c842f16c9DA5ae2A9eF0C0E87337D49c6955d",
+  "token_price": "0.1",
+  "hard_cap": "1000",
+  "soft_cap": "500",
+  "max_per_user": "400",
+  "start_time": "+30m",
+  "end_time": "+4h",
+  "db_tz_offset_hours": 8,
+  "tge_after_end_min": 10,
+  "tge_interval_min": 0,
+  "tge": [ { "percent": 100 } ]
+}

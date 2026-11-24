@@ -1,0 +1,15 @@
+/config/*/config.yaml
+.idea
+/logs
+.vscode/
+output/
+/config/secret
+/.cache/
+
+# 编译产物
+/core
+/job
+/notice
+
+# Windows reserved-name artifact
+NUL

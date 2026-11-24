@@ -1,0 +1,34 @@
+{
+  "IDO-V3-SAFE-MIGRATION-GUIDE.md": {
+    "bytes": 22129,
+    "sha256": "ef6b9b2a00d7318f188b1cd5edf7fcbe8e83ccbbc01e66cff7da60ff3018ba78"
+  },
+  "IDO-V3-SAFE-MIGRATION-GUIDE.docx": {
+    "bytes": 49295,
+    "sha256": "729ae565fbb2c555dbe05c709ebc40927a0cff91f868d765ac371cffff61732c"
+  },
+  "ido-v3-safe-migration\\encode-migration.cjs": {
+    "bytes": 2298,
+    "sha256": "d4c9cf04c2d3604bc13a9045236345bc9f5729f4c399be148326912381fe527a"
+  },
+  "ido-v3-safe-migration\\migration-snapshot.json": {
+    "bytes": 1387,
+    "sha256": "2dc968571c8471f03fffc151ac877884c86b3d79e3093719421fe6c36aae73bc"
+  },
+  "ido-v3-safe-migration\\safe-owner-management.abi.json": {
+    "bytes": 3952,
+    "sha256": "379960cfac49aa3921cfb4ae6bed2752d0cf1575bb2b70910b123da650629800"
+  },
+  "ido-v3-safe-migration\\selectors.json": {
+    "bytes": 745,
+    "sha256": "d99a61c570fda049a2b634fbbf003830ff2367a3ab74a23c53eec8ca1b7d605b"
+  },
+  "ido-v3-safe-migration\\V3-full.abi.json": {
+    "bytes": 42326,
+    "sha256": "adb2c7c7168f0d45fb4630991c2cb3cd64db520207dd6194ea1b98a6e40ada6f"
+  },
+  "ido-v3-safe-migration\\v3-governance-migration.abi.json": {
+    "bytes": 2688,
+    "sha256": "8c0860ebe5abc17bf96b9bd63045b8ead039ee66033d2a7fb49486715ae1864b"
+  }
+}

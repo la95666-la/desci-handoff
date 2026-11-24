@@ -1,0 +1,68 @@
+{
+  "authority": "local-non-authoritative-fixture",
+  "notice": "Generated implementation-tree fixture for deterministic local tests only. It is not reviewer approval and production validators require an external detached approval artifact.",
+  "schemaVersion": "fair-launch-full-set-v1",
+  "compiler": {
+    "solcVersion": "0.8.22",
+    "solcLongVersion": "0.8.22+commit.4fc1097e",
+    "viaIR": true,
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    }
+  },
+  "components": [
+    {
+      "key": "dispatcher",
+      "name": "JoinCareFairLaunchV1",
+      "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      "runtimeCodeHash": "0xa2687c5ad6ca134f4108327565b29dddcbc7fc24a7f566b2ab75bf5abb9f18dd"
+    },
+    {
+      "key": "core",
+      "name": "JoinCareFairLaunchV1CoreFacet",
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "runtimeCodeHash": "0x3a4aeaabad6bfc3ec6bb01e7988044f24d8810fbd4fac5cb0d78b85d40db9c28"
+    },
+    {
+      "key": "release",
+      "name": "JoinCareFairLaunchV1ReleaseFacet",
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "runtimeCodeHash": "0x7e40e8ff9c1c440ef506126d49ffdb12ea1094f815a0b9d435badc97ccf74748"
+    },
+    {
+      "key": "funds",
+      "name": "JoinCareFairLaunchV1FundsFacet",
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "runtimeCodeHash": "0x5c703566b9c594ac49c2a12a8b4c3708ba85b4c6d08fbf4f5a1c2b92f7cde36f"
+    },
+    {
+      "key": "admin",
+      "name": "JoinCareFairLaunchV1AdminFacet",
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "runtimeCodeHash": "0x076180b5933c6520047e5ac468fee51cd21e8d087840b4b3fee0eb42d87a69ee"
+    },
+    {
+      "key": "views",
+      "name": "JoinCareFairLaunchV1ViewsFacet",
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "runtimeCodeHash": "0x69e858eb0f750725ef100e65b052296f79c03d7eba91af0517162d00952a3e83"
+    },
+    {
+      "key": "logic",
+      "name": "JoinCareFairLaunchV1Logic",
+      "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "runtimeCodeHash": "0x6492f8abb8e77c9d421923dbb036583d3122824243bbc6b992b89658806990d0"
+    },
+    {
+      "key": "runtime",
+      "name": "JoinCareFairLaunchV1Runtime",
+      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "runtimeCodeHash": "0xd508f1cba6d943971ad6fd3f28bddc1979a4643ea9ff37026cf5fdbc1ae9b9b7"
+    }
+  ],
+  "aggregateAbiDigest": "0xf8c991864388ccd88a22f012ccb2b4dd02257c123ab2db827e188fcdffd7271a",
+  "selectorMapDigest": "0x627193356a476185bf6481c2c63fe4e09f08a202a5eb0f683d40d698b9411312",
+  "storageLayoutDigest": "0x78adcd57e8671c1b2d1f021fc061ee51434840447ef72e561b413ec9893eab09",
+  "fullSetDigest": "0x436c5ccf74841f509f461fe2039cf8cd827060beeabf88fbc244dbe079a168b7"
+}

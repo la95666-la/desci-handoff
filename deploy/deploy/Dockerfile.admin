@@ -1,0 +1,50 @@
+# syntax=docker/dockerfile:1
+# Build context = project root (so both src/joincare-admin/ and deploy/nginx.admin.conf are reachable)
+
+# ============== Stage 1: pnpm build (monorepo, only @vben/web-antd) ==============
+FROM node:22-bookworm-slim AS builder
+
+WORKDIR /src
+ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
+ENV PNPM_REGISTRY=https://registry.npmmirror.com
+ENV CI=true
+
+# git 是 prepare 阶段 `lefthook install` 必需的；is-ci 在 4.x 里检测更严，
+# 即使设了 CI=true 也仍会跑 lefthook，所以索性装 git 兜底。
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# corepack ships pnpm; pin to repo's version
+RUN corepack enable && corepack prepare pnpm@11.7.0 --activate
+
+ARG ADMIN_DIR=src/joincare-admin
+
+# 拷整个 monorepo（依赖被 build:antd 自动裁剪）
+COPY ${ADMIN_DIR}/ .
+
+# lefthook install 需要在 git 仓库里跑；rsync 时 .git 被 exclude，所以 init 一个空仓库兜底
+RUN git init -q && git config user.email "ci@joincare.local" && git config user.name "ci"
+
+# 容器内重新 install（host 上 node_modules 已在 rsync 时 exclude）
+RUN pnpm install --frozen-lockfile=false --prefer-offline
+
+# 生产模式打包，apiURL=/admin（同源走 nginx 反代）
+ARG VITE_GLOB_API_URL=/admin
+ENV VITE_GLOB_API_URL=$VITE_GLOB_API_URL
+
+# 关闭 mock；JoinCare 后端 API 地址在容器内由 nginx 反代，无需 vite proxy
+RUN printf "VITE_GLOB_API_URL=%s\nVITE_NITRO_MOCK=false\n" "$VITE_GLOB_API_URL" \
+    > apps/web-antd/.env.production
+
+RUN pnpm build:antd
+
+# ============== Stage 2: nginx 静态托管 + /admin/* 反代 backend ==============
+FROM nginx:1.27-alpine
+
+RUN rm -f /etc/nginx/conf.d/default.conf
+COPY deploy/nginx.admin.conf /etc/nginx/conf.d/admin.conf
+COPY --from=builder /src/apps/web-antd/dist /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

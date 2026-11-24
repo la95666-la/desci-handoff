@@ -1,0 +1,14 @@
+application:
+  name: notice
+  environment: prod
+protocol:
+  http:
+    host: |-
+    port: 13005
+  websocket:
+    host: |-
+    port: 13006
+    maxConnections: 5000
+    maxConnectionsPerIP: 20
+    # Trust forwarded client IP headers only from explicitly listed proxy CIDRs.
+    trustedProxyCIDRs: []

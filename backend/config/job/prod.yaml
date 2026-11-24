@@ -1,0 +1,12 @@
+application:
+  name: job
+  environment: prod
+  jobMode: ido
+protocol:
+  http:
+    host: |-
+    port: 13007
+fairLaunchMainnet:
+  scanner:
+    enabled: false
+    exclusiveJobMode: false

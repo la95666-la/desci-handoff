@@ -1,0 +1,3 @@
+# Hardhat mutation runtime is unavailable in this release.
+FROM scratch
+LABEL org.joincare.release-boundary="hardhat_operational_target_unavailable"

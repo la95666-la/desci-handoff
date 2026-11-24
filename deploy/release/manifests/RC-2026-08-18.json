@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "releaseCandidate": "joincare-bsc-testnet-rc-2026-08-18",
+  "status": "CANDIDATE_WITH_GATES",
+  "generatedAt": "2026-08-18T01:45:00+08:00",
+  "source": {
+    "backend": {
+      "repository": "git@github.com:la95666-la/desci-backend.git",
+      "branch": "kimi/k3-development",
+      "commit": "acff267e53234e4f4177293670ee251b9ac6b3fa",
+      "verification": ["GOEXPERIMENT=jsonv2 go test ./... -count=1", "websocket focused go test -race"]
+    },
+    "contracts": {
+      "repository": null,
+      "branch": "kimi/k3-development",
+      "commit": "144a85af4c554f2d056beb3ffcd38fcdc6088c34",
+      "verification": ["npm test"],
+      "gate": "Git remote is not configured; establish authoritative origin before push or tag."
+    },
+    "deployment": {
+      "repository": "git@github.com:la95666-la/desci-deployment.git",
+      "branch": "kimi/k3-development",
+      "commit": "c7cd6602cd4dee5c2f78c688946ec8fa5da75a53",
+      "verification": ["deployment policy tests", "shell syntax", "git diff --check", "40-migration schema/workers integration"]
+    },
+    "frontend": {
+      "repository": null,
+      "commit": null,
+      "sourceWhitelistFiles": 148,
+      "sourceWhitelistSha256": "eea5a4597d30a5dc78b4c2b77b8cc42776fc538a3ac365597f3d9158a229ac93",
+      "verification": ["npm run test:unit (3/3)", "npm run build"],
+      "gate": "Source is an ignored extracted directory without independent Git metadata; replace with authoritative checkout and commit SHA."
+    },
+    "admin": {
+      "repository": "git@github.com:la95666-la/desci-admin.git",
+      "branch": "kimi/k3-development",
+      "commit": "ac5550c4a04a577bd1788511cf39b653a3406062",
+      "verification": ["CI=true pnpm install --frozen-lockfile", "pnpm run build:antd"]
+    },
+    "telegramBot": {
+      "repository": "git@github.com:la95666-la/desci-tgbot.git",
+      "branch": "kimi/k3-development",
+      "commit": "7b266507e300f70b8a3e8badfadb237c365bc420",
+      "gate": "Go 1.24 container is available, but dependencies were unavailable because proxy.golang.org timed out."
+    }
+  },
+  "migrations": {
+    "count": 40,
+    "orderedSetSha256": "06bbf3a0229b464afb5142b0d17ead9862e7d5bbb81eef1e4ecbdbcd04289fe2",
+    "securityMigration": "2026_08_30_security_control_plane_and_event_fence.sql",
+    "securityMigrationSha256": "2401bf1d558e125406e59b4bb76e3ad4acb724ba60de8867b979114e25c9b1e7",
+    "legacySecurityMigrationSha256": "4ee32387ab98d9ffd061a9eef6a58582e5ed8b5fcaf80872190160cb4b4ea20a",
+    "legacyAppliedPolicy": "FAIL_CLOSED_COMPATIBILITY_REVIEW"
+  },
+  "contracts": {
+    "idoV2SourceSha256": "c60849de1ec65ceb1b0c9c086af47b316aadbc22769882ce6373f18ea3572c3e",
+    "checkInSourceSha256": "aff3ef1ab955dc9c6a58374270e410534ea9bb0f9197c88667c71b2fc78ec278",
+    "packageLockSha256": "4e7517667229c0d5736312399a9d039619be4be6af6eb06ee39c883267b58c3b",
+    "idoV2ArtifactSha256": "2c6f09e60316cb498c9870669bcbbc1022503ff6344c4035929122d306ee4b61",
+    "checkInArtifactSha256": "76a131aa86157305575a57f00f00b8cbf82b604c0cd08c8379ab71399f5e6ea4",
+    "warning": "Legacy JoinCare_v1 initializer ordering warning remains; legacy contract is excluded from the V2 release allowlist."
+  },
+  "runtimeImage": {
+    "status": "EXTERNAL_GATE",
+    "requiredReference": "repository@sha256:<64-hex-registry-digest>",
+    "note": "A local Docker image ID is not a registry digest."
+  },
+  "prohibitedActionsWithoutSeparateAuthorization": [
+    "push commits or tags",
+    "push images",
+    "write production or shared databases",
+    "deploy contracts or send blockchain transactions",
+    "rotate or transmit secrets"
+  ]
+}

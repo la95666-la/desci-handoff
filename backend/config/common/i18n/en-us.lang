@@ -1,0 +1,30 @@
+# Common
+ERR.000.00001=Service error
+ERR.000.00002=System maintenance in progress. We apologize for any inconvenience.
+ERR.000.00003=Invalid parameters
+ERR.000.00004={{1}} notice send failed
+ERR.000.00005=This permission is currently unavailable
+
+ERR.001.00001=Please connect wallet first
+ERR.001.00002=Insufficient balance
+ERR.001.00003=Invalid wallet address
+ERR.001.00004=Invalid signature message
+ERR.001.00005=Invalid wallet signature
+ERR.001.00006=Invalid or expired nonce
+ERR.001.00007=Wallet is not registered
+ERR.001.00008=Registration is in progress, please try again later
+ERR.001.00009=Already checked in today
+ERR.001.00010=Invalid check-in signature
+ERR.001.00011=Check-in contract is not configured
+ERR.001.00012=Check-in submission failed
+ERR.001.00013=Invalid or expired check-in nonce
+ERR.001.00014=You've exceeded the task rate limit. Please attempt again after 1 hour.
+ERR.001.00015=Please re-authorize X
+ERR.001.00016=This task has already been completed
+ERR.001.00017=This X account is already linked to another JoinCare account. Please switch back to the wallet you originally linked it to, or contact the JoinCare team to unbind it.
+ERR.001.00018=This Telegram account is already linked to another JoinCare account. Please use a different Telegram account.
+ERR.001.00019=Your X action has not been detected yet. Complete it on X, wait 10-30 seconds, and try again.
+ERR.001.00020=X verification is temporarily unavailable. Please try again later.
+ERR.001.00021=This task has been updated to a new round. The task list has been refreshed; please complete the new post.
+
+SCC.000.00001=success

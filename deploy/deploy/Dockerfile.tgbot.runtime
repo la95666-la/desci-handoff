@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+# Runtime-only · 仅 debian + COPY Go binary
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai
+RUN apt-get -qq update && \
+    apt-get -qq install -y --no-install-recommends ca-certificates tzdata && \
+    ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo Asia/Shanghai > /etc/timezone && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY artifacts/tgbot/joincare-tgbot /app/joincare-tgbot
+RUN chmod +x /app/joincare-tgbot
+
+CMD ["/app/joincare-tgbot"]

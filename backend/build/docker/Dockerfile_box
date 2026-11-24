@@ -1,0 +1,28 @@
+# 运行镜像
+FROM ubuntu:22.04
+WORKDIR /app/
+
+# 设置时区
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo 'Asia/Shanghai' > /etc/timezone && \
+    ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# 安装基础工具和运行时依赖
+RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    telnet \
+    iputils-ping \
+    net-tools \
+    dnsutils \
+    tzdata \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装 Node.js 24.x (前端运行环境)
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# 配置 npm 镜像源加快安装速度
+RUN npm config set registry https://registry.npmmirror.com

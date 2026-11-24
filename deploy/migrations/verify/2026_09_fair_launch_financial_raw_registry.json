@@ -1,0 +1,222 @@
+{
+  "domain": "joincare.database.financial-raw-registry.v2",
+  "maxUint256": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+  "fields": [
+    {
+      "table": "projects",
+      "column": "token_price_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "hard_cap_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "soft_cap_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "max_per_user_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "total_raised_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "total_deposited_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "sale_token_amount_raw",
+      "kind": "uint256",
+      "nullable": true,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "min_contribution_raw",
+      "kind": "uint256",
+      "nullable": true,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "max_contribution_raw",
+      "kind": "uint256",
+      "nullable": true,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "final_total_raised_raw",
+      "kind": "uint256",
+      "nullable": true,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "projects",
+      "column": "final_sale_token_amount_raw",
+      "kind": "uint256",
+      "nullable": true,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "fund_ledger",
+      "column": "amount_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "chain_tx_submission",
+      "column": "value_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "chain_tx_submission",
+      "column": "gas_price_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "ido_purchase_entitlement",
+      "column": "payment_amount_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "ido_purchase_entitlement",
+      "column": "project_token_amount_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "ido_reconciliation_wallet",
+      "column": "expected_payment_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "ido_reconciliation_wallet",
+      "column": "actual_payment_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "ido_reconciliation_wallet",
+      "column": "expected_tokens_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "ido_reconciliation_wallet",
+      "column": "actual_tokens_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "ido_reconciliation_wallet",
+      "column": "expected_claimed_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "ido_reconciliation_wallet",
+      "column": "actual_claimed_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "chain_event_reorg_generation_submission",
+      "column": "value_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "chain_event_reorg_generation_submission",
+      "column": "gas_price_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "chain_event_reorg_candidate_project",
+      "column": "project_id_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "chain_event_reorg_candidate_wallet_aggregate",
+      "column": "project_id_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "chain_event_reorg_candidate_wallet_aggregate",
+      "column": "amount_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "fund_ledger_v2_shadow",
+      "column": "amount_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    },
+    {
+      "table": "governance_timelock_call",
+      "column": "value_raw",
+      "kind": "uint256",
+      "nullable": false,
+      "zero": "domain-specific"
+    }
+  ],
+  "authority": "reviewer-candidate-only-external-admission-required",
+  "nonUintRawFields": [
+    {
+      "table": "chain_event_reorg_candidate_delta",
+      "column": "boundary_raw",
+      "kind": "signed-unbounded-decimal"
+    },
+    {
+      "table": "chain_event_reorg_candidate_delta",
+      "column": "candidate_raw",
+      "kind": "signed-unbounded-decimal"
+    }
+  ]
+}

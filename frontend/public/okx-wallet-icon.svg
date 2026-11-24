@@ -1,0 +1,19 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- 绿色背景 -->
+  <rect width="256" height="256" fill="#9FFF00"/>
+
+  <!-- 黑色十字形 - 顶部左 -->
+  <rect x="51" y="51" width="50" height="50" fill="#000000" rx="4"/>
+
+  <!-- 黑色十字形 - 顶部右 -->
+  <rect x="155" y="51" width="50" height="50" fill="#000000" rx="4"/>
+
+  <!-- 黑色十字形 - 中间 -->
+  <rect x="103" y="103" width="50" height="50" fill="#000000" rx="4"/>
+
+  <!-- 黑色十字形 - 底部左 -->
+  <rect x="51" y="155" width="50" height="50" fill="#000000" rx="4"/>
+
+  <!-- 黑色十字形 - 底部右 -->
+  <rect x="155" y="155" width="50" height="50" fill="#000000" rx="4"/>
+</svg>

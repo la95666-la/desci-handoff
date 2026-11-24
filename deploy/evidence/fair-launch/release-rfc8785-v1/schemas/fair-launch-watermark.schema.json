@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joincare.example/schemas/fair-launch/fair-launch-watermark.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "domain",
+    "generation",
+    "environmentId",
+    "chainId",
+    "proxyAddress",
+    "implementationCodeHash",
+    "sourceRegistryRevision",
+    "firstEnabledBlock",
+    "firstProjectCreatedBlock",
+    "minimumEventModel",
+    "requiredCapabilities",
+    "minimumSchemaVersion",
+    "minimumBackendJobManifestGeneration",
+    "previousWatermarkDigest",
+    "issuedAt",
+    "keySetVersion"
+  ],
+  "properties": {
+    "domain": {
+      "const": "joincare.release.fair-launch-watermark.v1"
+    },
+    "generation": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    },
+    "environmentId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$"
+    },
+    "chainId": {
+      "$ref": "common.schema.json#/$defs/uint"
+    },
+    "proxyAddress": {
+      "$ref": "common.schema.json#/$defs/evmAddress"
+    },
+    "implementationCodeHash": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "sourceRegistryRevision": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    },
+    "firstEnabledBlock": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "firstProjectCreatedBlock": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "minimumEventModel": {
+      "enum": [
+        "CE-V1",
+        "CE-V2-shadow",
+        "CE-V2-read",
+        "CE-V2-only"
+      ]
+    },
+    "requiredCapabilities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^fair-launch\\.[a-z0-9.-]+$"
+      }
+    },
+    "minimumSchemaVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "minimumBackendJobManifestGeneration": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    },
+    "previousWatermarkDigest": {
+      "$ref": "common.schema.json#/$defs/nullableDigest"
+    },
+    "issuedAt": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "keySetVersion": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    }
+  }
+}

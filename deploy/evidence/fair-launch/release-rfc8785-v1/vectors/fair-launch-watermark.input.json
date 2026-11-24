@@ -1,0 +1,28 @@
+{
+  "domain": "joincare.release.fair-launch-watermark.v1",
+  "generation": 1,
+  "environmentId": "joincare-mainnet",
+  "chainId": 56,
+  "proxyAddress": "0x1111111111111111111111111111111111111111",
+  "implementationCodeHash": "6666666666666666666666666666666666666666666666666666666666666666",
+  "sourceRegistryRevision": 1,
+  "firstEnabledBlock": 100,
+  "firstProjectCreatedBlock": null,
+  "minimumEventModel": "CE-V2-only",
+  "requiredCapabilities": [
+    "fair-launch.claim-refund-projection",
+    "fair-launch.e8-payment-token",
+    "fair-launch.external-end-convergence",
+    "fair-launch.governance-workflows",
+    "fair-launch.ingestion",
+    "fair-launch.materialization",
+    "fair-launch.outbox-recovery",
+    "fair-launch.reconciliation",
+    "fair-launch.source-registry"
+  ],
+  "minimumSchemaVersion": "2026_09_fair_v2_constraints",
+  "minimumBackendJobManifestGeneration": 1,
+  "previousWatermarkDigest": null,
+  "issuedAt": "2026-09-06T00:00:00Z",
+  "keySetVersion": 1
+}

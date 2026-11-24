@@ -1,0 +1,18 @@
+{
+  "domain": "joincare.release.detached-signature-envelope.v1",
+  "payloadDomain": "joincare.release.key-revocation.v1",
+  "payloadSha256": "44700772cec5b67c65cffb9198c8e9a19f29ac617ec3cb24f62bc9c013265986",
+  "keySetVersion": 1,
+  "signatures": [
+    {
+      "keyId": "key-a",
+      "algorithm": "Ed25519",
+      "signatureBase64": "scTZy6Swe0VHufiuYlCoe47GTWqIZnqNKN1WKHS+9O7e7VnBqyKnaIhFP2UfHVizGPAaZZ7Kp9trP//28Ef1Cw=="
+    },
+    {
+      "keyId": "key-b",
+      "algorithm": "Ed25519",
+      "signatureBase64": "v30xFj4IBN51f3LmUDbhoo3Vq6oXN2zvIQ5gDLjxM8noFmtx0iuin+Ivulcn4Xwdh+NubjiU1lpYrgqInHCKDg=="
+    }
+  ]
+}

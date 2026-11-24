@@ -1,0 +1,23 @@
+# Fair Launch V1 runtime example. Keep enabled=false until deployment gates,
+# runtime verification, Source Registry enrollment, and remote signing pass.
+chain:
+  project:
+    chainID: 56
+    confirmedConfirmations: 5
+    finalizedConfirmations: 20
+    fairLaunchV1:
+      enabled: false
+      contractAddress: ""
+      implementationAddress: ""
+      implementationCodeHash: ""
+      startBlock: 0
+      operatorAddress: ""
+      platformFeeReceiver: ""
+      platformFeeBps: 250
+      releasePolicyDigest: ""
+      releasePolicyVersion: 0
+      paymentTokenSymbols: []
+      paymentTokens: {}
+
+# Deliberately absent: private keys. Production signing must use the approved
+# Sign Policy Gateway -> Web3Signer -> KMS boundary.

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+MIG="$ROOT/migrations/2026_09_20_invite_daily_cap.sql"
+
+fail() { printf 'invite_daily_cap_migration_test: FAIL: %s\n' "$*" >&2; exit 1; }
+
+[ -f "$MIG" ] || fail 'migration missing'
+grep -Fq "VALUES ('invite.daily_cap', '10', 'int')" "$MIG" || fail 'default daily cap missing'
+grep -Fq 'duplicate settings keys must be resolved before 0920' "$MIG" || fail 'duplicate setting preflight missing'
+grep -Fq 'UNIQUE INDEX uk_settings_key (`key`)' "$MIG" || fail 'settings key uniqueness missing'
+grep -Fq 'INDEX idx_inviter_created_at (inviter_uid, created_at)' "$MIG" || fail 'daily count index missing'
+grep -Fq 'ON DUPLICATE KEY UPDATE `key` = VALUES(`key`)' "$MIG" || fail 'non-destructive config seed missing'
+! grep -Eqi 'START[[:space:]]+(JOB|TRANSACTION)|executeBatch|CREATE[[:space:]]+EVENT|INSERT[[:space:]]+INTO[[:space:]].*(authority|cursor|lease)|private[_ -]?key' "$MIG" || fail 'migration widens forbidden runtime authority'
+
+printf 'invite_daily_cap_migration_test: PASS\n'

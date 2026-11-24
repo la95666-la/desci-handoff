@@ -1,0 +1,66 @@
+# 打包镜像
+FROM ubuntu:22.04
+WORKDIR /home/
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo 'Asia/Shanghai' > /etc/timezone && \
+    ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    vim \
+    nano \
+    build-essential \
+    unzip \
+    software-properties-common \
+    ca-certificates \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://mirrors.aliyun.com/golang/go1.25.1.linux-amd64.tar.gz -O /tmp/go.tar.gz \
+    && tar -C /usr/local -xzf /tmp/go.tar.gz \
+    && rm /tmp/go.tar.gz
+
+ENV PATH="/usr/local/go/bin:${PATH}"
+ENV GOPATH="/go"
+ENV PATH="${GOPATH}/bin:${PATH}"
+
+RUN mkdir -p ${GOPATH}/src ${GOPATH}/bin
+
+# 安装 Node.js 和 npm (24.x)
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# 验证 Node.js 和 npm 版本
+RUN node --version && npm --version
+
+RUN PB_REL="https://github.com/protocolbuffers/protobuf/releases" && \
+    PROTOC_VERSION="24.4" && \
+    curl -LO $PB_REL/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip && \
+    unzip protoc-${PROTOC_VERSION}-linux-x86_64.zip -d /usr/local && \
+    rm protoc-${PROTOC_VERSION}-linux-x86_64.zip
+
+RUN go env -w GOPROXY=https://goproxy.cn,direct
+RUN go install mvdan.cc/garble@v0.15.0 &&  \
+    go install "google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6" && \
+    go install "google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1"
+
+
+# 清理缓存以减少镜像大小
+RUN apt-get clean && apt-get autoclean
+
+# 配置 npm 镜像源（可选，用于加快下载速度）
+RUN npm config set registry https://registry.npmmirror.com
+
+# 设置默认命令
+CMD ["/bin/bash"]
+
+# 镜像说明
+# 该镜像包含以下工具和环境:
+# - Go 1.25.1 (Go backend 服务编译)
+# - Protocol Buffers 24.4 (protoc, grpc 代码生成)
+# - Node.js 24.x (前端服务打包)
+# - npm (Node.js 包管理工具)
+# - Git, curl, wget, build-essential 等常用工具

@@ -1,0 +1,23 @@
+{
+  "v3": {
+    "acceptOwnership()": "0x79ba5097",
+    "operator()": "0x570ca735",
+    "owner()": "0x8da5cb5b",
+    "pendingOwner()": "0xe30c3978",
+    "setOperator(address)": "0xb3ab15fb",
+    "transferOwnership(address)": "0xf2fde38b",
+    "whitelistGovernor()": "0x32c8ab6c"
+  },
+  "safe": {
+    "addOwnerWithThreshold(address,uint256)": "0x0d582f13",
+    "changeThreshold(uint256)": "0x694e80c3",
+    "getModulesPaginated(address,uint256)": "0xcc2f8452",
+    "getOwners()": "0xa0e67e2b",
+    "getThreshold()": "0xe75235b8",
+    "isOwner(address)": "0x2f54bf6e",
+    "nonce()": "0xaffed0e0",
+    "removeOwner(address,address,uint256)": "0xf8dc5dd9",
+    "swapOwner(address,address,address)": "0xe318b52b",
+    "VERSION()": "0xffa1ad74"
+  }
+}

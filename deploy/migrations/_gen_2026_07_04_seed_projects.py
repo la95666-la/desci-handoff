@@ -1,0 +1,381 @@
+#!/usr/bin/env python3
+"""
+Generate SQL to seed two Phase-1 (pre_launch) projects into the joincare DB:
+  - project_id = 2  : P2X1 functional antibody  (Prof. Chunlei Fan lab, ZCMU)
+  - project_id = 3  : Smarto Neuro (Prof. Jing Liang / Ronald Olsen legacy)
+
+Source docs:
+  /mnt/d/la/desci/joincare_projects/extracted/pptx-P2X1单抗/新型功能性P2X1单抗的研发.md
+  /mnt/d/la/desci/joincare_projects/extracted/pdf-梁京院士/梁京院士团队专利成果转化项目.md
+
+Idempotent: INSERT ... ON DUPLICATE KEY UPDATE on project_id (uniqueIndex).
+Run:  python3 _gen_2026_07_04_seed_projects.py > 2026_07_04_seed_projects.sql
+"""
+import json
+from datetime import datetime
+
+def esc(s):
+    return s.replace("\\", "\\\\").replace("'", "''")
+
+def jstr(obj):
+    """Serialize obj to JSON, then SQL-escape as MySQL string literal (single-quoted)."""
+    return "'" + esc(json.dumps(obj, ensure_ascii=False)) + "'"
+
+# =============================================================================
+# PROJECT 2 · P2X1 functional monoclonal antibody
+# =============================================================================
+P2X1 = {
+    "project_id": 2,
+    "owner_address": "0x0000000000000000000000000000000000000000",
+    "name_en": "Functional P2X1 Antibody Development",
+    "name_cn": "新型功能性 P2X1 单抗药物研发",
+    "tagline": "First-in-class functional monoclonal antibody targeting the P2X1 ion channel — one platform, three indications (sepsis, oncology, longevity).",
+    "description": "The P2X1 antibody platform delivers the first functional monoclonal antibody targeting an ATP-gated calcium ion channel. Ion-channel mAbs are a globally difficult class of biologics — P2X1 is a homotrimeric two-pass transmembrane channel whose open/closed conformations pose an antigen-preparation problem no small-molecule can solve. Prof. Chunlei Fan's team at Zhejiang Chinese Medical University's School of Life Sciences has produced hP2X1 Nanodiscs preserving native conformation, immunized Balb/c mice, and screened 8 positive clones. Clone P007 restores LPS-suppressed neutrophil chemotaxis to baseline, humanized hP007A achieves 100× affinity gain (Kd = 3.97 nM), and pre-clinical animal work shows tumor-growth suppression outperforming the PD-L1 antibody Durvalumab, plus a sepsis-survival rescue in mice.",
+    "tags": ["Antibody", "P2X1", "Ion Channel", "Sepsis", "Oncology", "Anti-aging", "DeSci"],
+    "team_info": "",
+    "roadmap": "",
+    "partners": "Zhejiang Chinese Medical University · Suzhou Municipal Hospital · Zhonghansentai Biotech (200万流式抗体转让合作)",
+    "token_address": "0x0000000000000000000000000000000000000000",
+    "token_symbol": "P2X1",
+    "token_decimals": 18,
+    "payment_token": "JCC",
+    "token_price": "0.10",
+    "hard_cap": "0",
+    "soft_cap": "0",
+    "max_per_user": "0",
+    "start_time": "2026-09-30 12:00:00",
+    "end_time": "2026-10-30 12:00:00",
+    "tge_time": "2026-11-15 12:00:00",
+    "status": "pre_launch",
+    "category": "Biotech · Antibody",
+    "cover_url": "",
+    "cover_video_url": "",
+    "launch_at": "2026-09-30 12:00:00",
+    "story_html": """
+<h2>Background — why ion-channel mAbs are the hardest class of biologics</h2>
+<p>G-protein-coupled receptors (GPCRs) and ion channels together account for nearly half of all FDA-approved drug targets (34% and 13% respectively), yet only two GPCR monoclonal antibodies (<em>erenumab</em>, <em>mogamulizumab</em>) have reached the clinic. Antibodies outperform small molecules on selectivity, bioavailability, half-life and effector function — but antigen preparation with native conformation remains the industry blocker.</p>
+<p>Ion channels are strictly harder than GPCRs. GPCRs are single-subunit seven-pass membrane proteins; ion channels are <strong>multi-subunit, multi-pass functional assemblies that switch between open and closed conformations</strong>. Pfizer's biologics group is publicly working on GPCR / ion-channel antibody drugs — progress is slow.</p>
+
+<h2>Our approach — native-conformation antigen via Nanodiscs</h2>
+<p>P2X1 belongs to the ATP-gated (P2X) family: a homotrimer with each subunit crossing the membrane twice. Prof. Chunlei Fan's team amplified hP2X1-mFc.copGFP/293 cells, prepared <strong>hP2X1 Nanodiscs</strong> preserving native quaternary structure, and purified via Protein A/G. This native-conformation antigen unlocks the entire program.</p>
+
+<h2>From immunization to humanized hP007A</h2>
+<ul>
+  <li>Immunized 7 Balb/c mice with hP2X1 Nanodiscs; one mouse showed serum titer ≥ 1:204,800 (OD ≥ 1).</li>
+  <li>Fusion + ELISA screen yielded 16 positive clones; the top 8 (P001–P008) were characterized.</li>
+  <li><strong>P007 and P008</strong> restore LPS-suppressed neutrophil chemotaxis from CFS = 6 back to CFS ≈ 16 (normal baseline), p &lt; 0.0001.</li>
+  <li>CDR grafting onto human IgG1 across 19 combinations produced <strong>hP007A</strong> with best affinity: Kd shifted from 0.389 μM (mouse) to <strong>3.97 nM</strong> (humanized) — a 100× gain.</li>
+</ul>
+
+<h2>Three indication tracks — one platform</h2>
+<p>P2X1 is expressed on platelets, neutrophils, macrophages, smooth muscle and multiple tumor lines. As an ATP-gated Ca²⁺ channel it participates in LPS-induced systemic inflammation, apoptosis, synaptic transmission, and platelet activation — giving one antibody three orthogonal indications:</p>
+<ol>
+  <li><strong>Sepsis / severe endotoxemia</strong> — hP007A rescues mouse survival in LPS-induced sepsis models.</li>
+  <li><strong>Solid-tumor oncology</strong> — 0.92 mg/kg P007 monotherapy achieved <em>complete</em> tumor-growth suppression in NOD-SCID mice grafted with H460 (human lung cancer) + PBMCs, outperforming Durvalumab (clinical PD-L1 mAb), with cavity formation observed in tumor tissue.</li>
+  <li><strong>Anti-aging / longevity (XD001)</strong> — companion program, video-documented mouse phenotype extension to ~132 human-year equivalent.</li>
+</ol>
+""".strip(),
+    "research_html": """
+<h2>Key pre-clinical data</h2>
+<h3>Affinity (SPR, hP2X1 Nanodiscs chip)</h3>
+<table><thead><tr><th>Antibody</th><th>Kd</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>P007 (mouse)</td><td>0.389 μM</td><td>original clone</td></tr>
+<tr><td><strong>hP007A</strong> (humanized)</td><td><strong>3.97 nM</strong></td><td>CDR-grafted onto human IgG1</td></tr>
+</tbody></table>
+
+<h3>Neutrophil chemotaxis rescue</h3>
+<p>LPS-suppressed neutrophils (CFS = 6, ****p &lt; 0.0001 vs normal). P007 and P008 restore CFS to 16 and 15.8 respectively — indistinguishable from healthy controls (p &gt; 0.05).</p>
+
+<h3>P2X1 expression in patients</h3>
+<ul>
+  <li>Sepsis / infection patients (n = 53): neutrophil-surface P2X1 significantly higher than healthy controls; chemotaxis scores negatively correlated with P2X1 level.</li>
+  <li>Cancer patients: neutrophil P2X1 elevated; r = −0.83, ****p &lt; 0.0001 with chemotaxis capacity.</li>
+</ul>
+
+<h3>Tumor suppression (in-vivo, NOD-SCID + human PBMC)</h3>
+<ul>
+  <li>H460 lung-cancer model: 0.92 mg/kg P007 → <strong>complete</strong> growth suppression; superior to Durvalumab positive control.</li>
+  <li>A375 human-melanoma model: 3.68 mg/kg P007 dose-dependent volume reduction, cavity formation histology.</li>
+</ul>
+
+<h3>Sepsis survival rescue</h3>
+<p>LPS-induced lethal endotoxemia mice: hP007A (clone 1) shows clear survival curve separation vs 4 CDR2-point-mutant clones (2–5), validating functional epitope.</p>
+
+<h3>Companion assay — flow-cytometry antibody FCM001</h3>
+<p>P2X1 flow-detection antibody (patent CN118652341A) outperforms commercial reagents in specificity and sensitivity. Already licensed: <strong>¥2,000,000 transfer contract</strong> with Zhonghansentai Biotech.</p>
+""".strip(),
+    "risks_html": """
+<h3>Development-stage risks</h3>
+<ul>
+  <li><strong>CMC scale-up.</strong> hP007A antigen prep requires Nanodisc formulation — CDMO qualification is on the critical path. Timeline: 1.5–2 years, budget ~¥10M.</li>
+  <li><strong>Regulatory dual-track.</strong> Program will pursue both NMPA and FDA IND simultaneously; anti-thrombosis vs anti-tumor vs anti-aging indications may split into separate INDs.</li>
+  <li><strong>First-in-class ion-channel mAb.</strong> Regulators have limited precedent; expect additional safety-margin studies vs a well-trodden GPCR mAb path.</li>
+  <li><strong>Program-financing dependency.</strong> The current lab-completed stage cost ¥10M over 5 years; CMC + preclinical + Phase-I is another ~¥21M gated by fundraising. Delays cascade.</li>
+  <li><strong>Token / Phase-2 disclosure.</strong> Phase-1 of this listing is subscription and content only; no on-chain sale, no purchase contract, no vesting is live. Phase-2 (contracts + trading) will be re-announced with independent risk disclosures.</li>
+</ul>
+""".strip(),
+    "team_json": [
+        {"name": "Prof. Chunlei Fan (范春雷)", "role": "PROGRAM LEAD", "bio": "Zhejiang Chinese Medical University · School of Life Sciences. Principal inventor of the hP2X1 Nanodisc antigen platform and 8 P2X1 functional mAb clones. Named inventor on 3 published patents (CN118638232A, CN118717967A, CN118652341A) and one PCT with positive international-search report.", "avatar_url": ""},
+        {"name": "Prof. Bingwei Sun (孙炳伟)", "role": "CLINICAL LEAD", "bio": "Suzhou Municipal Hospital. Discovered that endotoxin-suppressed neutrophil chemotaxis correlates with P2X1 overexpression on the neutrophil membrane — the original biological insight motivating the P2X1 antibody program.", "avatar_url": ""},
+        {"name": "JoinCare Foundation", "role": "INCUBATION PARTNER", "bio": "Lead incubator, structuring CMC-CDMO partnerships and dual-track (NMPA / FDA) IND filings.", "avatar_url": ""}
+    ],
+    "tokenomics_json": {
+        "tge_percent": 5,
+        "cliff_months": 12,
+        "linear_months": 24,
+        "allocations": [
+            {"label": "Public sale (Phase 2)", "percent": 20, "color": "#74f5a1"},
+            {"label": "R&D + CMC reserve",     "percent": 30, "color": "#3884ff"},
+            {"label": "Team + advisors",       "percent": 15, "color": "#fa8c16"},
+            {"label": "Ecosystem / community", "percent": 15, "color": "#a55dff"},
+            {"label": "Foundation treasury",   "percent": 10, "color": "#212121"},
+            {"label": "Liquidity",             "percent": 10, "color": "#1aa64a"}
+        ]
+    },
+    "roadmap_json": [
+        {"quarter": "2020–2025", "title": "Antigen · mAb · humanization complete", "desc": "hP2X1 Nanodisc antigen; 8 mouse clones (P001–P008); P007 humanized to hP007A (Kd 3.97 nM). 5-year budget ¥10M. Patents CN118638232A, CN118717967A, CN118652341A + PCT.", "status": "done"},
+        {"quarter": "2026 Q3–Q4", "title": "Pre-launch subscription + content live", "desc": "This page. Notify-me + watchlist + updates. No on-chain sale yet.", "status": "active"},
+        {"quarter": "2026 Q4 – 2028 Q2", "title": "CMC (CDMO)", "desc": "Cell-line construction → scaled production → stability studies. Budget ~¥10M via CDMO. Gated by seed round close.", "status": "todo"},
+        {"quarter": "2027 Q2 – Q4", "title": "Preclinical efficacy + safety (thrombosis indication)", "desc": "Parallel to CMC mid-stage. Budget ~¥6M via CDMO.", "status": "todo"},
+        {"quarter": "2028 Q3", "title": "IND (NMPA + FDA) — thrombosis", "desc": "Enter Phase I. License-out expected to recycle capital.", "status": "todo"},
+        {"quarter": "2027 – 2028", "title": "Oncology + anti-aging indication tracks", "desc": "Independent preclinical + IND filings. Anti-aging XD001 companion program.", "status": "todo"}
+    ],
+    "documents_json": [
+        {"title": "Patent · Functional P2X1 mAb — preparation & application",       "kind": "PATENT · CN118638232A", "url": "https://cprs.patentstar.com.cn/Search/Detail?ANE=CN118638232A"},
+        {"title": "Patent · Anti-platelet-aggregation P2X1 mAb application",         "kind": "PATENT · CN118717967A", "url": "https://cprs.patentstar.com.cn/Search/Detail?ANE=CN118717967A"},
+        {"title": "Patent · P2X1 flow-cytometry monoclonal detection antibody",      "kind": "PATENT · CN118652341A", "url": "https://cprs.patentstar.com.cn/Search/Detail?ANE=CN118652341A"},
+        {"title": "PCT international search report — novelty / inventiveness / industrial applicability confirmed", "kind": "PCT REPORT", "url": ""}
+    ],
+    "faq_json": [
+        {"q": "Why is a P2X1 antibody drug harder than a GPCR antibody drug?",           "a": "GPCRs are seven-pass single-subunit membrane proteins. P2X1 is a homotrimer, each subunit crossing the membrane twice, with distinct open/closed conformations. Producing an antigen in native quaternary structure is the industry blocker — and it is what the hP2X1 Nanodisc platform solves."},
+        {"q": "Isn't Phase-1 just a subscription page — what am I actually joining?",     "a": "Phase 1 = notify-me subscription + team-published Updates + watchlist + (in warmup) whitelist. Nothing on-chain sells here. Phase 2 (contracts, purchase, vesting) will be a separately-announced event with its own risk disclosures."},
+        {"q": "How does the platform go from one antibody to three indications?",        "a": "P2X1 is expressed on platelets (thrombosis), neutrophils (sepsis, inflammation) and multiple tumor lines (oncology). One clone — different mechanism-of-action. Independent preclinical + IND per indication."},
+        {"q": "What's the expected fundraising timeline?",                                "a": "The current seed capital covers CMC (¥10M, ~2 years) and preclinical for the lead indication (¥6M, ~6 months). NMPA + FDA IND filings target 2028 Q3. Subsequent oncology / anti-aging IND filings are self-financed via the license-out recycle."}
+    ],
+    "onchain_json": [
+        {"label": "P2X1 token (post-TGE)",  "address": "", "chain": "BSC"},
+        {"label": "Vesting contract",       "address": "", "chain": "BSC"},
+        {"label": "Public-sale contract",   "address": "", "chain": "BSC"}
+    ]
+}
+
+# =============================================================================
+# PROJECT 3 · Smarto Neuro (Prof. Jing Liang — USC / Nishuwu Hospital)
+# =============================================================================
+LIANGJING = {
+    "project_id": 3,
+    "owner_address": "0x0000000000000000000000000000000000000000",
+    "name_en": "Smarto Neuro — Prof. Jing Liang Lab Technology Transfer",
+    "name_cn": "Smarto Neuro · 梁京院士团队专利成果转化",
+    "tagline": "60 years of GABA / gephyrin neuroscience turned into three neuro-health product lines — FDA-cleared supplement, 40Hz Class-II device, and D-P new-drug pipeline.",
+    "description": "Smarto Neuro is the technology-transfer vehicle for two generations of GABA-A / inhibitory-neuroreceptor science: Prof. Richard W. Olsen (UCLA — the 'father of the GABA receptor'), and Prof. Jing Liang (USC School of Pharmacy · Fellow of the Royal Society of Medicine). Prof. Liang extended Olsen's 1969 inhibitory-neuroreceptor theory into a mitochondrial-scale mechanism (2020) and a neuro-immune-deficiency hypothesis (2021). From 6,000+ natural plant flavonoids, the lab isolated the D-Flavonoid group — a positive modulator of gephyrin (the guiding/support protein of GABA-A receptors) — which shipped in 2018 as the FDA-registered Smarto-One supplement (over 20,000 user studies). A 2020 medicinal-chemistry sweep produced D-P, a novel single-molecule with 50× safety/efficacy gain and 15-minute blood-brain-barrier penetration. In parallel, a Class-II medical device based on MIT's 40Hz gamma stimulation targets clinical Alzheimer's intervention.",
+    "tags": ["Neuroscience", "Alzheimer's", "GABA-A", "Gephyrin", "Class-II Device", "Nutraceutical", "DeSci"],
+    "team_info": "",
+    "roadmap": "",
+    "partners": "USC School of Pharmacy · Xuanwu Hospital (Capital Medical University) · Peking Union Medical College · MIT (40Hz IP) · Beijing Hehui Optoelectronics · ISO 9001 / applying ISO 13485",
+    "token_address": "0x0000000000000000000000000000000000000000",
+    "token_symbol": "SMRT",
+    "token_decimals": 18,
+    "payment_token": "JCC",
+    "token_price": "0.20",
+    "hard_cap": "0",
+    "soft_cap": "0",
+    "max_per_user": "0",
+    "start_time": "2026-10-15 12:00:00",
+    "end_time": "2026-11-15 12:00:00",
+    "tge_time": "2026-12-01 12:00:00",
+    "status": "pre_launch",
+    "category": "Neuroscience · Deep Science",
+    "cover_url": "",
+    "cover_video_url": "",
+    "launch_at": "2026-10-15 12:00:00",
+    "story_html": """
+<h2>The theory — two generations of GABA inhibitory-neuroreceptor science</h2>
+<p><strong>1969 · Prof. Richard W. Olsen (UCLA)</strong> — the 'father of the GABA receptor'. Discovered that the brain is balanced by two systems (GABA inhibition and excitation); health = equilibrium. When inhibition fails, excitation releases neurotoxins → neuronal damage → transmission failure.</p>
+<p><strong>2004 · Prof. Jing Liang</strong> — the guiding/support-protein (gephyrin) hypothesis. When brain gephyrin drops below 50% of baseline, GABA-A receptor function collapses. This is now recognized as the <em>fourth pathological hypothesis</em> of Alzheimer's disease.</p>
+<p><strong>2020 · Mitochondrial extension</strong> — damaged brain-cell mitochondria → ATP drop → gephyrin drop → GABA-A signal loss → neurodegeneration.</p>
+<p><strong>2021 · Neuro-immune-deficiency hypothesis</strong> — over-activated microglia (stress, isolation, sleep loss) trigger neuro-inflammation.</p>
+
+<h2>The compound — from 6,000 plant flavonoids to D-P</h2>
+<p>From 2003 the Liang lab screened 6,000+ natural plant flavonoids. The <strong>D-Flavonoid group</strong> (mixture of natural small-molecule flavonoids) emerged as a positive GABA-A modulator: restores gephyrin, boosts mitochondrial ATP, crosses the blood-brain barrier, no dependency. Shipped as the FDA-registered Smarto-One supplement in 2018.</p>
+<p>2020: medicinal-chemistry optimization on the natural scaffold produced <strong>D-P</strong> — a single molecule with 50× gains in stability and efficacy, and <strong>15-minute BBB penetration</strong>. D-P is the base compound for the drug pipeline (D-P1 for Alzheimer's mid-early stage + BPSD; D-P2 for depression / mood disorders).</p>
+
+<h2>Three product lines, one theory</h2>
+<ol>
+  <li><strong>Nutraceutical (FDA-registered) — Smarto-One / Carefreeing™ series.</strong> Live in USA + China cross-border e-commerce. 288-person volunteer study shows improvement in sleep / stress / mood. Target market: 25–40 y/o urban women; 3-year revenue plan ¥1.2B / ¥3.5B / ¥6B (2026–2028).</li>
+  <li><strong>Class-II medical device — Smarto Light™ 40Hz.</strong> Non-invasive gamma-band multisensory (sound + light + vibration) stimulation. Based on MIT (Prof. Li-Huei Tsai) 40Hz gamma research. Two Class-II filings pending. Manufactured with Beijing Hehui Optoelectronics (ISO 9001, applying ISO 13485).</li>
+  <li><strong>New drug — D-P1 / D-P2.</strong> D-P1: Alzheimer's mid-early treatment + BPSD symptom relief. D-P2: mood disorders. Both have completed lab-stage data; awaiting Phase-I. IVD companion: 4 test kits (AD7C-NTP, Aβ1-42, P-Tau-181, Aβ42).</li>
+</ol>
+""".strip(),
+    "research_html": """
+<h2>Key evidence base</h2>
+
+<h3>D-Flavonoid — human & animal evidence</h3>
+<ul>
+  <li>Enhances GABA-A receptor tonic and phasic current (Shen et al., <em>J. Neuroscience</em> 2012).</li>
+  <li>Reduces Aβ plaque burden in transgenic AD mice (Liang et al., <em>J. Neurochem</em> 2014).</li>
+  <li>Rescues anxiety, memory, motor function in AD-model rodents. Reverses stress-induced neuroinflammation via microglia normalization (Liang et al., <em>J. Neuroinflammation</em> 2022).</li>
+  <li>288-person human observational study — reduces sleep disturbance, stress and mood problems (PLOS ONE 2022, Smarto-One).</li>
+  <li>USC IRB clearance for human testing; over 20,000 real-world consumer studies (2018–now).</li>
+</ul>
+
+<h3>D-P — 2nd-generation optimized single molecule</h3>
+<ul>
+  <li>50× stability & efficacy gain vs D-Flavonoid natural scaffold.</li>
+  <li>15-minute blood-brain-barrier penetration (small-molecule bioavailability solved).</li>
+  <li>8-hour full-body clearance, no residue, no dependency, no withdrawal-syndrome risk.</li>
+  <li>Lab-stage data + repeatability + stable manufacturing method — complete. Awaiting Phase-I.</li>
+</ul>
+
+<h3>40Hz gamma device — MIT clinical evidence</h3>
+<ul>
+  <li>Aβ40 clearance +28% (Nature — glymphatic mechanism).</li>
+  <li>Tau phosphorylation −37% (Tau P301S model).</li>
+  <li>MMSE cognitive decline slowed 83% (n = 76 double-blind).</li>
+  <li>ADCS-ADL score decline slowed 84% (p &lt; 0.001).</li>
+  <li>Default-mode-network connectivity +41%; synaptic-protein marker +68% at 6 weeks.</li>
+  <li>vs oral donepezil (6 mo): MMSE +3.2 vs +1.5; side-effect &lt; 1% vs 28%; ¥80/day vs ¥220/day; adherence 98% vs 63%.</li>
+</ul>
+
+<h3>Market — supplement pipeline</h3>
+<ul>
+  <li>China neuro-health nutraceutical market: 2025 est. ¥180B, CAGR 15%+ (Frost & Sullivan).</li>
+  <li>Mood disorders in CN: 132M patients, ¥17k/yr avg spend, ¥32.5B TAM.</li>
+  <li>Sleep disorders in CN: 300M patients, ¥932/yr avg spend, ¥400B TAM.</li>
+</ul>
+""".strip(),
+    "risks_html": """
+<h3>Three regulatory tracks — three risk profiles</h3>
+<ul>
+  <li><strong>Nutraceutical (Smarto-One)</strong> — already FDA-registered dietary supplement in USA + China food-quality certified. Lowest regulatory risk; revenue-generating. Risk is competitive (unverified competitor claims dominate the CN market — market-education cost).</li>
+  <li><strong>Class-II medical device (Smarto Light™ 40Hz)</strong> — two Class-II filings in progress. Standard medical-device timeline (18–24 months); manufacturing partner (Beijing Hehui Optoelectronics) applying for ISO 13485. IP: MIT 40Hz methods (licensed) + proprietary tri-modal (sound / light / vibration) protocol + original 40Hz music compositions.</li>
+  <li><strong>New drug (D-P1 / D-P2)</strong> — full FDA / NMPA drug pathway. 3–6 months IND prep; 6 months prior-research; 18 months preclinical; 3–6 months IND review; 1 year phased trials; 6–12 months NDA. Not first-in-class (natural D-Flavonoid parent scaffold has consumer safety track record), but full timeline is 4–5 years.</li>
+</ul>
+
+<h3>Financing structure</h3>
+<ul>
+  <li>Seed round: ¥45M RMB target, 20–25% equity release. Close deadline announced 2026-01-30.</li>
+  <li>Use of funds: drug R&D + product R&D + cross-border-EC brand + online market flow + channel-build + production.</li>
+  <li>Full financial model + additional strategic docs available only after NDA execution.</li>
+  <li><strong>Phase-1 of this listing is subscription and content only</strong> — no on-chain sale, no purchase contract, no vesting is live. Phase 2 (contracts + trading) will be separately announced with independent risk disclosures.</li>
+</ul>
+""".strip(),
+    "team_json": [
+        {"name": "Prof. Jing Liang (梁京)", "role": "SCIENTIFIC LEAD", "bio": "USC School of Pharmacy, professor. Fellow of the Royal Society of Medicine (2019–). Named 'New Scientist' by London (2012). Proposed the 'guiding / support protein — gephyrin' hypothesis (2004), later recognized as the fourth pathological hypothesis of Alzheimer's. 82 peer-reviewed papers; 2012 J. Neuroscience paper selected NIH 'Top 1000 papers influencing the world'. Chief investigator NIH Brain Challenge (2008). Editor-in-Chief, Chinese Pharmacology journal. Multiple technology invention patents.", "avatar_url": ""},
+        {"name": "Prof. Richard W. Olsen (奥森・理查德, in memoriam)", "role": "FOUNDING THEORY", "bio": "UCLA School of Medicine, lifetime distinguished professor. 'Father of the GABA receptor'. Nobel Committee lifetime-achievement award (Neuroscience). NIH career development award; Javits Neuroscience Prize; US HHS cardiovascular achievement award. 266 SCI papers; editor of Pharmacology, Neuroscience, Epilepsia, Alcoholism.", "avatar_url": ""},
+        {"name": "Prof. Rong Wang (王蓉)", "role": "CN LAB LEAD", "bio": "Director, Central Laboratory, Xuanwu Hospital (Capital Medical University). Chair, AD Peripheral-Biomarker & Early-Intervention Alliance (National Old-Age Disease Clinical Research Center). Chair, Basic & Translational Medicine Committee, Beijing Neurology Association. Neurofilament AD7c-NTP urine detection inventor. 32 first-author + 92 corresponding-author papers, 37 SCI.", "avatar_url": ""},
+        {"name": "Prof. Shun Yu (于顺)", "role": "CN LAB · PARKINSON'S", "bio": "Xuanwu Hospital, National Aging-Disease Clinical Research Center. Director, Molecular Diagnostics Lab, Beijing Aging Medicine Research Center. Deputy director, Parkinson's Research Institute (Capital Medical University Brain Research Institute).", "avatar_url": ""},
+        {"name": "Prof. Yu Liu (刘鱼)", "role": "CN LAB · TRANSFUSION MEDICINE", "bio": "Peking Union Medical College, professor. Johns Hopkins visiting scholar. Director, Transfusion Medicine Experimental Center, Chinese Academy of Medical Sciences.", "avatar_url": ""},
+        {"name": "Fan Zhao (赵凡)", "role": "CMO — COMMERCE LEAD", "bio": "Former CMO / Fast-Moving Consumer Head, ByteDance Douyin Marketing. Operated ¥500B GMV, ¥7B annual budget, 250-person team. Leading B-side ecosystem + C-side brand build + cross-border e-commerce channels.", "avatar_url": ""}
+    ],
+    "tokenomics_json": {
+        "tge_percent": 5,
+        "cliff_months": 6,
+        "linear_months": 18,
+        "allocations": [
+            {"label": "Public sale (Phase 2)", "percent": 22, "color": "#74f5a1"},
+            {"label": "R&D — D-P new drug",    "percent": 22, "color": "#3884ff"},
+            {"label": "Device + IVD build-out","percent": 12, "color": "#a55dff"},
+            {"label": "Team + advisors",       "percent": 15, "color": "#fa8c16"},
+            {"label": "Cross-border commerce", "percent": 10, "color": "#f5222d"},
+            {"label": "Foundation treasury",   "percent": 10, "color": "#212121"},
+            {"label": "Liquidity",             "percent":  9, "color": "#1aa64a"}
+        ]
+    },
+    "roadmap_json": [
+        {"quarter": "2003–2018", "title": "D-Flavonoid discovery → Smarto-One shipped", "desc": "6,000+ flavonoid screen → D-Flavonoid group → FDA supplement registration → China + USA channels + 20,000-user studies.", "status": "done"},
+        {"quarter": "2020",       "title": "D-P single molecule complete",              "desc": "Structure-optimized single-compound with 50× stability / efficacy gain and 15-min BBB penetration. Lab-stage + repeatability + manufacturing method complete.", "status": "done"},
+        {"quarter": "2026 Q3–Q4", "title": "Pre-launch subscription + content live",    "desc": "This page. Notify-me + watchlist + updates. No on-chain sale yet.", "status": "active"},
+        {"quarter": "2026 Q4",    "title": "Seed round close (¥45M target, 20–25% eq.)","desc": "Deadline 2026-01-30. Use-of-funds gates drug R&D + device build-out + channel expansion.", "status": "todo"},
+        {"quarter": "2027",       "title": "D-P1 IND (Alzheimer's mid-early + BPSD)",   "desc": "18 months preclinical → IND submission. Parallel: cross-border e-commerce ¥3.5B revenue plan (channel matrix + celebrity live-commerce).", "status": "todo"},
+        {"quarter": "2027",       "title": "Smarto Light™ 40Hz — Class-II approval",    "desc": "Two Class-II filings expected. Home-eyemask + hospital sleep-pod SKUs. ISO 13485 finalization.", "status": "todo"},
+        {"quarter": "2028",       "title": "D-P2 IND (mood disorders / depression)",     "desc": "6 months preclinical after CMC mid-stage. IVD 4-panel kit companion launches for AD early-screening.", "status": "todo"},
+        {"quarter": "2028",       "title": "Commerce Y3 · ¥6B revenue plan",             "desc": "Douyin store matrix + Tmall / JD + Sam's Club + 100 offline retail. Gross margin 82% target. Investor exit via IPO / M&A (comps: Chengcyan-Life Space acquisition PS 5–8×).", "status": "todo"}
+    ],
+    "documents_json": [
+        {"title": "US FDA · dietary supplement registration (Carefreeing™ / Smarto-One)", "kind": "REGULATORY", "url": ""},
+        {"title": "China food-quality inspection certificate",                            "kind": "REGULATORY", "url": ""},
+        {"title": "PONY test · oral acute-toxicity certification",                        "kind": "SAFETY",     "url": ""},
+        {"title": "D-Flavonoid — 18 selected peer-reviewed papers (J. Neurochem, PNAS, J. Neuroscience, PLOS ONE, Nature 2019)", "kind": "PAPERS", "url": ""},
+        {"title": "MIT 40Hz gamma — Nature glymphatic + NCT-03556280 Phase-II reference", "kind": "PAPERS",     "url": "https://www.nature.com/articles/s41586-019-1330-0"},
+        {"title": "Smarto-One PLOS ONE 2022 — 288-user stress / anxiety / sleep study",   "kind": "PAPERS",     "url": ""},
+        {"title": "Chengcyan-Life Space acquisition (PS 5–8× exit comp reference)",       "kind": "EXIT COMP",  "url": ""}
+    ],
+    "faq_json": [
+        {"q": "What is the difference between D-Flavonoid (Smarto-One) and D-P new drug?",   "a": "D-Flavonoid is a natural mixture of plant flavonoids, shipping since 2018 as an FDA-registered dietary supplement. D-P is a single medicinal-chemistry-optimized molecule derived from the same scaffold — 50× stability / efficacy gain, 15-min BBB penetration, and is now entering the full drug pathway (Alzheimer's D-P1, depression D-P2)."},
+        {"q": "Why three product lines simultaneously?",                                     "a": "One theory (GABA-A / gephyrin restoration), three regulatory tracks. The nutraceutical is already-cashflow, funding R&D. The Class-II device pays back in 18–24 months. The new drug is the long-horizon high-value asset. Cross-subsidy across product lines."},
+        {"q": "Isn't Phase-1 just a subscription page — what am I actually joining?",         "a": "Phase 1 = notify-me subscription + team-published Updates + watchlist + (in warmup) whitelist. Nothing on-chain sells here. Phase 2 (contracts + purchase + vesting) will be a separately-announced event with its own risk disclosures."},
+        {"q": "When does the seed round close?",                                             "a": "Seed round is ¥45M RMB, 20–25% equity release. Announced deadline: 2026-01-30. Detailed financial-model + additional strategic docs available only after NDA execution."}
+    ],
+    "onchain_json": [
+        {"label": "SMRT token (post-TGE)",    "address": "", "chain": "BSC"},
+        {"label": "Vesting contract",         "address": "", "chain": "BSC"},
+        {"label": "Public-sale contract",     "address": "", "chain": "BSC"},
+        {"label": "Foundation treasury multi-sig", "address": "", "chain": "BSC"}
+    ]
+}
+
+# =============================================================================
+# EMIT SQL
+# =============================================================================
+def emit(p):
+    """Emit INSERT ... ON DUPLICATE KEY UPDATE for one project.
+    Uses uniqueIndex on project_id for idempotency."""
+    cols = [
+        "project_id","owner_address","name_en","name_cn","tagline","description",
+        "tags","team_info","roadmap","partners",
+        "token_address","token_symbol","token_decimals","payment_token",
+        "token_price","hard_cap","soft_cap","max_per_user",
+        "start_time","end_time","tge_time","status",
+        "category","cover_url","cover_video_url","launch_at",
+        "story_html","research_html","risks_html",
+        "team_json","tokenomics_json","roadmap_json","documents_json","faq_json","onchain_json"
+    ]
+    vals = {
+        "project_id":       str(p["project_id"]),
+        "owner_address":    "'" + esc(p["owner_address"]) + "'",
+        "name_en":          "'" + esc(p["name_en"]) + "'",
+        "name_cn":          "'" + esc(p["name_cn"]) + "'",
+        "tagline":          "'" + esc(p["tagline"]) + "'",
+        "description":      "'" + esc(p["description"]) + "'",
+        "tags":             "'" + esc(json.dumps(p["tags"], ensure_ascii=False)) + "'",
+        "team_info":        "'" + esc(p["team_info"]) + "'",
+        "roadmap":          "'" + esc(p["roadmap"]) + "'",
+        "partners":         "'" + esc(p["partners"]) + "'",
+        "token_address":    "'" + esc(p["token_address"]) + "'",
+        "token_symbol":     "'" + esc(p["token_symbol"]) + "'",
+        "token_decimals":   str(p["token_decimals"]),
+        "payment_token":    "'" + esc(p["payment_token"]) + "'",
+        "token_price":      p["token_price"],
+        "hard_cap":         p["hard_cap"],
+        "soft_cap":         p["soft_cap"],
+        "max_per_user":     p["max_per_user"],
+        "start_time":       "'" + p["start_time"] + "'",
+        "end_time":         "'" + p["end_time"] + "'",
+        "tge_time":         "'" + p["tge_time"] + "'",
+        "status":           "'" + esc(p["status"]) + "'",
+        "category":         "'" + esc(p["category"]) + "'",
+        "cover_url":        "'" + esc(p["cover_url"]) + "'",
+        "cover_video_url":  "'" + esc(p["cover_video_url"]) + "'",
+        "launch_at":        "'" + p["launch_at"] + "'",
+        "story_html":       "'" + esc(p["story_html"]) + "'",
+        "research_html":    "'" + esc(p["research_html"]) + "'",
+        "risks_html":       "'" + esc(p["risks_html"]) + "'",
+        "team_json":        jstr(p["team_json"]),
+        "tokenomics_json":  jstr(p["tokenomics_json"]),
+        "roadmap_json":     jstr(p["roadmap_json"]),
+        "documents_json":   jstr(p["documents_json"]),
+        "faq_json":         jstr(p["faq_json"]),
+        "onchain_json":     jstr(p["onchain_json"])
+    }
+    upd = [f"`{c}`=VALUES(`{c}`)" for c in cols if c != "project_id"]
+    sql = "INSERT INTO projects (\n  " + ",".join([f"`{c}`" for c in cols]) + "\n) VALUES (\n  " + ",\n  ".join([vals[c] for c in cols]) + "\n) ON DUPLICATE KEY UPDATE\n  " + ",\n  ".join(upd) + ";\n"
+    return sql
+
+print("-- Seed two Phase-1 projects (P2X1 antibody + Smarto Neuro)")
+print("-- Idempotent: ON DUPLICATE KEY UPDATE on projects.project_id (unique)")
+print("-- Generated by migrations/_gen_2026_07_04_seed_projects.py")
+print("SET NAMES utf8mb4;")
+print(emit(P2X1))
+print(emit(LIANGJING))

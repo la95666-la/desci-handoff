@@ -1,0 +1,4 @@
+{
+  "status": "UNADMITTED_PLACEHOLDER",
+  "reason": "No real MySQL 8 information_schema snapshot or phase checkpoint has been independently reviewed and admitted."
+}

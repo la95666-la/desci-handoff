@@ -1,0 +1,443 @@
+DO_NOT_EXECUTE: FAIR LAUNCH CE-V2 / GOVERNANCE MECHANICAL DDL SPECIMEN ONLY
+SPECIMEN_FORMAT: every remaining nonblank line begins with SPEC> and cannot be submitted as SQL
+
+
+
+
+
+
+
+
+
+
+SPEC> -- This is deliberately not executable SQL. A verifier strips the first line
+SPEC> -- only for static tokenization. No production migration may source this file.
+
+
+SPEC> CREATE TABLE chain_contract_source (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   contract_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   contract_version VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   funding_mode VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   registered_at DATETIME(6) NOT NULL,
+SPEC>   retired_at DATETIME(6) NULL,
+SPEC>   start_block BIGINT UNSIGNED NOT NULL,
+SPEC>   enabled TINYINT UNSIGNED NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_source_address (chain_id,contract_address),
+SPEC>   CONSTRAINT chk_source_address CHECK (chain_id>0 AND contract_address REGEXP '^0x[0-9a-f]{40}$' AND enabled IN (0,1)) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE chain_contract_source_revision (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   source_id BIGINT UNSIGNED NOT NULL,
+SPEC>   revision_no INT UNSIGNED NOT NULL,
+SPEC>   activation_block_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   proxy_kind VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   abi_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   confirmation_policy VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   governance_tx_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   governance_operation_id VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   implementation_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   implementation_code_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   abi_version VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   from_block_number BIGINT UNSIGNED NOT NULL,
+SPEC>   from_transaction_index INT UNSIGNED NOT NULL,
+SPEC>   from_tx_log_ordinal_inclusive INT UNSIGNED NOT NULL,
+SPEC>   to_block_number BIGINT UNSIGNED NULL,
+SPEC>   to_transaction_index INT UNSIGNED NULL,
+SPEC>   to_tx_log_ordinal_exclusive INT UNSIGNED NULL,
+SPEC>   activation_event_identity_id BIGINT UNSIGNED NULL,
+SPEC>   predecessor_revision_id BIGINT UNSIGNED NULL,
+SPEC>   created_at DATETIME(6) NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_source_revision_no (source_id,revision_no),
+SPEC>   UNIQUE KEY uk_source_revision_identity_pair (id,source_id),
+SPEC>   UNIQUE KEY uk_source_revision_boundary (source_id,from_block_number,from_transaction_index,from_tx_log_ordinal_inclusive),
+SPEC>   CONSTRAINT fk_source_revision_source FOREIGN KEY (source_id) REFERENCES chain_contract_source(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_source_revision_predecessor_same_source FOREIGN KEY (predecessor_revision_id,source_id) REFERENCES chain_contract_source_revision(id,source_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_source_revision CHECK (revision_no>0 AND implementation_address REGEXP '^0x[0-9a-f]{40}$' AND implementation_code_hash REGEXP '^[0-9a-f]{64}$' AND ((to_block_number IS NULL AND to_transaction_index IS NULL AND to_tx_log_ordinal_exclusive IS NULL) OR (to_block_number IS NOT NULL AND to_transaction_index IS NOT NULL AND to_tx_log_ordinal_exclusive IS NOT NULL))) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE chain_ingestion_cursor (
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   archived_through_block BIGINT UNSIGNED NOT NULL,
+SPEC>   archived_through_block_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   last_tx_index INT UNSIGNED NOT NULL,
+SPEC>   last_log_index INT UNSIGNED NOT NULL,
+SPEC>   lease_token CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   fence_epoch BIGINT UNSIGNED NOT NULL,
+SPEC>   status VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   last_error VARCHAR(256) NULL,
+SPEC>   updated_at DATETIME(6) NOT NULL,
+SPEC>   cursor_generation BIGINT UNSIGNED NOT NULL,
+SPEC>   PRIMARY KEY (chain_id),
+SPEC>   CONSTRAINT chk_chain_cursor CHECK (chain_id>0 AND archived_through_block_hash REGEXP '^0x[0-9a-f]{64}$' AND cursor_generation>0) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE source_materialization_cursor (
+SPEC>   source_id BIGINT UNSIGNED NOT NULL,
+SPEC>   source_revision_id BIGINT UNSIGNED NOT NULL,
+SPEC>   materialized_through_block BIGINT UNSIGNED NOT NULL,
+SPEC>   materialized_through_block_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   materialized_through_tx_index INT UNSIGNED NOT NULL,
+SPEC>   materialized_through_tx_log_ordinal INT UNSIGNED NOT NULL,
+SPEC>   last_event_identity_id BIGINT UNSIGNED NULL,
+SPEC>   lease_token CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   fence_epoch BIGINT UNSIGNED NOT NULL,
+SPEC>   status VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   last_error VARCHAR(256) NULL,
+SPEC>   updated_at DATETIME(6) NOT NULL,
+SPEC>   cursor_generation BIGINT UNSIGNED NOT NULL,
+SPEC>   PRIMARY KEY (source_id),
+SPEC>   CONSTRAINT fk_materialization_cursor_source FOREIGN KEY (source_id) REFERENCES chain_contract_source(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_materialization_cursor_revision_same_source FOREIGN KEY (source_revision_id,source_id) REFERENCES chain_contract_source_revision(id,source_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_materialization_cursor CHECK (cursor_generation>0) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE source_ingestion_coverage (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   source_id BIGINT UNSIGNED NOT NULL,
+SPEC>   from_block BIGINT UNSIGNED NOT NULL,
+SPEC>   through_block BIGINT UNSIGNED NOT NULL,
+SPEC>   coverage_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   finalized TINYINT UNSIGNED NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_source_coverage_range (source_id,from_block,through_block),
+SPEC>   CONSTRAINT fk_source_coverage_source FOREIGN KEY (source_id) REFERENCES chain_contract_source(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_source_coverage CHECK (from_block<=through_block AND coverage_digest REGEXP '^[0-9a-f]{64}$' AND finalized IN (0,1)) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE chain_event_identity_v2 (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   tx_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   tx_log_ordinal INT UNSIGNED NOT NULL,
+SPEC>   created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_ce_identity (chain_id,tx_hash,tx_log_ordinal),
+SPEC>   CONSTRAINT chk_ce_identity CHECK (chain_id>0 AND tx_hash REGEXP '^0x[0-9a-f]{64}$') ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> ALTER TABLE source_materialization_cursor ADD CONSTRAINT fk_materialization_cursor_last_identity FOREIGN KEY (last_event_identity_id) REFERENCES chain_event_identity_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+SPEC> ALTER TABLE chain_contract_source_revision ADD CONSTRAINT fk_source_revision_activation_identity FOREIGN KEY (activation_event_identity_id) REFERENCES chain_event_identity_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+SPEC> CREATE TABLE chain_event_placement_v2 (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   event_identity_id BIGINT UNSIGNED NOT NULL,
+SPEC>   generation INT UNSIGNED NOT NULL,
+SPEC>   block_number BIGINT UNSIGNED NOT NULL,
+SPEC>   block_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   transaction_index INT UNSIGNED NOT NULL,
+SPEC>   rpc_log_index INT UNSIGNED NOT NULL,
+SPEC>   source_revision_id BIGINT UNSIGNED NOT NULL,
+SPEC>   canonical_slot TINYINT UNSIGNED NULL,
+SPEC>   finalized_at DATETIME(6) NULL,
+SPEC>   noncanonical_at DATETIME(6) NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_ce_placement_generation (event_identity_id,generation),
+SPEC>   UNIQUE KEY uk_ce_placement_identity_pair (id,event_identity_id),
+SPEC>   UNIQUE KEY uk_ce_placement_identity_revision (id,event_identity_id,source_revision_id),
+SPEC>   UNIQUE KEY uk_ce_placement_canonical (event_identity_id,canonical_slot),
+SPEC>   CONSTRAINT fk_ce_placement_identity FOREIGN KEY (event_identity_id) REFERENCES chain_event_identity_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_ce_placement_source_revision FOREIGN KEY (source_revision_id) REFERENCES chain_contract_source_revision(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_ce_placement CHECK (generation>0 AND block_hash REGEXP '^0x[0-9a-f]{64}$' AND (canonical_slot IS NULL OR canonical_slot=1)) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE chain_event_placement_observation_v2 (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   placement_id BIGINT UNSIGNED NOT NULL,
+SPEC>   event_identity_id BIGINT UNSIGNED NOT NULL,
+SPEC>   provider_identity VARCHAR(128) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   emitting_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   topics_data_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   raw_log_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   observed_at DATETIME(6) NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_ce_observation_provider (placement_id,provider_identity,raw_log_digest),
+SPEC>   UNIQUE KEY uk_ce_observation_identity_pair (id,event_identity_id),
+SPEC>   CONSTRAINT fk_ce_observation_placement_identity FOREIGN KEY (placement_id,event_identity_id) REFERENCES chain_event_placement_v2(id,event_identity_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_ce_observation CHECK (emitting_address REGEXP '^0x[0-9a-f]{40}$' AND topics_data_digest REGEXP '^[0-9a-f]{64}$' AND raw_log_digest REGEXP '^[0-9a-f]{64}$') ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE chain_event_payload_conflict_v2 (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   event_identity_id BIGINT UNSIGNED NOT NULL,
+SPEC>   first_observation_id BIGINT UNSIGNED NOT NULL,
+SPEC>   conflicting_observation_id BIGINT UNSIGNED NOT NULL,
+SPEC>   state VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   evidence_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   detected_at DATETIME(6) NOT NULL,
+SPEC>   resolved_at DATETIME(6) NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_ce_payload_conflict (event_identity_id,first_observation_id,conflicting_observation_id),
+SPEC>   CONSTRAINT fk_ce_conflict_identity FOREIGN KEY (event_identity_id) REFERENCES chain_event_identity_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_ce_conflict_first_observation FOREIGN KEY (first_observation_id,event_identity_id) REFERENCES chain_event_placement_observation_v2(id,event_identity_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_ce_conflict_second_observation FOREIGN KEY (conflicting_observation_id,event_identity_id) REFERENCES chain_event_placement_observation_v2(id,event_identity_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_ce_payload_conflict CHECK (state IN ('open','resolved') AND evidence_digest REGEXP '^[0-9a-f]{64}$') ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE chain_event_application_attempt_v2 (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   event_identity_id BIGINT UNSIGNED NOT NULL,
+SPEC>   placement_id BIGINT UNSIGNED NOT NULL,
+SPEC>   effect_version INT UNSIGNED NOT NULL,
+SPEC>   expected_effect TINYINT UNSIGNED NOT NULL,
+SPEC>   correlation_sender_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   correlation_calldata_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   correlation_nonce BIGINT UNSIGNED NULL,
+SPEC>   attempt_no INT UNSIGNED NOT NULL,
+SPEC>   predecessor_application_id BIGINT UNSIGNED NULL,
+SPEC>   requested_by_replay_audit_id BIGINT UNSIGNED NULL,
+SPEC>   disposition VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   effect_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   applied_at DATETIME(6) NULL,
+SPEC>   reversed_at DATETIME(6) NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_ce_application_attempt (event_identity_id,placement_id,effect_version,attempt_no),
+SPEC>   UNIQUE KEY uk_ce_application_identity_pair (id,event_identity_id),
+SPEC>   UNIQUE KEY uk_ce_application_identity_placement (id,event_identity_id,placement_id),
+SPEC>   CONSTRAINT fk_ce_application_identity FOREIGN KEY (event_identity_id) REFERENCES chain_event_identity_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_ce_application_placement_identity FOREIGN KEY (placement_id,event_identity_id) REFERENCES chain_event_placement_v2(id,event_identity_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_ce_application_predecessor_same_identity FOREIGN KEY (predecessor_application_id,event_identity_id) REFERENCES chain_event_application_attempt_v2(id,event_identity_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_ce_application CHECK (effect_version>0 AND expected_effect IN (0,1) AND attempt_no>0 AND ((correlation_sender_address IS NULL AND correlation_calldata_digest IS NULL AND correlation_nonce IS NULL) OR (correlation_sender_address REGEXP '^0x[0-9a-f]{40}$' AND correlation_calldata_digest REGEXP '^[0-9a-f]{64}$' AND correlation_nonce IS NOT NULL)) AND disposition IN ('exact','conditional','blocked','no_op','reversed') AND effect_digest REGEXP '^[0-9a-f]{64}$') ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE chain_event_identity_quarantine_v2 (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   legacy_table VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   legacy_id BIGINT UNSIGNED NOT NULL,
+SPEC>   raw_identity_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   failure_reason VARCHAR(128) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   tool_version VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   adjudication_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   created_at DATETIME(6) NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_ce_quarantine_legacy (legacy_table,legacy_id)
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE fund_ledger_v2_shadow (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   source_application_attempt_id BIGINT UNSIGNED NOT NULL,
+SPEC>   entry_ordinal INT UNSIGNED NOT NULL,
+SPEC>   effect_manifest_version INT UNSIGNED NOT NULL,
+SPEC>   tx_log_ordinal INT UNSIGNED NOT NULL,
+SPEC>   rpc_log_index INT UNSIGNED NOT NULL,
+SPEC>   token_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   amount_raw VARCHAR(78) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   counterparty_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   reversal_of_ledger_id BIGINT UNSIGNED NULL,
+SPEC>   compensation_generation INT UNSIGNED NULL,
+SPEC>   row_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   created_at DATETIME(6) NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_fund_ledger_v2_entry (source_application_attempt_id,entry_ordinal),
+SPEC>   UNIQUE KEY uk_fund_ledger_v2_reversal (reversal_of_ledger_id,compensation_generation),
+SPEC>   CONSTRAINT fk_fund_ledger_v2_application FOREIGN KEY (source_application_attempt_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_fund_ledger_v2_reversal FOREIGN KEY (reversal_of_ledger_id) REFERENCES fund_ledger_v2_shadow(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_fund_ledger_v2 CHECK (effect_manifest_version>0 AND amount_raw REGEXP '^(0|[1-9][0-9]{0,64})$' AND row_digest REGEXP '^[0-9a-f]{64}$') ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE ce_v2_cutover_control (
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   phase VARCHAR(24) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   writer_generation BIGINT UNSIGNED NOT NULL,
+SPEC>   reader_generation BIGINT UNSIGNED NOT NULL,
+SPEC>   cutover_block_number BIGINT UNSIGNED NULL,
+SPEC>   cutover_block_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   validation_query_version VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   validation_result_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   quarantine_count BIGINT UNSIGNED NOT NULL,
+SPEC>   unresolved_failure_count BIGINT UNSIGNED NOT NULL,
+SPEC>   source_coverage_gap_count BIGINT UNSIGNED NOT NULL,
+SPEC>   approved_manifest_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   PRIMARY KEY (chain_id),
+SPEC>   CONSTRAINT chk_ce_cutover CHECK (phase IN ('m1_expand','m2_backfill','m3_shadow_write','m4_shadow_read','m5_fenced','m6_v2_read','m7_v2_only','m8_retired') AND NOT(phase IN ('m5_fenced','m6_v2_read','m7_v2_only','m8_retired') AND (quarantine_count<>0 OR unresolved_failure_count<>0 OR source_coverage_gap_count<>0 OR cutover_block_hash IS NULL OR validation_result_digest IS NULL OR approved_manifest_digest IS NULL))) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> -- M1-only nullable additions; legacy final_event_record_id remains authoritative through M5.
+SPEC> ALTER TABLE chain_event_record ADD COLUMN chain_id_v2 BIGINT UNSIGNED NULL, ADD COLUMN tx_log_ordinal_v2 INT UNSIGNED NULL, ADD COLUMN event_identity_id_v2 BIGINT UNSIGNED NULL, ADD COLUMN placement_id_v2 BIGINT UNSIGNED NULL, ADD COLUMN application_attempt_id_v2 BIGINT UNSIGNED NULL;
+SPEC> ALTER TABLE chain_event_record ADD CONSTRAINT fk_chain_event_record_identity_v2 FOREIGN KEY (event_identity_id_v2) REFERENCES chain_event_identity_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT, ADD CONSTRAINT fk_chain_event_record_placement_same_identity_v2 FOREIGN KEY (placement_id_v2,event_identity_id_v2) REFERENCES chain_event_placement_v2(id,event_identity_id) ON UPDATE RESTRICT ON DELETE RESTRICT, ADD CONSTRAINT fk_chain_event_record_application_same_lineage_v2 FOREIGN KEY (application_attempt_id_v2,event_identity_id_v2,placement_id_v2) REFERENCES chain_event_application_attempt_v2(id,event_identity_id,placement_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+SPEC> ALTER TABLE chain_event_failure ADD COLUMN event_identity_id_v2 BIGINT UNSIGNED NULL, ADD COLUMN placement_id_v2 BIGINT UNSIGNED NULL, ADD COLUMN source_revision_id_v2 BIGINT UNSIGNED NULL, ADD COLUMN failure_generation_v2 INT UNSIGNED NULL;
+SPEC> ALTER TABLE chain_event_failure ADD CONSTRAINT fk_chain_event_failure_identity_v2 FOREIGN KEY (event_identity_id_v2) REFERENCES chain_event_identity_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT, ADD CONSTRAINT fk_chain_event_failure_same_lineage_v2 FOREIGN KEY (placement_id_v2,event_identity_id_v2,source_revision_id_v2) REFERENCES chain_event_placement_v2(id,event_identity_id,source_revision_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+SPEC> ALTER TABLE chain_event_replay_audit ADD COLUMN requested_placement_generation_v2 INT UNSIGNED NULL, ADD COLUMN effect_version_v2 INT UNSIGNED NULL;
+SPEC> ALTER TABLE chain_event_application_attempt_v2 ADD CONSTRAINT fk_ce_application_replay_audit FOREIGN KEY (requested_by_replay_audit_id) REFERENCES chain_event_replay_audit(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+SPEC> ALTER TABLE chain_tx_submission ADD COLUMN final_event_application_id_v2 BIGINT UNSIGNED NULL, ADD COLUMN expected_final_effect_version_v2 INT UNSIGNED NULL;
+SPEC> ALTER TABLE chain_tx_submission ADD CONSTRAINT fk_chain_tx_final_application_v2 FOREIGN KEY (final_event_application_id_v2) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+SPEC> CREATE TABLE governance_approval (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   approval_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   initiator_id BIGINT UNSIGNED NOT NULL,
+SPEC>   approver_id BIGINT UNSIGNED NOT NULL,
+SPEC>   expected_selector CHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   canonical_payload_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_governance_approval_digest (approval_digest),
+SPEC>   CONSTRAINT chk_governance_approval CHECK (initiator_id<>approver_id AND approval_digest REGEXP '^[0-9a-f]{64}$' AND expected_selector REGEXP '^0x[0-9a-f]{8}$' AND canonical_payload_digest REGEXP '^[0-9a-f]{64}$') ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE governance_safe_nonce_slot (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   safe_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   safe_nonce BIGINT UNSIGNED NOT NULL,
+SPEC>   owner_set_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   threshold_snapshot INT UNSIGNED NOT NULL,
+SPEC>   state VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   canonical_safe_tx_id BIGINT UNSIGNED NULL,
+SPEC>   conflict_detected_at DATETIME(6) NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_safe_nonce_slot (chain_id,safe_address,safe_nonce),
+SPEC>   CONSTRAINT chk_safe_nonce_slot CHECK (threshold_snapshot>0 AND state IN ('open','conflicted','consumed','reconciling')) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE governance_safe_tx (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   nonce_slot_id BIGINT UNSIGNED NOT NULL,
+SPEC>   approval_id BIGINT UNSIGNED NOT NULL,
+SPEC>   safe_tx_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   canonical_payload_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   state VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   canonical_winner_slot TINYINT UNSIGNED NULL,
+SPEC>   external_execution_tx_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   executed_safe_tx_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   execution_application_id BIGINT UNSIGNED NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_safe_tx_hash (nonce_slot_id,safe_tx_hash),
+SPEC>   UNIQUE KEY uk_safe_tx_slot_pair (id,nonce_slot_id),
+SPEC>   UNIQUE KEY uk_safe_winner (nonce_slot_id,canonical_winner_slot),
+SPEC>   CONSTRAINT fk_safe_tx_slot FOREIGN KEY (nonce_slot_id) REFERENCES governance_safe_nonce_slot(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_safe_tx_approval FOREIGN KEY (approval_id) REFERENCES governance_approval(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_safe_tx_execution_application FOREIGN KEY (execution_application_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_safe_tx CHECK (state IN ('draft','proposed','collecting_signatures','threshold_reached','submitted','broadcast_unknown','executed','applied','rejected','expired','superseded','execution_failed','reorged','reconciling') AND (canonical_winner_slot IS NULL OR canonical_winner_slot=1)) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> ALTER TABLE governance_safe_nonce_slot ADD CONSTRAINT fk_safe_nonce_canonical_tx_same_slot FOREIGN KEY (canonical_safe_tx_id,id) REFERENCES governance_safe_tx(id,nonce_slot_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+SPEC> CREATE TABLE governance_safe_signature (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   safe_tx_id BIGINT UNSIGNED NOT NULL,
+SPEC>   owner_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   signature MEDIUMBLOB NOT NULL,
+SPEC>   signature_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   observed_at DATETIME(6) NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_safe_owner_signature (safe_tx_id,owner_address),
+SPEC>   CONSTRAINT fk_safe_signature_tx FOREIGN KEY (safe_tx_id) REFERENCES governance_safe_tx(id) ON UPDATE RESTRICT ON DELETE RESTRICT
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE governance_timelock_operation (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   timelock_address VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   safe_tx_id BIGINT UNSIGNED NOT NULL,
+SPEC>   operation_id VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   operation_kind VARCHAR(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   predecessor VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   salt VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   expected_call_count INT UNSIGNED NOT NULL,
+SPEC>   delay_seconds BIGINT UNSIGNED NOT NULL,
+SPEC>   state VARCHAR(24) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   schedule_block_timestamp BIGINT UNSIGNED NULL,
+SPEC>   ready_at BIGINT UNSIGNED NULL,
+SPEC>   schedule_application_id BIGINT UNSIGNED NULL,
+SPEC>   execution_application_id BIGINT UNSIGNED NULL,
+SPEC>   target_effect_application_id BIGINT UNSIGNED NULL,
+SPEC>   target_expected_effect_version INT UNSIGNED NOT NULL,
+SPEC>   canonical_operation_payload_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   recomputed_operation_id VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   recomputed_operation_payload_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   is_operation_done TINYINT UNSIGNED NOT NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_timelock_operation (chain_id,timelock_address,operation_id),
+SPEC>   CONSTRAINT fk_timelock_safe_tx FOREIGN KEY (safe_tx_id) REFERENCES governance_safe_tx(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_timelock_schedule_application FOREIGN KEY (schedule_application_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_timelock_execution_application FOREIGN KEY (execution_application_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_timelock_target_application FOREIGN KEY (target_effect_application_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_timelock_operation CHECK (expected_call_count>0 AND operation_kind IN ('single','batch') AND state IN ('planned','safe_approved','scheduling','scheduled','ready','executing','executed','applied','cancelling','cancelled','blocked','reorged','reconciling') AND ((schedule_block_timestamp IS NULL AND ready_at IS NULL) OR ready_at=schedule_block_timestamp+delay_seconds)) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE governance_timelock_call (
+SPEC>   operation_row_id BIGINT UNSIGNED NOT NULL,
+SPEC>   call_index INT UNSIGNED NOT NULL,
+SPEC>   target VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   value_raw VARCHAR(78) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   calldata_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   canonical_call_payload_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   expected_schedule_effect_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   expected_execute_effect_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   scheduled_application_id BIGINT UNSIGNED NULL,
+SPEC>   executed_application_id BIGINT UNSIGNED NULL,
+SPEC>   PRIMARY KEY (operation_row_id,call_index),
+SPEC>   CONSTRAINT fk_timelock_call FOREIGN KEY (operation_row_id) REFERENCES governance_timelock_operation(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_timelock_call_scheduled_application FOREIGN KEY (scheduled_application_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_timelock_call_executed_application FOREIGN KEY (executed_application_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE governance_executor_submission (
+SPEC>   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+SPEC>   timelock_operation_row_id BIGINT UNSIGNED NOT NULL,
+SPEC>   attempt_no INT UNSIGNED NOT NULL,
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   executor_eoa VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   action VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   state VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   nonce BIGINT UNSIGNED NULL,
+SPEC>   raw_tx_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   tx_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NULL,
+SPEC>   active_slot TINYINT UNSIGNED NULL,
+SPEC>   execution_application_id BIGINT UNSIGNED NULL,
+SPEC>   external_execution_application_id BIGINT UNSIGNED NULL,
+SPEC>   PRIMARY KEY (id),
+SPEC>   UNIQUE KEY uk_executor_attempt (timelock_operation_row_id,attempt_no),
+SPEC>   UNIQUE KEY uk_executor_submission_sender_pair (id,chain_id,executor_eoa),
+SPEC>   UNIQUE KEY uk_executor_sender_nonce (chain_id,executor_eoa,nonce),
+SPEC>   UNIQUE KEY uk_executor_active (chain_id,executor_eoa,active_slot),
+SPEC>   CONSTRAINT fk_executor_operation FOREIGN KEY (timelock_operation_row_id) REFERENCES governance_timelock_operation(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_executor_execution_application FOREIGN KEY (execution_application_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT fk_executor_external_application FOREIGN KEY (external_execution_application_id) REFERENCES chain_event_application_attempt_v2(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+SPEC>   CONSTRAINT chk_executor_submission CHECK (action IN ('execute','executeBatch') AND state IN ('ready','signing_reserved','signed','submitted','broadcast_unknown','mined_success','final_success','executed_event_applied','released','superseded_external','final_revert','ambiguous','reorged','reconciling') AND (active_slot IS NULL OR active_slot=1)) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> CREATE TABLE governance_executor_nonce (
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   executor_eoa VARCHAR(42) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   next_nonce BIGINT UNSIGNED NOT NULL,
+SPEC>   active_submission_id BIGINT UNSIGNED NULL,
+SPEC>   PRIMARY KEY (chain_id,executor_eoa),
+SPEC>   UNIQUE KEY uk_executor_active_submission (active_submission_id),
+SPEC>   CONSTRAINT fk_executor_nonce_active_same_sender FOREIGN KEY (active_submission_id,chain_id,executor_eoa) REFERENCES governance_executor_submission(id,chain_id,executor_eoa) ON UPDATE RESTRICT ON DELETE RESTRICT
+SPEC> ) ENGINE=InnoDB;
+
+
+SPEC> CREATE TABLE ce_v2_equivalence_validation (
+SPEC>   chain_id BIGINT UNSIGNED NOT NULL,
+SPEC>   validation_generation BIGINT UNSIGNED NOT NULL,
+SPEC>   invariant_name VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   validation_query_version VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   expected_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   actual_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   mismatch_count BIGINT UNSIGNED NOT NULL,
+SPEC>   evidence_root_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   result_row_digest CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   checked_through_block BIGINT UNSIGNED NOT NULL,
+SPEC>   checked_through_block_hash VARCHAR(66) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+SPEC>   PRIMARY KEY (chain_id,validation_generation,invariant_name),
+SPEC>   CONSTRAINT chk_ce_equivalence_validation CHECK (invariant_name IN ('v1_to_v2_exactly_one','v2_to_v1_exactly_one','failure_applied_disjoint','final_reference_identity_effect','aggregate_digests','source_coverage','ordinal_reconstruction')) ENFORCED
+SPEC> ) ENGINE=InnoDB;
+
+SPEC> -- Static validation views. Production implementation may use equivalent transactional queries/procedures.
+SPEC> CREATE VIEW ce_v2_m5_gate_v AS SELECT c.chain_id FROM ce_v2_cutover_control c JOIN ce_v2_equivalence_validation v ON v.chain_id=c.chain_id AND v.validation_generation=c.writer_generation AND v.validation_query_version=c.validation_query_version AND v.checked_through_block=c.cutover_block_number AND v.checked_through_block_hash=c.cutover_block_hash WHERE c.phase='m5_fenced' AND c.quarantine_count=0 AND c.unresolved_failure_count=0 AND c.source_coverage_gap_count=0 AND c.cutover_block_hash IS NOT NULL AND c.validation_query_version IS NOT NULL AND c.validation_result_digest IS NOT NULL AND c.approved_manifest_digest IS NOT NULL AND v.result_row_digest=SHA2(CONCAT_WS(':',v.invariant_name,v.validation_query_version,v.expected_digest,v.actual_digest,v.mismatch_count,v.evidence_root_digest,v.checked_through_block,v.checked_through_block_hash),256) GROUP BY c.chain_id,c.validation_result_digest HAVING COUNT(DISTINCT v.invariant_name)=7 AND SUM(v.mismatch_count)=0 AND SUM(v.expected_digest<>v.actual_digest)=0 AND c.validation_result_digest=SHA2(CONCAT_WS('|',MAX(CASE WHEN v.invariant_name='v1_to_v2_exactly_one' THEN v.result_row_digest END),MAX(CASE WHEN v.invariant_name='v2_to_v1_exactly_one' THEN v.result_row_digest END),MAX(CASE WHEN v.invariant_name='failure_applied_disjoint' THEN v.result_row_digest END),MAX(CASE WHEN v.invariant_name='final_reference_identity_effect' THEN v.result_row_digest END),MAX(CASE WHEN v.invariant_name='aggregate_digests' THEN v.result_row_digest END),MAX(CASE WHEN v.invariant_name='source_coverage' THEN v.result_row_digest END),MAX(CASE WHEN v.invariant_name='ordinal_reconstruction' THEN v.result_row_digest END)),256);
+SPEC> CREATE VIEW ce_v2_m6_final_event_gate_v AS SELECT s.id FROM chain_tx_submission s JOIN chain_event_application_attempt_v2 a ON a.id=s.final_event_application_id_v2 AND a.effect_version=s.expected_final_effect_version_v2 JOIN chain_event_identity_v2 i ON i.id=a.event_identity_id AND i.chain_id=s.chain_id AND i.tx_hash=s.tx_hash JOIN chain_event_placement_v2 p ON p.id=a.placement_id AND p.event_identity_id=a.event_identity_id LEFT JOIN chain_event_payload_conflict_v2 c ON c.event_identity_id=a.event_identity_id AND c.state='open' WHERE p.canonical_slot=1 AND p.finalized_at IS NOT NULL AND p.noncanonical_at IS NULL AND a.expected_effect=1 AND a.disposition IN ('exact','conditional') AND a.applied_at IS NOT NULL AND a.reversed_at IS NULL AND a.correlation_sender_address=LOWER(s.sender_address) AND a.correlation_calldata_digest=SHA2(s.call_data,256) AND a.correlation_nonce=s.nonce AND c.id IS NULL;
+SPEC> CREATE VIEW fund_ledger_v2_provenance_gap_v AS SELECT l.id FROM fund_ledger_v2_shadow l JOIN chain_event_application_attempt_v2 a ON a.id=l.source_application_attempt_id JOIN chain_event_placement_v2 p ON p.id=a.placement_id AND p.event_identity_id=a.event_identity_id JOIN chain_event_identity_v2 i ON i.id=a.event_identity_id WHERE l.tx_log_ordinal<>i.tx_log_ordinal OR l.rpc_log_index<>p.rpc_log_index;
+SPEC> CREATE VIEW governance_timelock_call_evidence_gap_v AS SELECT o.id FROM governance_timelock_operation o LEFT JOIN governance_timelock_call c ON c.operation_row_id=o.id LEFT JOIN chain_event_application_attempt_v2 scheduled ON scheduled.id=c.scheduled_application_id LEFT JOIN chain_event_application_attempt_v2 executed ON executed.id=c.executed_application_id LEFT JOIN chain_event_placement_v2 sp ON sp.id=scheduled.placement_id AND sp.event_identity_id=scheduled.event_identity_id LEFT JOIN chain_event_placement_v2 ep ON ep.id=executed.placement_id AND ep.event_identity_id=executed.event_identity_id GROUP BY o.id,o.expected_call_count HAVING COUNT(c.call_index)<>o.expected_call_count OR MIN(c.call_index)<>0 OR MAX(c.call_index)<>o.expected_call_count-1 OR COUNT(DISTINCT c.call_index)<>o.expected_call_count OR SUM(scheduled.id IS NULL OR executed.id IS NULL OR sp.canonical_slot<>1 OR sp.finalized_at IS NULL OR sp.noncanonical_at IS NOT NULL OR ep.canonical_slot<>1 OR ep.finalized_at IS NULL OR ep.noncanonical_at IS NOT NULL OR c.canonical_call_payload_digest<>SHA2(CONCAT_WS(':',c.call_index,c.target,c.value_raw,c.calldata_digest),256) OR scheduled.effect_digest<>c.expected_schedule_effect_digest OR executed.effect_digest<>c.expected_execute_effect_digest)>0;
+SPEC> CREATE VIEW governance_convergence_gate_v AS SELECT o.id FROM governance_timelock_operation o JOIN governance_safe_tx s ON s.id=o.safe_tx_id AND s.canonical_payload_digest=o.canonical_operation_payload_digest JOIN governance_safe_nonce_slot slot ON slot.id=s.nonce_slot_id AND slot.canonical_safe_tx_id=s.id JOIN governance_approval approval ON approval.id=s.approval_id AND approval.canonical_payload_digest=s.canonical_payload_digest JOIN chain_event_application_attempt_v2 safe_execution ON safe_execution.id=s.execution_application_id JOIN chain_event_identity_v2 safe_identity ON safe_identity.id=safe_execution.event_identity_id AND safe_identity.chain_id=slot.chain_id AND safe_identity.tx_hash=s.external_execution_tx_hash JOIN chain_event_placement_v2 safe_place ON safe_place.id=safe_execution.placement_id AND safe_place.event_identity_id=safe_execution.event_identity_id JOIN chain_event_application_attempt_v2 timelock_execution ON timelock_execution.id=o.execution_application_id JOIN chain_event_placement_v2 timelock_place ON timelock_place.id=timelock_execution.placement_id AND timelock_place.event_identity_id=timelock_execution.event_identity_id JOIN chain_event_application_attempt_v2 target ON target.id=o.target_effect_application_id AND target.effect_version=o.target_expected_effect_version JOIN chain_event_placement_v2 target_place ON target_place.id=target.placement_id AND target_place.event_identity_id=target.event_identity_id LEFT JOIN chain_event_payload_conflict_v2 safe_conflict ON safe_conflict.event_identity_id=safe_execution.event_identity_id AND safe_conflict.state='open' LEFT JOIN chain_event_payload_conflict_v2 timelock_conflict ON timelock_conflict.event_identity_id=timelock_execution.event_identity_id AND timelock_conflict.state='open' LEFT JOIN chain_event_payload_conflict_v2 target_conflict ON target_conflict.event_identity_id=target.event_identity_id AND target_conflict.state='open' LEFT JOIN governance_timelock_call_evidence_gap_v gap ON gap.id=o.id JOIN governance_executor_submission executor ON executor.timelock_operation_row_id=o.id AND (executor.execution_application_id=o.execution_application_id OR executor.external_execution_application_id=o.execution_application_id) WHERE s.canonical_winner_slot=1 AND s.executed_safe_tx_hash=s.safe_tx_hash AND o.recomputed_operation_id=o.operation_id AND o.recomputed_operation_payload_digest=o.canonical_operation_payload_digest AND o.is_operation_done=1 AND safe_place.canonical_slot=1 AND safe_place.finalized_at IS NOT NULL AND safe_place.noncanonical_at IS NULL AND timelock_place.canonical_slot=1 AND timelock_place.finalized_at IS NOT NULL AND timelock_place.noncanonical_at IS NULL AND target_place.canonical_slot=1 AND target_place.finalized_at IS NOT NULL AND target_place.noncanonical_at IS NULL AND safe_execution.applied_at IS NOT NULL AND safe_execution.reversed_at IS NULL AND timelock_execution.applied_at IS NOT NULL AND timelock_execution.reversed_at IS NULL AND target.expected_effect=1 AND target.applied_at IS NOT NULL AND target.reversed_at IS NULL AND safe_conflict.id IS NULL AND timelock_conflict.id IS NULL AND target_conflict.id IS NULL AND gap.id IS NULL;
+
+SPEC> -- CROSS_ROW_RULES_REQUIRED:
+SPEC> -- payload conflict blocks non-blocked applications; application/reversal history is append-only;
+SPEC> -- M5 requires quarantine_count=0 and V1/V2 equivalence; M6 reader switch is atomic;
+SPEC> -- Safe hash and Timelock operation ID are recomputed from exact deployed versions;
+SPEC> -- all Timelock call indexes 0..N-1 and target event application are required;
+SPEC> -- executor signing_reserved follows Gateway journal recovery and never shares Operator nonce.

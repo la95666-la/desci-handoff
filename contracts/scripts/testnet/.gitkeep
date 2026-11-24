@@ -1,0 +1,2 @@
+# 此文件确保 reports 目录被 git 追踪
+# 但 reports 目录中的实际报告文件会被 .gitignore 忽略

@@ -1,0 +1,30 @@
+{
+  "domain": "joincare.release.key-set.v1",
+  "keySetVersion": 1,
+  "threshold": 2,
+  "keys": [
+    {
+      "keyId": "key-a",
+      "algorithm": "Ed25519",
+      "publicKeyBase64": "AxLvrY71IotFdIwFOyYi/agOflZC4q+Va3+lFL9pKCM="
+    },
+    {
+      "keyId": "key-b",
+      "algorithm": "Ed25519",
+      "publicKeyBase64": "xFIp2clRWaPl5WNdModY+u1Y7igLnW3jK+cnHsuBzCc="
+    },
+    {
+      "keyId": "key-c",
+      "algorithm": "Ed25519",
+      "publicKeyBase64": "L23fEmvBnVnhEgTzS/SXJAtOqGD8SfYm4T00cc4QmQk="
+    }
+  ],
+  "validFromGeneration": 1,
+  "validThroughGeneration": 100,
+  "supersedesKeySetVersion": null,
+  "previousKeySetDigest": null,
+  "revokedAtGeneration": null,
+  "revocationReason": null,
+  "issuedAt": "2026-09-06T00:00:00Z",
+  "signaturesByPreviousKeySet": []
+}

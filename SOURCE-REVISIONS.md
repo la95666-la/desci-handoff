@@ -1,0 +1,7 @@
+﻿# JoinCare 来源版本
+
+- admin: 14e162be27c0e849a61af6e447236bf7f5fd121c
+- backend: c0f681df6856318b96071bd2926090731ba829df
+- contracts: 3ca73317b5cbefba65402d235aaa3222f536d1e0
+- deploy: 819b6a366b03406cadddf90c173e4a03b40bf3a6
+- frontend: 84a08415d817e9489ca231f38cb4495a72ecc728

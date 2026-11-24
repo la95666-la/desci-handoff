@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joincare.example/schemas/fair-launch/image-capability.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "domain",
+    "environmentId",
+    "generation",
+    "issuedAt",
+    "expiresAt",
+    "keySetVersion",
+    "component",
+    "artifactSha256",
+    "containerImageId",
+    "sourceCommit",
+    "schemaMin",
+    "schemaMax",
+    "eventModel",
+    "capabilities",
+    "maintenanceModes",
+    "previousManifestDigest"
+  ],
+  "properties": {
+    "domain": {
+      "const": "joincare.release.image-capability.v1"
+    },
+    "environmentId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$"
+    },
+    "generation": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    },
+    "issuedAt": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "expiresAt": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "keySetVersion": {
+      "$ref": "common.schema.json#/$defs/positiveUint"
+    },
+    "component": {
+      "const": "backend-job"
+    },
+    "artifactSha256": {
+      "$ref": "common.schema.json#/$defs/digest256"
+    },
+    "containerImageId": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "sourceCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "schemaMin": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemaMax": {
+      "type": "string",
+      "minLength": 1
+    },
+    "eventModel": {
+      "enum": [
+        "CE-V1",
+        "CE-V2-shadow",
+        "CE-V2-read",
+        "CE-V2-only"
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^fair-launch\\.[a-z0-9.-]+$"
+      }
+    },
+    "maintenanceModes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "signer-recovery",
+          "write-disabled-replay"
+        ]
+      }
+    },
+    "previousManifestDigest": {
+      "$ref": "common.schema.json#/$defs/nullableDigest"
+    }
+  }
+}
